@@ -3,6 +3,8 @@ package reyes;
 public class Ficha {
 	String Tipo;
 	int x, y, cantCoronas;
+	boolean puntajeContado=false;
+	
 	public Ficha(String tipo, int cantCoronas, int x, int y) {
 		Tipo = tipo;
 		this.cantCoronas = cantCoronas;
@@ -27,6 +29,14 @@ public class Ficha {
 	}
 	public int getCantCoronas() {
 		return cantCoronas;
+	}
+	
+	
+	public boolean isPuntajeContado() {
+		return puntajeContado;
+	}
+	public void setPuntajeContado(boolean puntajeContado) {
+		this.puntajeContado = puntajeContado;
 	}
 	
 	
