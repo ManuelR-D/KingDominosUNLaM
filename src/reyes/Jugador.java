@@ -1,15 +1,16 @@
 package reyes;
 import java.util.ArrayList;
 import java.util.List;
-public class Castillo {
+
+import ClasesQueTodaviaNoSeUsan.Usuario;
+public class Jugador {
 	private Usuario dueño;
-	private int cantReyes;
+//	private int cantReyes; No se usa en esta implementacion
 	private List<Carta> cartasCastillo = new ArrayList<Carta>();
 	private Tablero tablero;
 	
-	public Castillo(Usuario dueño, int cantReyes, int tamTablero) {
+	public Jugador(Usuario dueño, int tamTablero) {
 		this.dueño = dueño;
-		this.cantReyes = cantReyes;
 		this.tablero = new Tablero(tamTablero);
 	}
 }

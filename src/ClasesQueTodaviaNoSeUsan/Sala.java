@@ -1,7 +1,9 @@
-package reyes;
+package ClasesQueTodaviaNoSeUsan;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import reyes.Partida;
 
 public class Sala {
 	private int idSala;

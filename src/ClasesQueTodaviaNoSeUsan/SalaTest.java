@@ -1,11 +1,8 @@
-package reyes.Tests;
+package ClasesQueTodaviaNoSeUsan;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-
-import reyes.Sala;
-import reyes.Usuario;
 
 public class SalaTest {
 

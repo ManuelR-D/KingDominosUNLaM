@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.print.DocFlavor.URL;
+
+import ClasesQueTodaviaNoSeUsan.Sala;
 public class Partida {
 	private Sala salaDeJugadores;
 	private Carta[] cartasTotales = new Carta[CANTIDAD_CARTAS];
-	private Castillo[] castillos;
-	private final static int REYES_DE_PARTIDA = 1;
+	private Jugador[] castillos;
+//	private final static int REYES_DE_PARTIDA = 1;
 	private final static int TAMAÑO_TABLERO = 5;
 	private final static int CANTIDAD_CARTAS = 48;
 	
@@ -20,10 +22,10 @@ public class Partida {
 	//TODO: iniciarPartida	
 	public Partida(Sala sala) {
 		this.salaDeJugadores = sala;
-		this.castillos = new Castillo[sala.getCantJugadoresEnSala()];
+		this.castillos = new Jugador[sala.getCantJugadoresEnSala()];
 		//asignamos el castillo a cada jugador
 		for (int i = 0; i < castillos.length; i++) {
-			castillos[i] = new Castillo(sala.getJugador(i), REYES_DE_PARTIDA, TAMAÑO_TABLERO);
+			castillos[i] = new Jugador(sala.getJugador(i), TAMAÑO_TABLERO);
 		}
 		//armamos el mazo con las cartas TODO: se podrían pasar parametros para variar la cantidad de cartas, no es complejo
 		armarMazo();
