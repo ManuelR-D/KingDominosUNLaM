@@ -1,10 +1,9 @@
 package reyes;
 
-public class Carta {
+public class Carta implements Comparable<Carta> {
 	private int idCarta;
 	private int x = 0, y = 0;
 	private Ficha[] fichas = new Ficha[2];
-	private boolean usada = false;
 	private int rotacion = 1;
 
 	public Carta(int idCarta, String tipoIzq, int cantCoronasI, String tipoDer, int cantCoronasD) {
@@ -49,25 +48,34 @@ public class Carta {
 
 		switch (rotacion) {
 		case 1:
+			System.out.printf("id:%d --", this.idCarta);
 			System.out.printf("[%s/%d coronas]---", ficha1.getTipo(), ficha1.getCantCoronas());
 			System.out.printf("[%s/%d coronas]\n", ficha2.getTipo(), ficha2.getCantCoronas());
 			break;
 		case 2:
+			System.out.printf("id:%d --", this.idCarta);
 			System.out.printf("[%s/%d coronas]\n", ficha2.getTipo(), ficha2.getCantCoronas());
 			System.out.println("\t|");
 			System.out.printf("[%s/%d coronas]\n", ficha1.getTipo(), ficha1.getCantCoronas());
 			break;
 		case 3:
+			System.out.printf("id:%d --", this.idCarta);
 			System.out.printf("[%s/%d coronas]---", ficha2.getTipo(), ficha2.getCantCoronas());
 			System.out.printf("[%s/%d coronas]\n", ficha1.getTipo(), ficha1.getCantCoronas());
 			break;
 		case 4:
+			System.out.printf("id:%d --", this.idCarta);
 			System.out.printf("[%s/%d coronas]\n", ficha1.getTipo(), ficha1.getCantCoronas());
 			System.out.println("\t|");
 			System.out.printf("[%s/%d coronas]\n", ficha2.getTipo(), ficha2.getCantCoronas());
 			break;
 		}
 
+	}
+
+	@Override
+	public int compareTo(Carta otraCarta) {
+		return this.idCarta - otraCarta.idCarta;
 	}
 
 }

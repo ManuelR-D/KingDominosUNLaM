@@ -3,41 +3,50 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 
-import javax.print.DocFlavor.URL;
 
-import ClasesQueTodaviaNoSeUsan.Sala;
 public class Partida {
-	private Sala salaDeJugadores;
-	private Carta[] cartasTotales = new Carta[CANTIDAD_CARTAS];
-	private Jugador[] castillos;
-//	private final static int REYES_DE_PARTIDA = 1;
+	private List<Carta> cartasTotales;
+	private Jugador[] jugadores;
 	private final static int TAMAÑO_TABLERO = 5;
 	private final static int CANTIDAD_CARTAS = 48;
+	private final static int CANTIDAD_JUGADORES= 2;
 	
 	//TODO: determinar turnos iniciales a partir de dados
 	//TODO: iniciarPartida	
-	public Partida(Sala sala) {
-		this.salaDeJugadores = sala;
-		this.castillos = new Jugador[sala.getCantJugadoresEnSala()];
-		//asignamos el castillo a cada jugador
-		for (int i = 0; i < castillos.length; i++) {
-			castillos[i] = new Jugador(sala.getJugador(i), TAMAÑO_TABLERO);
+	public Partida() {
+		this.jugadores = new Jugador[CANTIDAD_JUGADORES];
+		
+		//Creamos a cada jugador
+		for (int i = 0; i < jugadores.length; i++) {
+			jugadores[i] = new Jugador("Jugador "+i, TAMAÑO_TABLERO);
 		}
-		//armamos el mazo con las cartas TODO: se podrían pasar parametros para variar la cantidad de cartas, no es complejo
 		armarMazo();
+		mezclarMazo();
+		
+		iniciarPartida();
 
 	}
+	public List<Carta> getCartasTotales() {
+		return cartasTotales;
+	}
 	
+	private void mezclarMazo() {
+		List<Carta> cartasMezcladas= new ArrayList<Carta>(CANTIDAD_CARTAS);
+		for(int i=0;i<CANTIDAD_CARTAS;i++) {
+			int numeroAleatorio=(int) (Math.random() * (CANTIDAD_CARTAS-i));
+			cartasMezcladas.add(cartasTotales.remove(numeroAleatorio));
+		}
+		cartasTotales=cartasMezcladas;		
+	}
 	private void armarMazo() {
-		this.cartasTotales = new Carta[CANTIDAD_CARTAS];
+		this.cartasTotales = new ArrayList<Carta>(CANTIDAD_CARTAS);
 		File file = new File("./assets/cartas.txt");
 		Scanner scanner;
-		File directory = new File("./");
-		System.out.println(directory.getAbsolutePath());
 		try {
 			scanner = new Scanner(file);
 		} catch (FileNotFoundException e) {
@@ -50,40 +59,41 @@ public class Partida {
 			int    cantCoronasI = Integer.parseInt(scanner.nextLine());
 			String tipoDer = scanner.nextLine();
 			int    cantCoronasD = Integer.parseInt(scanner.nextLine());
-			cartasTotales[idCarta-1] = new Carta(idCarta, tipoIzq, cantCoronasI, tipoDer, cantCoronasD);
+			cartasTotales.add(new Carta(idCarta, tipoIzq, cantCoronasI, tipoDer, cantCoronasD));
 			idCarta++;
 		}
 		scanner.close();
 	}
 
 	public void iniciarPartida() {
-		int[] turnos = determinarTurnos();
+		int[] turnos = determinarTurnosIniciales();
+		Set<Carta> cartas4=new TreeSet<Carta>();
+		quitarNCartasDelMazo(4,cartas4);
+		mostrarNCartas(4,cartas4);
+	}
+	private void mostrarNCartas(int n, Set<Carta> cartas) {
+		for(Carta carta:cartas) {
+			carta.mostrarCarta();
+		}
+	}
+	private void quitarNCartasDelMazo(int n,Set<Carta> cartasN) {
+		for(int i=0;i<n;i++) {
+			cartasN.add(cartasTotales.remove(0));
+		}
 		
 	}
-	private int[] determinarTurnos() {
-		int[][] ordenDeTurnos = new int[salaDeJugadores.getCantJugadoresEnSala()][2];
-		for (int i = 0; i < salaDeJugadores.getCantJugadoresEnSala(); i++) {
-			ordenDeTurnos[i][0] = i;
-			ordenDeTurnos[i][1] = (int) (Math.random() * 7);
+	private int[] determinarTurnosIniciales() {
+		int[] turnos=new int[CANTIDAD_JUGADORES];
+		List<Integer>idJugadores=new ArrayList<Integer>(4);
+		
+		for(int i=0;i<CANTIDAD_JUGADORES;i++) {
+			idJugadores.add(i);
 		}
-		for (int j = 1; j < ordenDeTurnos.length-1; j++) {
-			for (int i = 0; i < ordenDeTurnos.length-j; i++) {
-				if (ordenDeTurnos[i][1] < ordenDeTurnos[i+1][1]) {
-					int jugador = ordenDeTurnos[i+1][0];
-					int dado = ordenDeTurnos[i+1][1];
-					ordenDeTurnos[i+1][0] = ordenDeTurnos[i][0];
-					ordenDeTurnos[i+1][1] = ordenDeTurnos[i][1];
-					ordenDeTurnos[i][0] = jugador;
-					ordenDeTurnos[i][1] = dado;
-				}
-			}	
+		for(int i=0;i<CANTIDAD_JUGADORES;i++) {
+			int numeroAleatorio=(int) (Math.random() * (CANTIDAD_JUGADORES-i));
+			turnos[i]=idJugadores.remove(numeroAleatorio);
 		}
-		int[] ret = new int[salaDeJugadores.getCantJugadoresEnSala()];
-		int i = 0;
-		for (int[] jugador : ordenDeTurnos) {
-			ret[i++] = jugador[0];
-		}
-		return ret;
+		
+		return turnos;
 	}
-
 }
