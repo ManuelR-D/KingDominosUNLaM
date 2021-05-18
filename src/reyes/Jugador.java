@@ -9,4 +9,9 @@ public class Jugador {
 		this.nombre = nombre;
 		this.tablero = new Tablero(tamTablero);
 	}
+
+	public void eligeCarta(Carta cartaElegida, int numeroAleatorio) {
+		System.out.println(this.nombre+" elige la carta "+numeroAleatorio);
+		cartaElegida.mostrarCarta();
+	}
 }

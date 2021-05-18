@@ -98,6 +98,8 @@ public class Tablero {
 		if (!tipoAdyacenteCompatible(carta)) {
 			return false;
 		}
+		
+		//TODO COMPROBAR LIMITE DE 5X5
 
 		tablero[f1X][f1Y] = fichas[0];
 		tablero[f2X][f2Y] = fichas[1];
