@@ -41,41 +41,48 @@ public class Carta implements Comparable<Carta> {
 		}
 		rotacion++;
 	}
-
-	public void mostrarCarta() {
+	@Override
+	public String toString() {
+		String ret = "";
+		String[][] mat = { {"","",""},{"","",""},{"","",""} }; 
 		Ficha ficha1 = fichas[0];
 		Ficha ficha2 = fichas[1];
-
-		switch (rotacion) {
+		mat[1][1] = ficha1.toString();
+		//mat[ficha2.getX() + 1][ficha2.getY() + 1] = ficha2.toString();
+		switch(rotacion) {
 		case 1:
-			System.out.printf("id:%d --", this.idCarta);
-			System.out.printf("[%s/%d coronas]---", ficha1.getTipo(), ficha1.getCantCoronas());
-			System.out.printf("[%s/%d coronas]\n", ficha2.getTipo(), ficha2.getCantCoronas());
+			mat[1][2] = ficha2.toString();
 			break;
 		case 2:
-			System.out.printf("id:%d --", this.idCarta);
-			System.out.printf("[%s/%d coronas]\n", ficha2.getTipo(), ficha2.getCantCoronas());
-			System.out.println("\t|");
-			System.out.printf("[%s/%d coronas]\n", ficha1.getTipo(), ficha1.getCantCoronas());
+			mat[2][1] = ficha2.toString();
 			break;
 		case 3:
-			System.out.printf("id:%d --", this.idCarta);
-			System.out.printf("[%s/%d coronas]---", ficha2.getTipo(), ficha2.getCantCoronas());
-			System.out.printf("[%s/%d coronas]\n", ficha1.getTipo(), ficha1.getCantCoronas());
+			mat[1][0] = ficha2.toString();
 			break;
 		case 4:
-			System.out.printf("id:%d --", this.idCarta);
-			System.out.printf("[%s/%d coronas]\n", ficha1.getTipo(), ficha1.getCantCoronas());
-			System.out.println("\t|");
-			System.out.printf("[%s/%d coronas]\n", ficha2.getTipo(), ficha2.getCantCoronas());
+			mat[0][1] = ficha2.toString();
 			break;
 		}
-
+		for (String[] strings : mat) {
+			for (String strings2 : strings) {
+				ret+=String.format("%9s" + "|",strings2);
+			}
+			ret+="\n";
+		}
+		return ret;
 	}
 
 	@Override
 	public int compareTo(Carta otraCarta) {
 		return this.idCarta - otraCarta.idCarta;
+	}
+
+	public void moverCarta(int filaAbs, int columnaAbs) {
+		this.fichas[0].x += filaAbs;
+		this.fichas[0].y += columnaAbs;
+		this.fichas[1].x += filaAbs;
+		this.fichas[1].y += columnaAbs;
+		
 	}
 
 }

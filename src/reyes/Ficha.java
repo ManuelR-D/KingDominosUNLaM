@@ -32,6 +32,10 @@ public class Ficha {
 	}
 	
 	
+	@Override
+	public String toString() {
+		return Tipo + "/" + cantCoronas;
+	}
 	public boolean isPuntajeContado() {
 		return puntajeContado;
 	}

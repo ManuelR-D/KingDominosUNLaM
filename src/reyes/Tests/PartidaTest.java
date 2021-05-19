@@ -36,11 +36,13 @@ public class PartidaTest {
 		List<Carta> cartasOrdenadas = new ArrayList<Carta>();
 
 		int i = 0;
+		int nCartas = 4;
+		int tamanioOriginalMazo = mazo.size();
 		while (mazo.size() >= 1) {
-			p.quitarNCartasDelMazo(mazo, 4, cartasOrdenadas);
+			p.quitarNCartasDelMazo(mazo, nCartas, cartasOrdenadas);
 			i++;
 		}
-		assertEquals(12, i);
+		assertEquals(tamanioOriginalMazo/nCartas, i);
 	}
 	
 	@Test

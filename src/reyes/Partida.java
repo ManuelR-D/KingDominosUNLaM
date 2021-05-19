@@ -75,22 +75,21 @@ public class Partida {
 
 	public void iniciarPartida() {
 		List<Integer> turnos = determinarTurnosIniciales();
-		List<Carta> cartasAElegir = new ArrayList<Carta>();
 		List<Carta> cartasAElegirSig = new ArrayList<Carta>();
 
-		quitarNCartasDelMazo(mazo, 4, cartasAElegir);
-		quitarNCartasDelMazo(mazo, 4, cartasAElegirSig);
-		cartasAElegir.sort(Carta::compareTo);
-		cartasAElegirSig.sort(Carta::compareTo);
-
+		int i = 0;
 		while (mazo.size() > 1) {
-			cartasAElegir = cartasAElegirSig;
-			elegirCartas(cartasAElegir, turnos);
+			System.out.println("--------Ronda: " + ++i + "--------");
 			cartasAElegirSig.clear();
 			quitarNCartasDelMazo(mazo, 4, cartasAElegirSig);
 			cartasAElegirSig.sort(Carta::compareTo);
+			elegirCartas(cartasAElegirSig, turnos);
 		}
-
+		i = 0;
+		for (Jugador jugador : jugadores) {
+			System.out.println("-------Tablero de Jugador " + ++i + "-------");
+			System.out.println(jugador.tablero);
+		}
 	}
 
 	private void elegirCartas(List<Carta> cartasAElegir, List<Integer> turnos) {
@@ -109,6 +108,7 @@ public class Partida {
 
 			//TODO falta la logica de cuando el jugador elige la carta pueda ponerla en su tablero
 			jugadores[turno].eligeCarta(cartaElegida, numeroElegido);
+			jugadores[turno].insertaEnTablero(cartaElegida);
 			// Los numeros elegidos se guardan en un map, ya que el menor de estos decide
 			// quien comienza el turno siguiente
 			nuevoOrdenDeTurnos.put(numeroElegido, turno);
@@ -122,7 +122,7 @@ public class Partida {
 
 	public void mostrarCartas(Set<Carta> cartas) {
 		for (Carta carta : cartas) {
-			carta.mostrarCarta();
+			System.out.println(carta);
 		}
 	}
 
