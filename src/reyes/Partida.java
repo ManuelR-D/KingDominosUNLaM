@@ -1,87 +1,150 @@
 package reyes;
+
 import java.io.File;
 import java.io.FileNotFoundException;
-
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeMap;
 
-import javax.print.DocFlavor.URL;
 public class Partida {
-	private Sala salaDeJugadores;
-	private Carta[] cartasTotales = new Carta[CANTIDAD_CARTAS];
-	private Castillo[] castillos;
-	private final static int REYES_DE_PARTIDA = 1;
+	private List<Carta> mazo;
+	private Jugador[] jugadores;
 	private final static int TAMAÑO_TABLERO = 5;
 	private final static int CANTIDAD_CARTAS = 48;
-	
-	//TODO: determinar turnos iniciales a partir de dados
-	//TODO: iniciarPartida	
-	public Partida(Sala sala) {
-		this.salaDeJugadores = sala;
-		this.castillos = new Castillo[sala.getCantJugadoresEnSala()];
-		//asignamos el castillo a cada jugador
-		for (int i = 0; i < castillos.length; i++) {
-			castillos[i] = new Castillo(sala.getJugador(i), REYES_DE_PARTIDA, TAMAÑO_TABLERO);
-		}
-		//armamos el mazo con las cartas TODO: se podrían pasar parametros para variar la cantidad de cartas, no es complejo
-		armarMazo();
+	private final static int CANTIDAD_JUGADORES = 2;
 
+	public Partida() {
+		this.jugadores = new Jugador[CANTIDAD_JUGADORES];
+
+		// Creamos a cada jugador
+		for (int i = 0; i < jugadores.length; i++) {
+			jugadores[i] = new Jugador("Jugador " + (i + 1), TAMAÑO_TABLERO);
+		}
+		mazo = new ArrayList<Carta>(armarMazo());
+		mazo = mezclarMazo(mazo);
 	}
-	
-	private void armarMazo() {
-		this.cartasTotales = new Carta[CANTIDAD_CARTAS];
+
+	public List<Carta> getMazo() {
+		return mazo;
+	}
+
+	public List<Carta> mezclarMazo(List<Carta> cartas) {
+		List<Carta> cartasMezcladas = new ArrayList<Carta>(CANTIDAD_CARTAS);
+
+		for (int i = 0; i < CANTIDAD_CARTAS; i++) {
+			int numeroAleatorio = numeroAleatorioEntre(0, CANTIDAD_CARTAS - i - 1);
+			cartasMezcladas.add(cartas.remove(numeroAleatorio));
+		}
+
+		return cartas = cartasMezcladas;
+	}
+
+	private int numeroAleatorioEntre(int mayorIgualQue, int menorIgualQue) {
+		int numeroAleatorio = (int) Math.floor(Math.random() * (menorIgualQue - mayorIgualQue + 1) + mayorIgualQue);
+		return numeroAleatorio;
+	}
+
+	public List<Carta> armarMazo() {
+		List<Carta> cartas = new ArrayList<Carta>(CANTIDAD_CARTAS);
 		File file = new File("./assets/cartas.txt");
 		Scanner scanner;
-		File directory = new File("./");
-		System.out.println(directory.getAbsolutePath());
+
 		try {
 			scanner = new Scanner(file);
+			int idCarta = 1;
+			while (scanner.hasNextLine()) {
+				String tipoIzq = scanner.nextLine();
+				int cantCoronasI = Integer.parseInt(scanner.nextLine());
+				String tipoDer = scanner.nextLine();
+				int cantCoronasD = Integer.parseInt(scanner.nextLine());
+				cartas.add(new Carta(idCarta, tipoIzq, cantCoronasI, tipoDer, cantCoronasD));
+				idCarta++;
+			}
 		} catch (FileNotFoundException e) {
 			System.out.println("No se encontro el archivo de cartas");
-			return;
-		}
-		int idCarta = 1;
-		while(scanner.hasNextLine()) {
-			String tipoIzq = scanner.nextLine();
-			int    cantCoronasI = Integer.parseInt(scanner.nextLine());
-			String tipoDer = scanner.nextLine();
-			int    cantCoronasD = Integer.parseInt(scanner.nextLine());
-			cartasTotales[idCarta-1] = new Carta(idCarta, tipoIzq, cantCoronasI, tipoDer, cantCoronasD);
-			idCarta++;
+			return null;
 		}
 		scanner.close();
+
+		return cartas;
 	}
 
 	public void iniciarPartida() {
-		int[] turnos = determinarTurnos();
-		
-	}
-	private int[] determinarTurnos() {
-		int[][] ordenDeTurnos = new int[salaDeJugadores.getCantJugadoresEnSala()][2];
-		for (int i = 0; i < salaDeJugadores.getCantJugadoresEnSala(); i++) {
-			ordenDeTurnos[i][0] = i;
-			ordenDeTurnos[i][1] = (int) (Math.random() * 7);
-		}
-		for (int j = 1; j < ordenDeTurnos.length-1; j++) {
-			for (int i = 0; i < ordenDeTurnos.length-j; i++) {
-				if (ordenDeTurnos[i][1] < ordenDeTurnos[i+1][1]) {
-					int jugador = ordenDeTurnos[i+1][0];
-					int dado = ordenDeTurnos[i+1][1];
-					ordenDeTurnos[i+1][0] = ordenDeTurnos[i][0];
-					ordenDeTurnos[i+1][1] = ordenDeTurnos[i][1];
-					ordenDeTurnos[i][0] = jugador;
-					ordenDeTurnos[i][1] = dado;
-				}
-			}	
-		}
-		int[] ret = new int[salaDeJugadores.getCantJugadoresEnSala()];
+		List<Integer> turnos = determinarTurnosIniciales();
+		List<Carta> cartasAElegirSig = new ArrayList<Carta>();
+
 		int i = 0;
-		for (int[] jugador : ordenDeTurnos) {
-			ret[i++] = jugador[0];
+		while (mazo.size() > 1) {
+			System.out.println("--------Ronda: " + ++i + "--------");
+			cartasAElegirSig.clear();
+			quitarNCartasDelMazo(mazo, 4, cartasAElegirSig);
+			cartasAElegirSig.sort(Carta::compareTo);
+			elegirCartas(cartasAElegirSig, turnos);
 		}
-		return ret;
+		i = 0;
+		for (Jugador jugador : jugadores) {
+			System.out.println("-------Tablero de Jugador " + ++i + "-------");
+			System.out.println(jugador.tablero);
+		}
 	}
 
+	private void elegirCartas(List<Carta> cartasAElegir, List<Integer> turnos) {
+		int numeroElegido;
+		List<Integer> numerosElegidos = new LinkedList<Integer>();
+		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
+		for (int i = 0; i < turnos.size(); i++) {
+			do {
+				/// ESTO DEBE CAMBIARSE CUANDO EL USUARIO PUEDA JUGAR YA QUE EL DECIDIRA QUE
+				/// CARTA QUIERE
+				numeroElegido = numeroAleatorioEntre(0, cartasAElegir.size() - 1);
+			} while (numerosElegidos.contains(numeroElegido));
+			numerosElegidos.add(numeroElegido);
+			Carta cartaElegida = cartasAElegir.get(numeroElegido);
+			int turno = turnos.get(i);
+
+			//TODO falta la logica de cuando el jugador elige la carta pueda ponerla en su tablero
+			jugadores[turno].eligeCarta(cartaElegida, numeroElegido);
+			jugadores[turno].insertaEnTablero(cartaElegida);
+			// Los numeros elegidos se guardan en un map, ya que el menor de estos decide
+			// quien comienza el turno siguiente
+			nuevoOrdenDeTurnos.put(numeroElegido, turno);
+		}
+		turnos.clear();
+		for (Map.Entry<Integer, Integer> entrada : nuevoOrdenDeTurnos.entrySet()) {
+			// modifico turnos de acuerdo al numero elegido
+			turnos.add(entrada.getValue());
+		}
+	}
+
+	public void mostrarCartas(Set<Carta> cartas) {
+		for (Carta carta : cartas) {
+			System.out.println(carta);
+		}
+	}
+
+	public void quitarNCartasDelMazo(List<Carta> mazo, int n, List<Carta> cartas) {
+		for (int i = 0; i < n; i++) {
+			cartas.add(mazo.remove(0));
+		}
+
+	}
+
+	private List<Integer> determinarTurnosIniciales() {
+		List<Integer> turnos = new ArrayList<Integer>();
+		List<Integer> idJugadores = new ArrayList<Integer>(4);
+
+		for (int i = 0; i < CANTIDAD_JUGADORES; i++) {
+			idJugadores.add(i);
+		}
+		for (int i = 0; i < CANTIDAD_JUGADORES; i++) {
+			int numeroAleatorio = numeroAleatorioEntre(0, CANTIDAD_JUGADORES - i - 1);
+			turnos.add(idJugadores.remove(numeroAleatorio));
+		}
+
+		return turnos;
+	}
 }
