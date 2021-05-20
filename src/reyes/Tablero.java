@@ -112,49 +112,16 @@ public class Tablero {
 			return false;
 		}
 		
-		//TODO COMPROBAR LIMITE DE 5X5
+		//comprobamos que no salga del limite
 		if (!comprobarLimite(f1X, f1Y, f2X, f2Y,LIMITE_CONSTRUCCION)) {
 			carta.moverCarta(-filaAbs, -columnaAbs);
-			tablero[f1X][f1Y] = null;
-			tablero[f2X][f2Y] = null;
 			return false;
 		}
 
 		tablero[f1X][f1Y] = fichas[0];
 		tablero[f2X][f2Y] = fichas[1];
-//		if(!this.esTableroValido(carta)) {
-//			carta.moverCarta(-filaAbs, -columnaAbs);
-//			tablero[f1X][f1Y] = null;
-//			tablero[f2X][f2Y] = null;
-//			return false;
-//		}
 		return true;
 	}
-	/*
-	 *
-	 *Verifica que la distancia entre todas las fichas nunca sea mayor a 5
-	 *Se puede usar cualquier numero arbitrario también, facilita la creación
-	 *de otros modos de juego.
-	 *Esta función no debería usarse más que para debug, puesto que verifica
-	 *todas las fichas, en lugar de sólo la ultima carta ingresada
-	 *O(tamTablero^4)
-	 * */
-	private boolean esTableroValido() {
-		for (Ficha[] fichas : tablero) {
-			for (Ficha ficha : fichas) {
-				for (Ficha[] fichas2 : tablero) {
-					for (Ficha ficha2 : fichas2) {
-						if((ficha != null && ficha2 != null) &&
-						   (Math.abs(ficha2.getX() - ficha.getX()) >= 5 ||
-						   Math.abs(ficha2.getY() - ficha.getY()) >= 5))
-							return false;
-					}
-				}
-			}
-		}
-		return true;
-	}
-	
 	private boolean comprobarLimite(int f1X, int f1Y, int f2X, int f2Y, int limite) {
 		int xMinAux = xMin;
 		int xMaxAux = xMax;
@@ -195,29 +162,7 @@ public class Tablero {
 			return true;
 		}
 	}
-	/*
-	 * 
-	 * Verifica que la cartaElegida (ya ingresada en el tablero) esté
-	 * en una posición legal
-	 * O(tamTablero^2)
-	 * */
-	private boolean esTableroValido(Carta cartaElegida) {
-		int f1X = cartaElegida.getFichas()[0].getX();
-		int f1Y = cartaElegida.getFichas()[0].getY();
-		int f2X = cartaElegida.getFichas()[1].getX();
-		int f2Y = cartaElegida.getFichas()[1].getY();
-		for (Ficha[] fichas : tablero) {
-			for (Ficha ficha : fichas) {
-				if((ficha != null) &&
-						(Math.abs(f1X - ficha.getX()) >= tamTablero ||
-						 Math.abs(f1Y - ficha.getY()) >= tamTablero ||
-						 Math.abs(f2X - ficha.getX()) >= tamTablero ||
-						 Math.abs(f2Y - ficha.getY()) >= tamTablero ))
-					 return false;
-			}
-		}
-		return true;
-	}
+	
 	private boolean tipoAdyacenteCompatible(Carta carta) {
 		Ficha[] fichas = carta.getFichas();
 		int f1X = fichas[0].getX();

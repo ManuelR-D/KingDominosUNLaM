@@ -86,9 +86,16 @@ public class Partida {
 	}
 
 	public boolean iniciarPartida() {
-		if(cantidadCartas%cantidadJugadores != 0) {
-			System.out.println("La cantidad de jugadores ha de ser multiplo de la cantidad de cartas!");
+		if(cantidadJugadores > 4 || cantidadJugadores < 2) {
+			System.out.println("La cantidad de jugadores es invalida!!");
 			return false;
+		}
+		//El código puede funcionar sin problemas con cualquier cantidad de cartas 
+		//mientras el total sea múltiplo de 4, pues siempre se roba de a 4 cartas.
+		//Sin embargo, el enunciado tiene la limitación de 48 para todos los modos.
+		//Se puede quitar esta validación en el futuro si quisieramos agregar otros modos.
+		if(cantidadCartas != 48) {
+			System.out.println("La cantidad de cartas tiene que ser 48! (limitación por parte del enunciado)");
 		}
 		List<Integer> turnos = determinarTurnosIniciales();
 		List<Carta> cartasAElegirSig = new ArrayList<Carta>();

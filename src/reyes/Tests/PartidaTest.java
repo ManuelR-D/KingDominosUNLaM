@@ -47,18 +47,35 @@ public class PartidaTest {
 	
 	@Test
 	public void iniciarPartida() {
+		int cantidadJugadores = 3;
+		int cantidadCartas = 48;
+		int tamTablero = 5;
 		Partida p = new Partida();
-//		
-//		assertEquals(true, p.iniciarPartida());
-//		p = new Partida(2,5,15);
-//		assertEquals(false, p.iniciarPartida());
-//		p = new Partida(2,5,20);
-//		assertEquals(true, p.iniciarPartida());
-//		p = new Partida(2,8,20);
-//		assertEquals(true, p.iniciarPartida());
-//		p = new Partida(3,5,30);
-//		assertEquals(true, p.iniciarPartida());
-		p.iniciarPartida();
+		//paritda por defecto, 2 jugadores, 5x5, 48 cartas
+		assertEquals(true, p.iniciarPartida());
+		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas); //3 jug
+		assertEquals(true, p.iniciarPartida());
+		cantidadJugadores++;
+		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas); // 4 jug
+		assertEquals(true, p.iniciarPartida());
+		
+		cantidadJugadores++;
+		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas); // 5 jug
+		assertEquals(false, p.iniciarPartida()); //es invalido >4 jugadores
+		cantidadJugadores = 1;
+		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas);
+		assertEquals(false, p.iniciarPartida()); //es invalido <2 jugadores
+		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas+1);
+		assertEquals(false, p.iniciarPartida()); //es invalido != 48 cartas
+		//aunque en el futuro podríamos añadir modos con diferente cantidad de cartas.
+		//el código ya está preparado para eso.
+		
+		//El gran duelo
+		cantidadJugadores = 2;
+		tamTablero = 7;
+		cantidadCartas = 48;
+		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas);
+		assertEquals(true, p.iniciarPartida());
 	}
 
 }
