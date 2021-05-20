@@ -9,7 +9,7 @@ public class Tablero {
 	public Tablero(int tamTablero) {
 		this.tamTablero = tamTablero;
 		this.tablero = new Ficha[tamTablero * 2 - 1][tamTablero * 2 - 1];
-		this.tablero[4][4] = new Ficha("Castillo",0,4,4);
+		this.tablero[tamTablero-1][tamTablero-1] = new Ficha("Castillo",0,tamTablero-1,tamTablero-1);
 	}
 
 	public Ficha[][] getTablero() {
@@ -113,7 +113,7 @@ public class Tablero {
 
 		tablero[f1X][f1Y] = fichas[0];
 		tablero[f2X][f2Y] = fichas[1];
-		if(!this.esTableroValido()) {
+		if(!this.esTableroValido(carta)) {
 			carta.moverCarta(-filaAbs, -columnaAbs);
 			tablero[f1X][f1Y] = null;
 			tablero[f2X][f2Y] = null;
@@ -125,7 +125,10 @@ public class Tablero {
 	 *
 	 *Verifica que la distancia entre todas las fichas nunca sea mayor a 5
 	 *Se puede usar cualquier numero arbitrario también, facilita la creación
-	 *de otros modos de juego
+	 *de otros modos de juego.
+	 *Esta función no debería usarse más que para debug, puesto que verifica
+	 *todas las fichas, en lugar de sólo la ultima carta ingresada
+	 *O(tamTablero^4)
 	 * */
 	private boolean esTableroValido() {
 		for (Ficha[] fichas : tablero) {
@@ -140,7 +143,29 @@ public class Tablero {
 				}
 			}
 		}
-		
+		return true;
+	}
+	/*
+	 * 
+	 * Verifica que la cartaElegida (ya ingresada en el tablero) esté
+	 * en una posición legal
+	 * O(tamTablero^2)
+	 * */
+	private boolean esTableroValido(Carta cartaElegida) {
+		int f1X = cartaElegida.getFichas()[0].getX();
+		int f1Y = cartaElegida.getFichas()[0].getY();
+		int f2X = cartaElegida.getFichas()[1].getX();
+		int f2Y = cartaElegida.getFichas()[1].getY();
+		for (Ficha[] fichas : tablero) {
+			for (Ficha ficha : fichas) {
+				if((ficha != null) &&
+						(Math.abs(f1X - ficha.getX()) >= tamTablero ||
+						 Math.abs(f1Y - ficha.getY()) >= tamTablero ||
+						 Math.abs(f2X - ficha.getX()) >= tamTablero ||
+						 Math.abs(f2Y - ficha.getY()) >= tamTablero ))
+					 return false;
+			}
+		}
 		return true;
 	}
 	private boolean tipoAdyacenteCompatible(Carta carta) {
@@ -202,9 +227,9 @@ public class Tablero {
 		for (Ficha[] fichas : tablero) {
 			for (Ficha ficha : fichas) {
 				if(ficha != null)
-					ret+=String.format("%8s|",ficha.getTipo());
+					ret+=String.format("%8s/%s|",ficha.getTipo(),ficha.getCantCoronas());
 				else
-					ret+=String.format("%8s|"," ");
+					ret+=String.format("%10s|"," ");
 			}
 			ret+="\n";
 		}

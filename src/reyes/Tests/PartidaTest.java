@@ -49,7 +49,15 @@ public class PartidaTest {
 	public void iniciarPartida() {
 		Partida p = new Partida();
 		
-		p.iniciarPartida();
+		assertEquals(true, p.iniciarPartida());
+		p = new Partida(2,5,15);
+		assertEquals(false, p.iniciarPartida());
+		p = new Partida(2,5,20);
+		assertEquals(true, p.iniciarPartida());
+		p = new Partida(2,8,20);
+		assertEquals(true, p.iniciarPartida());
+		p = new Partida(3,5,30);
+		assertEquals(true, p.iniciarPartida());
 	}
 
 }
