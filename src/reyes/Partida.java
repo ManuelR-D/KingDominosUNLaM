@@ -89,6 +89,7 @@ public class Partida {
 		for (Jugador jugador : jugadores) {
 			System.out.println("-------Tablero de Jugador " + ++i + "-------");
 			System.out.println(jugador.tablero);
+			jugador.tablero.puntajeTotal();
 		}
 	}
 

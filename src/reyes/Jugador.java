@@ -39,12 +39,11 @@ public class Jugador {
 		}
 		if(y >= 10) {
 			//si fallamos todas las rotaciones y todas las posiciones, tenemos un error
-			System.err.println("ERRORERRORERRORERRORERRORERRORERROR");
-			System.out.println(tablero);
-			System.out.println("Para la carta");
+			System.err.println("No hay posiciones validas para esta carta");
 			System.out.println(cartaElegida);
-			System.out.println("Para la coordenada: "+x+","+y);
-			System.err.println("ERRORERRORERRORERRORERRORERRORERROR");
+			System.err.println("En este tablero");
+			System.out.println(tablero);
+			System.err.println("El jugador pierde el turno!");
 		}else
 			System.out.println(cartaElegida);
 	}

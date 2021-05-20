@@ -113,10 +113,36 @@ public class Tablero {
 
 		tablero[f1X][f1Y] = fichas[0];
 		tablero[f2X][f2Y] = fichas[1];
-
+		if(!this.esTableroValido()) {
+			carta.moverCarta(-filaAbs, -columnaAbs);
+			tablero[f1X][f1Y] = null;
+			tablero[f2X][f2Y] = null;
+			return false;
+		}
 		return true;
 	}
-
+	/*
+	 *
+	 *Verifica que la distancia entre todas las fichas nunca sea mayor a 5
+	 *Se puede usar cualquier numero arbitrario también, facilita la creación
+	 *de otros modos de juego
+	 * */
+	private boolean esTableroValido() {
+		for (Ficha[] fichas : tablero) {
+			for (Ficha ficha : fichas) {
+				for (Ficha[] fichas2 : tablero) {
+					for (Ficha ficha2 : fichas2) {
+						if((ficha != null && ficha2 != null) &&
+						   (Math.abs(ficha2.getX() - ficha.getX()) >= 5 ||
+						   Math.abs(ficha2.getY() - ficha.getY()) >= 5))
+							return false;
+					}
+				}
+			}
+		}
+		
+		return true;
+	}
 	private boolean tipoAdyacenteCompatible(Carta carta) {
 		Ficha[] fichas = carta.getFichas();
 		int f1X = fichas[0].getX();
@@ -165,12 +191,8 @@ public class Tablero {
 		if(fComparacion == null)
 			return false;
 		String fTipo = fComparacion.getTipo();
-		if (fTipo.compareTo("Castillo") == 0 || fTipo.compareTo(f1T) == 0) {
-			return true;
-		} else
-			return false;
+		return (fTipo.compareTo("Castillo") == 0 || fTipo.compareTo(f1T) == 0);
 	}
-	
 	public int getTamanio() {
 		return tamTablero;
 	}
