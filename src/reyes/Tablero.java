@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tablero {
+	private static final int LIMITE_CONSTRUCCION = 5;
 	private Ficha[][] tablero;
 	private int tamTablero;
+	private int xMin,xMax,yMin,yMax;
 	public Tablero(int tamTablero) {
 		this.tamTablero = tamTablero;
 		this.tablero = new Ficha[tamTablero * 2 - 1][tamTablero * 2 - 1];
-		this.tablero[4][4] = new Ficha("Castillo",0,4,4);
+		this.tablero[tamTablero-1][tamTablero-1] = new Ficha("Castillo",0,tamTablero-1,tamTablero-1);
+		xMin=xMax=yMin=yMax=tamTablero-1;
 	}
 
 	public Ficha[][] getTablero() {
@@ -109,14 +112,57 @@ public class Tablero {
 			return false;
 		}
 		
-		//TODO COMPROBAR LIMITE DE 5X5
+		//comprobamos que no salga del limite
+		if (!comprobarLimite(f1X, f1Y, f2X, f2Y,LIMITE_CONSTRUCCION)) {
+			carta.moverCarta(-filaAbs, -columnaAbs);
+			return false;
+		}
 
 		tablero[f1X][f1Y] = fichas[0];
 		tablero[f2X][f2Y] = fichas[1];
-
 		return true;
 	}
+	private boolean comprobarLimite(int f1X, int f1Y, int f2X, int f2Y, int limite) {
+		int xMinAux = xMin;
+		int xMaxAux = xMax;
+		int yMinAux = yMin;
+		int yMaxAux = yMax;
 
+		if (f1X < xMinAux)
+			xMinAux = f1X;
+
+		if (f1X > xMaxAux)
+			xMaxAux = f1X;
+
+		if (f1Y < yMinAux)
+			yMinAux = f1Y;
+
+		if (f1Y > yMaxAux)
+			yMaxAux = f1Y;
+
+		if (f2X < xMinAux)
+			xMinAux = f2X;
+
+		if (f2X > xMaxAux)
+			xMaxAux = f2X;
+
+		if (f2Y < yMinAux)
+			yMinAux = f2Y;
+
+		if (f2Y > yMaxAux)
+			yMaxAux = f2Y;
+
+		if (xMaxAux - xMinAux >= limite || yMaxAux - yMinAux >= limite) {
+			return false;
+		} else {
+			xMin = xMinAux;
+			xMax = xMaxAux;
+			yMin = yMinAux;
+			yMax = yMaxAux;
+			return true;
+		}
+	}
+	
 	private boolean tipoAdyacenteCompatible(Carta carta) {
 		Ficha[] fichas = carta.getFichas();
 		int f1X = fichas[0].getX();
@@ -165,12 +211,8 @@ public class Tablero {
 		if(fComparacion == null)
 			return false;
 		String fTipo = fComparacion.getTipo();
-		if (fTipo.compareTo("Castillo") == 0 || fTipo.compareTo(f1T) == 0) {
-			return true;
-		} else
-			return false;
+		return (fTipo.compareTo("Castillo") == 0 || fTipo.compareTo(f1T) == 0);
 	}
-	
 	public int getTamanio() {
 		return tamTablero;
 	}
@@ -180,12 +222,45 @@ public class Tablero {
 		for (Ficha[] fichas : tablero) {
 			for (Ficha ficha : fichas) {
 				if(ficha != null)
-					ret+=String.format("%8s|",ficha.getTipo());
+					ret+=String.format("%8s/%s|",ficha.getTipo(),ficha.getCantCoronas());
 				else
-					ret+=String.format("%8s|"," ");
+					ret+=String.format("%10s|"," ");
 			}
 			ret+="\n";
 		}
 		return ret;
 	}
+
+	public boolean esPosibleInsertar(Carta cartaElegida) {
+		int x = -4;
+		int y = -4;
+		int rotaciones = 0;
+		while(ponerCarta(cartaElegida, x, y) == false && y < 10) {
+			//probamos todas las rotaciones posibles
+			cartaElegida.rotarCarta();
+			rotaciones++;
+			if(rotaciones == 3) {
+				rotaciones = 0;
+				//si fallamos en todas las rotaciones, cambiamos de posicion
+				if(x<getTamanio() - 1)
+					x++;
+				else {
+					x = -4;
+					y++;
+				}
+				cartaElegida.rotarCarta();
+			}
+		}
+		quitarCarta(cartaElegida);
+		return y < 10;
+	}
+
+	private void quitarCarta(Carta cartaElegida) {
+		tablero[cartaElegida.getFichas()[0].getX()][cartaElegida.getFichas()[0].getY()] = null;
+		tablero[cartaElegida.getFichas()[1].getX()][cartaElegida.getFichas()[1].getY()] = null;
+		cartaElegida.setDefault();
+		
+	}
+	
+	
 }

@@ -12,6 +12,16 @@ public class Carta implements Comparable<Carta> {
 		fichas[1] = new Ficha(tipoDer, cantCoronasD, x, y + 1);
 	}
 
+	public void setDefault() {
+		this.x = 0;
+		this.y = 0;
+		this.rotacion = 1;
+		this.fichas[0].x = x;
+		this.fichas[0].y = y;
+		this.fichas[1].x = x;
+		this.fichas[1].y = y+1;
+	}
+
 	public Ficha[] getFichas() {
 		return fichas;
 	}
