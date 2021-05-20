@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tablero {
+	private static final int LIMITE_CONSTRUCCION = 5;
 	private Ficha[][] tablero;
 	private int tamTablero;
+	private int xMin,xMax,yMin,yMax;
 	public Tablero(int tamTablero) {
 		this.tamTablero = tamTablero;
 		this.tablero = new Ficha[tamTablero * 2 - 1][tamTablero * 2 - 1];
 		this.tablero[tamTablero-1][tamTablero-1] = new Ficha("Castillo",0,tamTablero-1,tamTablero-1);
+		xMin=xMax=yMin=yMax=tamTablero-1;
 	}
 
 	public Ficha[][] getTablero() {
@@ -110,15 +113,21 @@ public class Tablero {
 		}
 		
 		//TODO COMPROBAR LIMITE DE 5X5
-
-		tablero[f1X][f1Y] = fichas[0];
-		tablero[f2X][f2Y] = fichas[1];
-		if(!this.esTableroValido(carta)) {
+		if (!comprobarLimite(f1X, f1Y, f2X, f2Y,LIMITE_CONSTRUCCION)) {
 			carta.moverCarta(-filaAbs, -columnaAbs);
 			tablero[f1X][f1Y] = null;
 			tablero[f2X][f2Y] = null;
 			return false;
 		}
+
+		tablero[f1X][f1Y] = fichas[0];
+		tablero[f2X][f2Y] = fichas[1];
+//		if(!this.esTableroValido(carta)) {
+//			carta.moverCarta(-filaAbs, -columnaAbs);
+//			tablero[f1X][f1Y] = null;
+//			tablero[f2X][f2Y] = null;
+//			return false;
+//		}
 		return true;
 	}
 	/*
@@ -144,6 +153,47 @@ public class Tablero {
 			}
 		}
 		return true;
+	}
+	
+	private boolean comprobarLimite(int f1X, int f1Y, int f2X, int f2Y, int limite) {
+		int xMinAux = xMin;
+		int xMaxAux = xMax;
+		int yMinAux = yMin;
+		int yMaxAux = yMax;
+
+		if (f1X < xMinAux)
+			xMinAux = f1X;
+
+		if (f1X > xMaxAux)
+			xMaxAux = f1X;
+
+		if (f1Y < yMinAux)
+			yMinAux = f1Y;
+
+		if (f1Y > yMaxAux)
+			yMaxAux = f1Y;
+
+		if (f2X < xMinAux)
+			xMinAux = f2X;
+
+		if (f2X > xMaxAux)
+			xMaxAux = f2X;
+
+		if (f2Y < yMinAux)
+			yMinAux = f2Y;
+
+		if (f2Y > yMaxAux)
+			yMaxAux = f2Y;
+
+		if (xMaxAux - xMinAux >= limite || yMaxAux - yMinAux >= limite) {
+			return false;
+		} else {
+			xMin = xMinAux;
+			xMax = xMaxAux;
+			yMin = yMinAux;
+			yMax = yMaxAux;
+			return true;
+		}
 	}
 	/*
 	 * 
