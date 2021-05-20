@@ -18,33 +18,28 @@ public class Jugador {
 
 	public void insertaEnTablero(Carta cartaElegida) {
 		// TODO Auto-generated method stub
-		int x = -4;
-		int y = -4;
+		if(!tablero.esPosibleInsertar(cartaElegida)) {
+			System.out.println("No es posible insertar la carta");
+			System.out.println(cartaElegida);
+			System.out.println("En el tablero");
+			System.out.println(tablero);
+			System.out.println("El jugador pierde el turno!!");
+			return;
+		}
+		int x = (int) Math.floor(Math.random() * (4 - (-4) + 1) - 4);
+		int y = (int) Math.floor(Math.random() * (4 - (-4) + 1) - 4);
 		int rotaciones = 0;
-		while(tablero.ponerCarta(cartaElegida, x, y) == false && y < 10) {
+		while(tablero.ponerCarta(cartaElegida, x, y) == false) {
 			//probamos todas las rotaciones posibles
 			cartaElegida.rotarCarta();
 			rotaciones++;
 			if(rotaciones == 3) {
 				rotaciones = 0;
 				//si fallamos en todas las rotaciones, cambiamos de posicion
-				if(x<tablero.getTamanio() - 1)
-					x++;
-				else {
-					x = -4;
-					y++;
-				}
+				x = (int) Math.floor(Math.random() * (4 - (-4) + 1) - 4);
+				y = (int) Math.floor(Math.random() * (4 - (-4) + 1) - 4);
 				cartaElegida.rotarCarta();
 			}
 		}
-		if(y >= 10) {
-			//si fallamos todas las rotaciones y todas las posiciones, tenemos un error
-			System.err.println("No hay posiciones validas para esta carta");
-			System.out.println(cartaElegida);
-			System.err.println("En este tablero");
-			System.out.println(tablero);
-			System.err.println("El jugador pierde el turno!");
-		}else
-			System.out.println(cartaElegida);
 	}
 }

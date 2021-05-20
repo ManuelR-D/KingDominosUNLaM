@@ -210,4 +210,37 @@ public class Tablero {
 		}
 		return ret;
 	}
+
+	public boolean esPosibleInsertar(Carta cartaElegida) {
+		int x = -4;
+		int y = -4;
+		int rotaciones = 0;
+		while(ponerCarta(cartaElegida, x, y) == false && y < 10) {
+			//probamos todas las rotaciones posibles
+			cartaElegida.rotarCarta();
+			rotaciones++;
+			if(rotaciones == 3) {
+				rotaciones = 0;
+				//si fallamos en todas las rotaciones, cambiamos de posicion
+				if(x<getTamanio() - 1)
+					x++;
+				else {
+					x = -4;
+					y++;
+				}
+				cartaElegida.rotarCarta();
+			}
+		}
+		quitarCarta(cartaElegida);
+		return y < 10;
+	}
+
+	private void quitarCarta(Carta cartaElegida) {
+		tablero[cartaElegida.getFichas()[0].getX()][cartaElegida.getFichas()[0].getY()] = null;
+		tablero[cartaElegida.getFichas()[1].getX()][cartaElegida.getFichas()[1].getY()] = null;
+		cartaElegida.setDefault();
+		
+	}
+	
+	
 }
