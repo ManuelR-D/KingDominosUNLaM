@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.TreeMap;
 
 public class Partida {
@@ -149,8 +148,8 @@ public class Partida {
 				ganador = jugadores[i].getNombre();
 			}
 		}
-		
-		System.out.println("Ha ganado "+ganador);
+
+		System.out.println("Ha ganado " + ganador);
 
 		return true;
 	}
@@ -162,8 +161,7 @@ public class Partida {
 		for (int i = 0; i < turnos.size(); i++) {
 			int turno = turnos.get(i);
 			if (i == cartasAElegir.size() - 1) { // el ultimo jugador en elegir, no tiene decision
-				for (numeroElegido = 0; cartasAElegir.get(numeroElegido) == null; numeroElegido++)
-					;
+				for (numeroElegido = 0; cartasAElegir.get(numeroElegido) == null; numeroElegido++);
 				jugadores[turno].insertaEnTablero(cartasAElegir.get(numeroElegido));
 			} else {
 				do {
@@ -181,12 +179,6 @@ public class Partida {
 		for (Map.Entry<Integer, Integer> entrada : nuevoOrdenDeTurnos.entrySet()) {
 			// modifico turnos de acuerdo al numero elegido
 			turnos.add(entrada.getValue());
-		}
-	}
-
-	public void mostrarCartas(Set<Carta> cartas) {
-		for (Carta carta : cartas) {
-			System.out.println(carta);
 		}
 	}
 

@@ -89,17 +89,10 @@ public class Carta implements Comparable<Carta> {
 	}
 
 	public void moverCarta(int filaAbs, int columnaAbs) {
-//		int f1x = this.fichas[0].x, f1y = this.fichas[0].x, f2x = this.fichas[1].x, f2y = this.fichas[1].y;
-//		if (f1x + filaAbs >= tam || f1x + filaAbs < 0 || f1y + columnaAbs >= tam || f1y + columnaAbs < 0
-//				|| f1x + filaAbs >= tam || f1x + filaAbs < 0 || f1y + columnaAbs >= tam || f1y + columnaAbs < 0) {
-//			return false;
-//		}
 		this.fichas[0].x += filaAbs;
 		this.fichas[0].y += columnaAbs;
 		this.fichas[1].x += filaAbs;
 		this.fichas[1].y += columnaAbs;
-//		return true;
-
 	}
 
 }

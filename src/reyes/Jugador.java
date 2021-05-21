@@ -22,7 +22,6 @@ public class Jugador {
 	}*/
 
 	public void insertaEnTablero(Carta cartaElegida) {
-		// TODO Auto-generated method stub
 		if(!tablero.esPosibleInsertar(cartaElegida)) {
 			/*System.out.println("No es posible insertar la carta");
 			System.out.println(cartaElegida);
