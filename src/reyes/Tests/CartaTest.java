@@ -1,7 +1,6 @@
 package reyes.Tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
@@ -124,7 +123,6 @@ public class CartaTest {
 	public void moverCarta1() {
 		Carta c1 = new Carta(0, "Pradera", 0, "Oasis", 2);
 
-//		c1.moverCarta(0, 0, 9);
 		c1.moverCarta(0, 0);
 		Ficha[] fichas = c1.getFichas();
 		assertEquals(0, fichas[0].getX());
@@ -138,7 +136,6 @@ public class CartaTest {
 	public void moverCarta2() {
 		Carta c1 = new Carta(0, "Pradera", 0, "Oasis", 2);
 
-//		c1.moverCarta(5, 5, 9);
 		c1.moverCarta(5, 5);
 		Ficha[] fichas = c1.getFichas();
 		assertEquals(5, fichas[0].getX());
@@ -147,21 +144,13 @@ public class CartaTest {
 		assertEquals(6, fichas[1].getY());
 	}
 
-//	@Test
-//	public void moverCarta3() {
-//		Carta c1 = new Carta(0, "Pradera", 0, "Oasis", 2);
-//
-//		assertFalse(c1.moverCarta(10, 10, 9));
-//	}
 
 	@Test
 	public void moverCarta4() {
 		Carta c1 = new Carta(0, "Pradera", 0, "Oasis", 2);
 
-//		c1.moverCarta(5, 5, 9);
 		c1.moverCarta(5, 5);
 
-//		c1.moverCarta(-2, -3, 9);
 		c1.moverCarta(-2, -3);
 		Ficha[] fichas = c1.getFichas();
 		assertEquals(3, fichas[0].getX());

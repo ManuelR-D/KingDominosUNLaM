@@ -25,7 +25,7 @@ public class Partida {
 		this.cantidadCartas = DEFAULT_CANT_CARTAS;
 		this.cantidadJugadores = DEFAULT_CANT_JUGADORES;
 	}
-	
+
 	public Partida(int cantidadJugadores, int tamanioTablero, int cantidadCartas) {
 		this.cantidadCartas = cantidadCartas;
 		this.tamanioTablero = tamanioTablero;
@@ -61,7 +61,7 @@ public class Partida {
 			int idCarta = 1;
 			scanner = new Scanner(file);
 			while (idCarta <= cantidadCartas) {
-				
+
 				if (scanner.hasNextLine()) {
 					String tipoIzq = scanner.nextLine();
 					int cantCoronasI = Integer.parseInt(scanner.nextLine());
@@ -70,12 +70,13 @@ public class Partida {
 					cartas.add(new Carta(idCarta, tipoIzq, cantCoronasI, tipoDer, cantCoronasD));
 					idCarta++;
 				} else {
-					scanner.close(); //volvemos al inicio del archivo y seguimos cargando
+					scanner.close(); // volvemos al inicio del archivo y seguimos cargando
 					scanner = new Scanner(file);
 				}
 			}
-			//si la cantidad de cartas no fuera multiplo de 48, podria suceder que scanner siguiera abierto
-			scanner.close(); 
+			// si la cantidad de cartas no fuera multiplo de 48, podria suceder que scanner
+			// siguiera abierto
+			scanner.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("No se encontro el archivo de cartas");
 			return null;
@@ -85,15 +86,16 @@ public class Partida {
 	}
 
 	public boolean iniciarPartida() {
-		if(cantidadJugadores > 4 || cantidadJugadores < 2) {
+		if (cantidadJugadores > 4 || cantidadJugadores < 2) {
 			System.out.println("La cantidad de jugadores es invalida!!");
 			return false;
 		}
-		//El código puede funcionar sin problemas con cualquier cantidad de cartas 
-		//mientras el total sea múltiplo de 4, pues siempre se roba de a 4 cartas.
-		//Sin embargo, el enunciado tiene la limitación de 48 para todos los modos.
-		//Se puede quitar esta validación en el futuro si quisieramos agregar otros modos.
-		if(cantidadCartas != 48) {
+		// El código puede funcionar sin problemas con cualquier cantidad de cartas
+		// mientras el total sea múltiplo de 4, pues siempre se roba de a 4 cartas.
+		// Sin embargo, el enunciado tiene la limitación de 48 para todos los modos.
+		// Se puede quitar esta validación en el futuro si quisieramos agregar otros
+		// modos.
+		if (cantidadCartas != 48) {
 			System.out.println("La cantidad de cartas tiene que ser 48! (limitación por parte del enunciado)");
 			return false;
 		}
@@ -105,11 +107,11 @@ public class Partida {
 		for (int i = 0; i < jugadores.length; i++) {
 			jugadores[i] = new Jugador("Jugador " + (i + 1), tamanioTablero);
 		}
-		jugadores[0] = new Bot("BotTest!",tamanioTablero);
-		//armamos y mezclamos el mazo
+		jugadores[0] = new Bot("BotTest!", tamanioTablero);
+		// armamos y mezclamos el mazo
 		mazo = new ArrayList<Carta>(armarMazo());
 		mazo = mezclarMazo(mazo);
-		
+
 		int rondas = 0;
 		while (mazo.size() > 1) {
 			System.out.println("--------Ronda: " + ++rondas + "--------");
@@ -118,15 +120,38 @@ public class Partida {
 			cartasAElegirSig.sort(Carta::compareTo);
 			elegirCartas(cartasAElegirSig, turnos);
 		}
+
 		System.out.println("-------Partida finalizada!!!-------");
+		List<Integer> puntajesFinales = new ArrayList<Integer>();
+
 		for (Jugador jugador : jugadores) {
 			System.out.println("-------Tablero de Jugador " + jugador.nombre + "-------");
 			System.out.println(jugador.tablero);
-			List<String> puntajesTotales=jugador.tablero.puntajeTotal();
-			for(String puntaje:puntajesTotales) {
+			List<String> puntajesTotales = jugador.tablero.puntajeTotal();
+			for (int i = 0; i < puntajesTotales.size(); i++) {
+				String puntaje = puntajesTotales.get(i);
 				System.out.println(puntaje);
+				if (i == puntajesTotales.size() - 1) {
+					int puntajeFinal = Integer.valueOf(puntaje.split(":")[1]);
+					puntajesFinales.add(puntajeFinal);
+				}
+			}
+
+		}
+
+		int maxPuntaje = 0;
+		String ganador = null;
+
+		for (int i = 0; i < puntajesFinales.size(); i++) {
+			Integer puntaje = puntajesFinales.get(i);
+			if (puntaje > maxPuntaje) {
+				maxPuntaje = puntaje;
+				ganador = jugadores[i].getNombre();
 			}
 		}
+		
+		System.out.println("Ha ganado "+ganador);
+
 		return true;
 	}
 
@@ -136,14 +161,14 @@ public class Partida {
 		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
 		for (int i = 0; i < turnos.size(); i++) {
 			int turno = turnos.get(i);
-			if(i == cartasAElegir.size()-1) { //el ultimo jugador en elegir, no tiene decision
-				for(numeroElegido = 0; cartasAElegir.get(numeroElegido) == null; numeroElegido++);
+			if (i == cartasAElegir.size() - 1) { // el ultimo jugador en elegir, no tiene decision
+				for (numeroElegido = 0; cartasAElegir.get(numeroElegido) == null; numeroElegido++)
+					;
 				jugadores[turno].insertaEnTablero(cartasAElegir.get(numeroElegido));
-			}else {
-				do
-				{
+			} else {
+				do {
 					numeroElegido = jugadores[turno].eligeCarta(cartasAElegir);
-				}while(numerosElegidos.contains(numeroElegido));
+				} while (numerosElegidos.contains(numeroElegido));
 				jugadores[turno].insertaEnTablero(cartasAElegir.get(numeroElegido));
 				cartasAElegir.set(numeroElegido, null);
 			}
