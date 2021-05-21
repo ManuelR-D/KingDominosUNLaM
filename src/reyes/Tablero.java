@@ -19,7 +19,8 @@ public class Tablero {
 		return tablero;
 	}
 
-	public int puntajeTotal() {
+	public List<String> puntajeTotal() {
+		List<String> puntajeTotalYParciales=new ArrayList<String>();
 		int acum = 0;
 		int contRegiones = 0;
 		for (int i = 0; i < tablero.length; i++) {
@@ -29,12 +30,14 @@ public class Tablero {
 				if (puntajeParcial > 0) {
 					contRegiones++;
 					String tipo = tablero[i][j].getTipo();
+					puntajeTotalYParciales.add(contRegiones+"-"+tipo+"="+puntajeParcial+" puntos.\n");
 					//System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcial + " puntos.");
 				}
 			}
 		}
 		//System.out.println("PUNTAJE TOTAL:" + acum);
-		return acum;
+		puntajeTotalYParciales.add("PUNTAJE TOTAL:"+acum);
+		return puntajeTotalYParciales;
 	}
 
 	private int contarPuntajeParcial(int x, int y) {
@@ -84,8 +87,8 @@ public class Tablero {
 		Ficha[] fichas = carta.getFichas();
 		int filaAbs  	= tablero.length/2 - y;  //este eje esta invertido
 		int columnaAbs  = tablero.length/2 + x;
+//		carta.moverCarta(filaAbs,columnaAbs,tablero.length);
 		carta.moverCarta(filaAbs,columnaAbs);
-		//mostrarTablero();
 		
 		
 		int f1X = fichas[0].getX();
@@ -97,23 +100,27 @@ public class Tablero {
 		   f1Y >= tablero.length || f1Y < 0 ||
 		   f2X >= tablero.length || f2X < 0 ||
 		   f2Y >= tablero.length || f2Y < 0) {
+//			carta.moverCarta(-filaAbs,-columnaAbs,tablero.length);
 			carta.moverCarta(-filaAbs,-columnaAbs);
 			return false;
 		}
 		// Si ya hay alguna "ficha" colocada en la posicion de la carta entonces
 		// devuelvo false
 		if (tablero[f1X][f1Y] != null || tablero[f2X][f2Y] != null) {
+//			carta.moverCarta(-filaAbs,-columnaAbs,tablero.length);
 			carta.moverCarta(-filaAbs,-columnaAbs);
 			return false;
 		}
 		// Si no hay tipos adyacentes compatibles, no se puede poner la carta
 		if (!tipoAdyacenteCompatible(carta)) {
+//			carta.moverCarta(-filaAbs,-columnaAbs,tablero.length);
 			carta.moverCarta(-filaAbs,-columnaAbs);
 			return false;
 		}
 		
 		//comprobamos que no salga del limite
 		if (!comprobarLimite(f1X, f1Y, f2X, f2Y,LIMITE_CONSTRUCCION)) {
+//			carta.moverCarta(-filaAbs, -columnaAbs,tablero.length);
 			carta.moverCarta(-filaAbs, -columnaAbs);
 			return false;
 		}

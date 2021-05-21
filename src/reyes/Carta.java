@@ -19,7 +19,7 @@ public class Carta implements Comparable<Carta> {
 		this.fichas[0].x = x;
 		this.fichas[0].y = y;
 		this.fichas[1].x = x;
-		this.fichas[1].y = y+1;
+		this.fichas[1].y = y + 1;
 	}
 
 	public Ficha[] getFichas() {
@@ -51,15 +51,16 @@ public class Carta implements Comparable<Carta> {
 		}
 		rotacion++;
 	}
+
 	@Override
 	public String toString() {
 		String ret = "";
-		String[][] mat = { {"","",""},{"","",""},{"","",""} }; 
+		String[][] mat = { { "", "", "" }, { "", "", "" }, { "", "", "" } };
 		Ficha ficha1 = fichas[0];
 		Ficha ficha2 = fichas[1];
 		mat[1][1] = ficha1.toString();
-		//mat[ficha2.getX() + 1][ficha2.getY() + 1] = ficha2.toString();
-		switch(rotacion) {
+		// mat[ficha2.getX() + 1][ficha2.getY() + 1] = ficha2.toString();
+		switch (rotacion) {
 		case 1:
 			mat[1][2] = ficha2.toString();
 			break;
@@ -75,9 +76,9 @@ public class Carta implements Comparable<Carta> {
 		}
 		for (String[] strings : mat) {
 			for (String strings2 : strings) {
-				ret+=String.format("%9s" + "|",strings2);
+				ret += String.format("%9s" + "|", strings2);
 			}
-			ret+="\n";
+			ret += "\n";
 		}
 		return ret;
 	}
@@ -88,11 +89,17 @@ public class Carta implements Comparable<Carta> {
 	}
 
 	public void moverCarta(int filaAbs, int columnaAbs) {
+//		int f1x = this.fichas[0].x, f1y = this.fichas[0].x, f2x = this.fichas[1].x, f2y = this.fichas[1].y;
+//		if (f1x + filaAbs >= tam || f1x + filaAbs < 0 || f1y + columnaAbs >= tam || f1y + columnaAbs < 0
+//				|| f1x + filaAbs >= tam || f1x + filaAbs < 0 || f1y + columnaAbs >= tam || f1y + columnaAbs < 0) {
+//			return false;
+//		}
 		this.fichas[0].x += filaAbs;
 		this.fichas[0].y += columnaAbs;
 		this.fichas[1].x += filaAbs;
 		this.fichas[1].y += columnaAbs;
-		
+//		return true;
+
 	}
 
 }

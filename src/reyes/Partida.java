@@ -122,7 +122,10 @@ public class Partida {
 		for (Jugador jugador : jugadores) {
 			System.out.println("-------Tablero de Jugador " + jugador.nombre + "-------");
 			System.out.println(jugador.tablero);
-			System.out.println("PUNTAJE TOTAL: " + jugador.tablero.puntajeTotal());
+			List<String> puntajesTotales=jugador.tablero.puntajeTotal();
+			for(String puntaje:puntajesTotales) {
+				System.out.println(puntaje);
+			}
 		}
 		return true;
 	}

@@ -21,7 +21,9 @@ public class Bot extends Jugador {
 			if(carta != null) { 
 				//si no la eligieron ya...
 				insertaEnTablero(carta);
-				int puntajeActual = tablero.puntajeTotal();
+				List<String> puntajeTotalYParciales=tablero.puntajeTotal();
+				String[] puntajeTotalActual = puntajeTotalYParciales.get(puntajeTotalYParciales.size()-1).split(":");
+				int puntajeActual = Integer.valueOf(puntajeTotalActual[1]);
 				if(puntajeMax < puntajeActual) {
 					puntajeMax = puntajeActual;
 					numeroElegido = i;

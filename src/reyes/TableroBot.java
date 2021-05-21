@@ -1,5 +1,7 @@
 package reyes;
 
+import java.util.List;
+
 public class TableroBot extends Tablero{
 
 	public TableroBot(int tamTablero) {
@@ -8,9 +10,9 @@ public class TableroBot extends Tablero{
 	}
 
 	@Override
-	public int puntajeTotal() {
+	public List<String> puntajeTotal() {
 		// TODO Auto-generated method stub
-		int ret = super.puntajeTotal();
+		List<String> ret = super.puntajeTotal();
 		for (Ficha[] fichas : this.tablero) {
 			for (Ficha ficha : fichas) {
 				if(ficha != null) {
