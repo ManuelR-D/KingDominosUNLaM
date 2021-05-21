@@ -7,6 +7,7 @@ public class Tablero {
 	private static final int LIMITE_CONSTRUCCION = 5;
 	protected Ficha[][] tablero;
 	private int tamTablero;
+	private int cantTerrenoColocado=0;
 	private int xMin, xMax, yMin, yMax;
 
 	public Tablero(int tamTablero) {
@@ -120,6 +121,7 @@ public class Tablero {
 
 		tablero[f1X][f1Y] = fichas[0];
 		tablero[f2X][f2Y] = fichas[1];
+		cantTerrenoColocado++;
 		return true;
 	}
 
@@ -265,4 +267,7 @@ public class Tablero {
 
 	}
 
+	public int getCantTerrenoColocado() {
+		return cantTerrenoColocado;
+	}
 }

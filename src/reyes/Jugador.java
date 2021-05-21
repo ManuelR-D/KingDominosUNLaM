@@ -53,4 +53,8 @@ public class Jugador {
 		//TODO: Prompt al jugador preguntando qué carta quiere elegir de las disponibles
 		return FuncionesGenerales.numeroAleatorioEntre(0, cartasAElegir.size()-1);
 	}
+	
+	public int getCantTerrenoColocado() {
+		return tablero.getCantTerrenoColocado();
+	}
 }

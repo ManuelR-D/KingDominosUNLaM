@@ -133,20 +133,66 @@ public class Partida {
 
 		}
 
-		int maxPuntaje = 0;
-		String ganador = null;
+		determinarGanadores(puntajesFinales);
 
+		return true;
+	}
+
+	private void determinarGanadores(List<Integer> puntajesFinales) {
+		int maxPuntaje = 0;
+		List<Integer> ganadoresPorPunto = new ArrayList<Integer>();
+
+		System.out.println("PUNTAJES FINALES:");
 		for (int i = 0; i < puntajesFinales.size(); i++) {
 			Integer puntaje = puntajesFinales.get(i);
+			System.out.println(jugadores[i].getNombre() + ":" + puntaje);
 			if (puntaje > maxPuntaje) {
 				maxPuntaje = puntaje;
-				ganador = jugadores[i].getNombre();
+				ganadoresPorPunto.clear();
+				ganadoresPorPunto.add(i);
+			} else {
+				if (puntaje == maxPuntaje) {
+					ganadoresPorPunto.add(i);
+				}
 			}
 		}
 
-		System.out.println("Ha ganado " + ganador);
+		if (ganadoresPorPunto.size() == 1) {
+			System.out.println("Ha ganado " + jugadores[ganadoresPorPunto.get(0)].getNombre());
+			return;
+		}
 
-		return true;
+		// Si hay mas de un ganador por puntos, se define por cantidad de terreno
+		int maxTerreno = 0;
+		List<Integer> ganadoresPorTerreno = new ArrayList<Integer>();
+		System.out.println("EMPATE POR PUNTOS");
+		for (int i = 0; i < ganadoresPorPunto.size(); i++) {
+			int cantTerreno = jugadores[ganadoresPorPunto.get(i)].getCantTerrenoColocado();
+			System.out.println(jugadores[i].getNombre() + ":" + cantTerreno);
+			if (cantTerreno > maxTerreno) {
+				maxTerreno = cantTerreno;
+				ganadoresPorTerreno.clear();
+				ganadoresPorTerreno.add(i);
+			} else {
+				if (cantTerreno == maxTerreno) {
+					ganadoresPorTerreno.add(i);
+				}
+			}
+		}
+
+		if (ganadoresPorTerreno.size() == 1) {
+			System.out.println("Ha ganado " + jugadores[ganadoresPorTerreno.get(0)].getNombre());
+			return;
+		}
+
+		// Si hay mas de un ganador por terreno se comparte la victoria
+
+		System.out.println("No se pudo desempatar, comparten la victoria :)");
+		System.out.println("Ganadores:");
+		for (int i = 0; i < ganadoresPorTerreno.size(); i++) {
+			System.out.println(jugadores[ganadoresPorTerreno.get(i)].getNombre());
+		}
+
 	}
 
 	private void elegirCartas(List<Carta> cartasAElegir, List<Integer> turnos) {
