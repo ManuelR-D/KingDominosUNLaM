@@ -15,7 +15,6 @@ public class Bot extends Jugador {
 	public int eligeCarta(List<Carta> cartasAElegir) {
 		int puntajeMax = -1;
 		int numeroElegido = -1;
-		// TODO Auto-generated method stub
 		for (int i = 0; i < cartasAElegir.size(); i++) {
 			Carta carta = cartasAElegir.get(i);
 			if(carta != null) { 
@@ -37,7 +36,6 @@ public class Bot extends Jugador {
 
 	@Override
 	public void insertaEnTablero(Carta cartaElegida) {
-		// TODO Auto-generated method stub
 		if(!tablero.esPosibleInsertar(cartaElegida)) {
 			/*System.out.println("No es posible insertar la carta");
 			System.out.println(cartaElegida);

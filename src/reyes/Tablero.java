@@ -7,12 +7,13 @@ public class Tablero {
 	private static final int LIMITE_CONSTRUCCION = 5;
 	protected Ficha[][] tablero;
 	private int tamTablero;
-	private int xMin,xMax,yMin,yMax;
+	private int xMin, xMax, yMin, yMax;
+
 	public Tablero(int tamTablero) {
 		this.tamTablero = tamTablero;
 		this.tablero = new Ficha[tamTablero * 2 - 1][tamTablero * 2 - 1];
-		this.tablero[tamTablero-1][tamTablero-1] = new Ficha("Castillo",0,tamTablero-1,tamTablero-1);
-		xMin=xMax=yMin=yMax=tamTablero-1;
+		this.tablero[tamTablero - 1][tamTablero - 1] = new Ficha("Castillo", 0, tamTablero - 1, tamTablero - 1);
+		xMin = xMax = yMin = yMax = tamTablero - 1;
 	}
 
 	public Ficha[][] getTablero() {
@@ -20,7 +21,7 @@ public class Tablero {
 	}
 
 	public List<String> puntajeTotal() {
-		List<String> puntajeTotalYParciales=new ArrayList<String>();
+		List<String> puntajeTotalYParciales = new ArrayList<String>();
 		int acum = 0;
 		int contRegiones = 0;
 		for (int i = 0; i < tablero.length; i++) {
@@ -30,13 +31,11 @@ public class Tablero {
 				if (puntajeParcial > 0) {
 					contRegiones++;
 					String tipo = tablero[i][j].getTipo();
-					puntajeTotalYParciales.add(contRegiones+"-"+tipo+"="+puntajeParcial+" puntos.\n");
-					//System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcial + " puntos.");
+					puntajeTotalYParciales.add(contRegiones + "-" + tipo + "=" + puntajeParcial + " puntos.\n");
 				}
 			}
 		}
-		//System.out.println("PUNTAJE TOTAL:" + acum);
-		puntajeTotalYParciales.add("PUNTAJE TOTAL:"+acum);
+		puntajeTotalYParciales.add("PUNTAJE TOTAL:" + acum);
 		return puntajeTotalYParciales;
 	}
 
@@ -80,47 +79,41 @@ public class Tablero {
 			return;
 
 	}
+
 	/*
 	 * Las coordenadas x,y ya vienen con centro relativo al castillo del jugador.
 	 */
 	public boolean ponerCarta(Carta carta, int x, int y) {
 		Ficha[] fichas = carta.getFichas();
-		int filaAbs  	= tablero.length/2 - y;  //este eje esta invertido
-		int columnaAbs  = tablero.length/2 + x;
-//		carta.moverCarta(filaAbs,columnaAbs,tablero.length);
-		carta.moverCarta(filaAbs,columnaAbs);
-		
-		
+		int filaAbs = tablero.length / 2 - y; // este eje esta invertido
+		int columnaAbs = tablero.length / 2 + x;
+
+		carta.moverCarta(filaAbs, columnaAbs);
+
 		int f1X = fichas[0].getX();
 		int f1Y = fichas[0].getY();
 		int f2X = fichas[1].getX();
 		int f2Y = fichas[1].getY();
-		//System.out.println(f1X + "," + f1Y + ";" + f2X + "," + f2Y);
-		if(f1X >= tablero.length || f1X < 0 ||
-		   f1Y >= tablero.length || f1Y < 0 ||
-		   f2X >= tablero.length || f2X < 0 ||
-		   f2Y >= tablero.length || f2Y < 0) {
-//			carta.moverCarta(-filaAbs,-columnaAbs,tablero.length);
-			carta.moverCarta(-filaAbs,-columnaAbs);
+		// System.out.println(f1X + "," + f1Y + ";" + f2X + "," + f2Y);
+		if (f1X >= tablero.length || f1X < 0 || f1Y >= tablero.length || f1Y < 0 || f2X >= tablero.length || f2X < 0
+				|| f2Y >= tablero.length || f2Y < 0) {
+			carta.moverCarta(-filaAbs, -columnaAbs);
 			return false;
 		}
 		// Si ya hay alguna "ficha" colocada en la posicion de la carta entonces
 		// devuelvo false
 		if (tablero[f1X][f1Y] != null || tablero[f2X][f2Y] != null) {
-//			carta.moverCarta(-filaAbs,-columnaAbs,tablero.length);
-			carta.moverCarta(-filaAbs,-columnaAbs);
+			carta.moverCarta(-filaAbs, -columnaAbs);
 			return false;
 		}
 		// Si no hay tipos adyacentes compatibles, no se puede poner la carta
 		if (!tipoAdyacenteCompatible(carta)) {
-//			carta.moverCarta(-filaAbs,-columnaAbs,tablero.length);
-			carta.moverCarta(-filaAbs,-columnaAbs);
+			carta.moverCarta(-filaAbs, -columnaAbs);
 			return false;
 		}
-		
-		//comprobamos que no salga del limite
-		if (!comprobarLimite(f1X, f1Y, f2X, f2Y,LIMITE_CONSTRUCCION)) {
-//			carta.moverCarta(-filaAbs, -columnaAbs,tablero.length);
+
+		// comprobamos que no salga del limite
+		if (!comprobarLimite(f1X, f1Y, f2X, f2Y, LIMITE_CONSTRUCCION)) {
 			carta.moverCarta(-filaAbs, -columnaAbs);
 			return false;
 		}
@@ -129,6 +122,7 @@ public class Tablero {
 		tablero[f2X][f2Y] = fichas[1];
 		return true;
 	}
+
 	private boolean comprobarLimite(int f1X, int f1Y, int f2X, int f2Y, int limite) {
 		int xMinAux = xMin;
 		int xMaxAux = xMax;
@@ -169,7 +163,7 @@ public class Tablero {
 			return true;
 		}
 	}
-	
+
 	private boolean tipoAdyacenteCompatible(Carta carta) {
 		Ficha[] fichas = carta.getFichas();
 		int f1X = fichas[0].getX();
@@ -179,27 +173,27 @@ public class Tablero {
 		int f2Y = fichas[1].getY();
 		String f2T = fichas[1].getTipo();
 
-		Ficha fComparacion = f1Y == tablero.length-1 ? null : tablero[f1X][f1Y + 1];
+		Ficha fComparacion = f1Y == tablero.length - 1 ? null : tablero[f1X][f1Y + 1];
 		if (compararFichas(f1T, fComparacion))
 			return true;
 
-		fComparacion = f1X == tablero.length-1 ? null : tablero[f1X + 1][f1Y];
+		fComparacion = f1X == tablero.length - 1 ? null : tablero[f1X + 1][f1Y];
 		if (compararFichas(f1T, fComparacion))
 			return true;
 
 		fComparacion = f1Y == 0 ? null : tablero[f1X][f1Y - 1];
 		if (compararFichas(f1T, fComparacion))
 			return true;
-		
+
 		fComparacion = f1X == 0 ? null : tablero[f1X - 1][f1Y];
 		if (compararFichas(f1T, fComparacion))
 			return true;
 
-		fComparacion = f2Y == tablero.length-1 ? null : tablero[f2X][f2Y + 1];
+		fComparacion = f2Y == tablero.length - 1 ? null : tablero[f2X][f2Y + 1];
 		if (compararFichas(f2T, fComparacion))
 			return true;
 
-		fComparacion = f2X == tablero.length-1 ? null : tablero[f2X + 1][f2Y];
+		fComparacion = f2X == tablero.length - 1 ? null : tablero[f2X + 1][f2Y];
 		if (compararFichas(f2T, fComparacion))
 			return true;
 
@@ -215,25 +209,27 @@ public class Tablero {
 	}
 
 	private boolean compararFichas(String f1T, Ficha fComparacion) {
-		if(fComparacion == null)
+		if (fComparacion == null)
 			return false;
 		String fTipo = fComparacion.getTipo();
 		return (fTipo.compareTo("Castillo") == 0 || fTipo.compareTo(f1T) == 0);
 	}
+
 	public int getTamanio() {
 		return tamTablero;
 	}
+
 	@Override
 	public String toString() {
 		String ret = "";
 		for (Ficha[] fichas : tablero) {
 			for (Ficha ficha : fichas) {
-				if(ficha != null)
-					ret+=String.format("%8s/%s|",ficha.getTipo(),ficha.getCantCoronas());
+				if (ficha != null)
+					ret += String.format("%8s/%s|", ficha.getTipo(), ficha.getCantCoronas());
 				else
-					ret+=String.format("%10s|"," ");
+					ret += String.format("%10s|", " ");
 			}
-			ret+="\n";
+			ret += "\n";
 		}
 		return ret;
 	}
@@ -242,14 +238,14 @@ public class Tablero {
 		int x = -4;
 		int y = -4;
 		int rotaciones = 0;
-		while(ponerCarta(cartaElegida, x, y) == false && y < 10) {
-			//probamos todas las rotaciones posibles
+		while (ponerCarta(cartaElegida, x, y) == false && y < 10) {
+			// probamos todas las rotaciones posibles
 			cartaElegida.rotarCarta();
 			rotaciones++;
-			if(rotaciones == 3) {
+			if (rotaciones == 3) {
 				rotaciones = 0;
-				//si fallamos en todas las rotaciones, cambiamos de posicion
-				if(x<getTamanio() - 1)
+				// si fallamos en todas las rotaciones, cambiamos de posicion
+				if (x < getTamanio() - 1)
 					x++;
 				else {
 					x = -4;
@@ -266,8 +262,7 @@ public class Tablero {
 		tablero[cartaElegida.getFichas()[0].getX()][cartaElegida.getFichas()[0].getY()] = null;
 		tablero[cartaElegida.getFichas()[1].getX()][cartaElegida.getFichas()[1].getY()] = null;
 		cartaElegida.setDefault();
-		
+
 	}
-	
-	
+
 }

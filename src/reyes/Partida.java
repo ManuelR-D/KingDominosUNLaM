@@ -25,7 +25,19 @@ public class Partida {
 		this.cantidadJugadores = DEFAULT_CANT_JUGADORES;
 	}
 
-	public Partida(int cantidadJugadores, int tamanioTablero, int cantidadCartas) {
+	public Partida(int cantidadJugadores, int tamanioTablero, int cantidadCartas) throws KingDominoExcepcion {
+		if (cantidadJugadores > 4 || cantidadJugadores < 2) {
+			throw new KingDominoExcepcion("La cantidad de jugadores es invalida!!");
+		}
+		if (cantidadCartas != 48) {
+			throw new KingDominoExcepcion(
+					"La cantidad de cartas tiene que ser 48! (limitación por parte del enunciado)");
+			// El código puede funcionar sin problemas con cualquier cantidad de cartas
+			// mientras el total sea múltiplo de 4, pues siempre se roba de a 4 cartas.
+			// Sin embargo, el enunciado tiene la limitación de 48 para todos los modos.
+			// Se puede quitar esta validación en el futuro si quisieramos agregar otros
+			// modos.
+		}
 		this.cantidadCartas = cantidadCartas;
 		this.tamanioTablero = tamanioTablero;
 		this.cantidadJugadores = cantidadJugadores;
@@ -39,16 +51,11 @@ public class Partida {
 		List<Carta> cartasMezcladas = new ArrayList<Carta>(cantidadCartas);
 
 		for (int i = 0; i < cantidadCartas; i++) {
-			int numeroAleatorio = numeroAleatorioEntre(0, cantidadCartas - i - 1);
+			int numeroAleatorio = FuncionesGenerales.numeroAleatorioEntre(0, cantidadCartas - i - 1);
 			cartasMezcladas.add(cartas.remove(numeroAleatorio));
 		}
 
 		return cartas = cartasMezcladas;
-	}
-
-	private int numeroAleatorioEntre(int mayorIgualQue, int menorIgualQue) {
-		int numeroAleatorio = (int) Math.floor(Math.random() * (menorIgualQue - mayorIgualQue + 1) + mayorIgualQue);
-		return numeroAleatorio;
 	}
 
 	public List<Carta> armarMazo() {
@@ -85,19 +92,7 @@ public class Partida {
 	}
 
 	public boolean iniciarPartida() {
-		if (cantidadJugadores > 4 || cantidadJugadores < 2) {
-			System.out.println("La cantidad de jugadores es invalida!!");
-			return false;
-		}
-		// El código puede funcionar sin problemas con cualquier cantidad de cartas
-		// mientras el total sea múltiplo de 4, pues siempre se roba de a 4 cartas.
-		// Sin embargo, el enunciado tiene la limitación de 48 para todos los modos.
-		// Se puede quitar esta validación en el futuro si quisieramos agregar otros
-		// modos.
-		if (cantidadCartas != 48) {
-			System.out.println("La cantidad de cartas tiene que ser 48! (limitación por parte del enunciado)");
-			return false;
-		}
+
 		List<Integer> turnos = determinarTurnosIniciales();
 		List<Carta> cartasAElegirSig = new ArrayList<Carta>();
 		this.jugadores = new Jugador[cantidadJugadores];
@@ -161,7 +156,8 @@ public class Partida {
 		for (int i = 0; i < turnos.size(); i++) {
 			int turno = turnos.get(i);
 			if (i == cartasAElegir.size() - 1) { // el ultimo jugador en elegir, no tiene decision
-				for (numeroElegido = 0; cartasAElegir.get(numeroElegido) == null; numeroElegido++);
+				for (numeroElegido = 0; cartasAElegir.get(numeroElegido) == null; numeroElegido++)
+					;
 				jugadores[turno].insertaEnTablero(cartasAElegir.get(numeroElegido));
 			} else {
 				do {
@@ -197,7 +193,7 @@ public class Partida {
 			idJugadores.add(i);
 		}
 		for (int i = 0; i < cantidadJugadores; i++) {
-			int numeroAleatorio = numeroAleatorioEntre(0, cantidadJugadores - i - 1);
+			int numeroAleatorio = FuncionesGenerales.numeroAleatorioEntre(0, cantidadJugadores - i - 1);
 			turnos.add(idJugadores.remove(numeroAleatorio));
 		}
 
