@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Tablero {
 	private static final int LIMITE_CONSTRUCCION = 5;
-	private Ficha[][] tablero;
+	protected Ficha[][] tablero;
 	private int tamTablero;
 	private int xMin,xMax,yMin,yMax;
 	public Tablero(int tamTablero) {
@@ -29,11 +29,11 @@ public class Tablero {
 				if (puntajeParcial > 0) {
 					contRegiones++;
 					String tipo = tablero[i][j].getTipo();
-					System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcial + " puntos.");
+					//System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcial + " puntos.");
 				}
 			}
 		}
-		System.out.println("PUNTAJE TOTAL:" + acum);
+		//System.out.println("PUNTAJE TOTAL:" + acum);
 		return acum;
 	}
 
@@ -255,7 +255,7 @@ public class Tablero {
 		return y < 10;
 	}
 
-	private void quitarCarta(Carta cartaElegida) {
+	public void quitarCarta(Carta cartaElegida) {
 		tablero[cartaElegida.getFichas()[0].getX()][cartaElegida.getFichas()[0].getY()] = null;
 		tablero[cartaElegida.getFichas()[1].getX()][cartaElegida.getFichas()[1].getY()] = null;
 		cartaElegida.setDefault();

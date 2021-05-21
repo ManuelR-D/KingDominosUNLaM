@@ -68,7 +68,6 @@ public class Partida {
 					String tipoDer = scanner.nextLine();
 					int cantCoronasD = Integer.parseInt(scanner.nextLine());
 					cartas.add(new Carta(idCarta, tipoIzq, cantCoronasI, tipoDer, cantCoronasD));
-					System.out.println(idCarta);
 					idCarta++;
 				} else {
 					scanner.close(); //volvemos al inicio del archivo y seguimos cargando
@@ -96,6 +95,7 @@ public class Partida {
 		//Se puede quitar esta validación en el futuro si quisieramos agregar otros modos.
 		if(cantidadCartas != 48) {
 			System.out.println("La cantidad de cartas tiene que ser 48! (limitación por parte del enunciado)");
+			return false;
 		}
 		List<Integer> turnos = determinarTurnosIniciales();
 		List<Carta> cartasAElegirSig = new ArrayList<Carta>();
@@ -105,6 +105,7 @@ public class Partida {
 		for (int i = 0; i < jugadores.length; i++) {
 			jugadores[i] = new Jugador("Jugador " + (i + 1), tamanioTablero);
 		}
+		jugadores[0] = new Bot("BotTest!",tamanioTablero);
 		//armamos y mezclamos el mazo
 		mazo = new ArrayList<Carta>(armarMazo());
 		mazo = mezclarMazo(mazo);
@@ -113,17 +114,17 @@ public class Partida {
 		while (mazo.size() > 1) {
 			System.out.println("--------Ronda: " + ++rondas + "--------");
 			cartasAElegirSig.clear();
-			quitarNCartasDelMazo(mazo, this.cantidadJugadores, cartasAElegirSig);
+			quitarNCartasDelMazo(mazo, 4, cartasAElegirSig);
 			cartasAElegirSig.sort(Carta::compareTo);
 			elegirCartas(cartasAElegirSig, turnos);
 		}
-		int i = 0;
+		System.out.println("-------Partida finalizada!!!-------");
 		for (Jugador jugador : jugadores) {
-			System.out.println("-------Tablero de Jugador " + ++i + "-------");
+			System.out.println("-------Tablero de Jugador " + jugador.nombre + "-------");
 			System.out.println(jugador.tablero);
-			jugador.tablero.puntajeTotal();
+			System.out.println("PUNTAJE TOTAL: " + jugador.tablero.puntajeTotal());
 		}
-		return (cantidadCartas/cantidadJugadores == rondas);
+		return true;
 	}
 
 	private void elegirCartas(List<Carta> cartasAElegir, List<Integer> turnos) {
@@ -131,18 +132,19 @@ public class Partida {
 		List<Integer> numerosElegidos = new LinkedList<Integer>();
 		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
 		for (int i = 0; i < turnos.size(); i++) {
-			do {
-				/// ESTO DEBE CAMBIARSE CUANDO EL USUARIO PUEDA JUGAR YA QUE EL DECIDIRA QUE
-				/// CARTA QUIERE
-				numeroElegido = numeroAleatorioEntre(0, cartasAElegir.size() - 1);
-			} while (numerosElegidos.contains(numeroElegido));
-			numerosElegidos.add(numeroElegido);
-			Carta cartaElegida = cartasAElegir.get(numeroElegido);
 			int turno = turnos.get(i);
-
-			//TODO falta la logica de cuando el jugador elige la carta pueda ponerla en su tablero
-			jugadores[turno].eligeCarta(cartaElegida, numeroElegido);
-			jugadores[turno].insertaEnTablero(cartaElegida);
+			if(i == cartasAElegir.size()-1) { //el ultimo jugador en elegir, no tiene decision
+				for(numeroElegido = 0; cartasAElegir.get(numeroElegido) == null; numeroElegido++);
+				jugadores[turno].insertaEnTablero(cartasAElegir.get(numeroElegido));
+			}else {
+				do
+				{
+					numeroElegido = jugadores[turno].eligeCarta(cartasAElegir);
+				}while(numerosElegidos.contains(numeroElegido));
+				jugadores[turno].insertaEnTablero(cartasAElegir.get(numeroElegido));
+				cartasAElegir.set(numeroElegido, null);
+			}
+			numerosElegidos.add(numeroElegido);
 			// Los numeros elegidos se guardan en un map, ya que el menor de estos decide
 			// quien comienza el turno siguiente
 			nuevoOrdenDeTurnos.put(numeroElegido, turno);
