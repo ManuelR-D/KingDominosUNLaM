@@ -65,7 +65,7 @@ public class Tablero {
 			return;
 
 		if (!ficha.isPuntajeContado()) {
-			if (ficha.getTipo().compareTo(tipo) == 0) {
+			if (ficha.getTipo().equals(tipo)) {
 				ficha.setPuntajeContado(true);
 				int acumPuntos = acumTotal.get(0) + 1;
 				acumTotal.set(0, acumPuntos);
