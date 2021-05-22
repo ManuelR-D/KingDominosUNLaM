@@ -43,10 +43,6 @@ public class Partida {
 		this.cantidadJugadores = cantidadJugadores;
 	}
 
-	public Mazo getMazo() {
-		return mazo;
-	}
-
 	public boolean iniciarPartida() {
 
 		List<Integer> turnos = determinarTurnosIniciales();
@@ -60,7 +56,8 @@ public class Partida {
 		jugadores[0] = new Bot("BotTest!", tamanioTablero);
 		// armamos y mezclamos el mazo
 		mazo = new Mazo(cantidadCartas);
-		mazo.mezclarMazo();;
+		mazo.mezclarMazo();
+		;
 
 		int rondas = 0;
 		while (mazo.getTam() > 1) {
@@ -179,8 +176,6 @@ public class Partida {
 			turnos.add(entrada.getValue());
 		}
 	}
-
-
 
 	private List<Integer> determinarTurnosIniciales() {
 		List<Integer> turnos = new ArrayList<Integer>();

@@ -36,7 +36,7 @@ public class Bot extends Jugador {
 
 	@Override
 	public void insertaEnTablero(Carta cartaElegida) {
-		if(!tablero.esPosibleInsertar(cartaElegida)) {
+		if(!tablero.esPosibleInsertarEnTodoElTablero(cartaElegida)) {
 			/*System.out.println("No es posible insertar la carta");
 			System.out.println(cartaElegida);
 			System.out.println("En el tablero");

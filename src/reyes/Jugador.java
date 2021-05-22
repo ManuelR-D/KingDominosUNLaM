@@ -4,7 +4,6 @@ import java.util.List;
 
 public class Jugador {
 	public String nombre;
-//	private int cantReyes; No se usa en esta implementacion
 	public Tablero tablero;
 	
 	public Jugador(String nombre, int tamTablero) {
@@ -22,7 +21,7 @@ public class Jugador {
 	}*/
 
 	public void insertaEnTablero(Carta cartaElegida) {
-		if(!tablero.esPosibleInsertar(cartaElegida)) {
+		if(!tablero.esPosibleInsertarEnTodoElTablero(cartaElegida)) {
 			/*System.out.println("No es posible insertar la carta");
 			System.out.println(cartaElegida);
 			System.out.println("En el tablero");
