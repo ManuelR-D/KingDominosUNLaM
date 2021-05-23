@@ -50,7 +50,11 @@ public class Jugador {
 
 	public int eligeCarta(List<Carta> cartasAElegir) {
 		//TODO: Prompt al jugador preguntando qué carta quiere elegir de las disponibles
-		return FuncionesGenerales.numeroAleatorioEntre(0, cartasAElegir.size()-1);
+		int numeroElegido;
+		do {
+			numeroElegido = FuncionesGenerales.numeroAleatorioEntre(0, cartasAElegir.size()-1);
+		}while(cartasAElegir.get(numeroElegido) == null);
+		return numeroElegido;
 	}
 	
 	public int getCantTerrenoColocado() {

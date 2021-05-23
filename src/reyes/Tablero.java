@@ -238,20 +238,6 @@ public class Tablero {
 		return tamTablero;
 	}
 
-//	@Override
-//	public String toString() {
-//		String ret = "";
-//		for (Ficha[] fichas : tablero) {
-//			for (Ficha ficha : fichas) {
-//				if (ficha != null)
-//					ret += String.format("%8s/%s|", ficha.getTipo(), ficha.getCantCoronas());
-//				else
-//					ret += String.format("%10s|", " ");
-//			}
-//			ret += "\n";
-//		}
-//		return ret;
-//	}
 	@Override
 	public String toString() {
 		String ret = "";
