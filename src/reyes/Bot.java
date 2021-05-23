@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Bot extends Jugador {
 
 	public Bot(String nombre, int tamTablero) {
-		super("BotTest!", tamTablero);
+		super(nombre, tamTablero);
 		this.tablero = new TableroBot(tamTablero);
 	}
 
@@ -34,19 +34,10 @@ public class Bot extends Jugador {
 
 	@Override
 	public void insertaEnTablero(Carta cartaElegida, Scanner entrada) {
-		if (!tablero.esPosibleInsertarEnTodoElTablero(cartaElegida)) {
-			/*
-			 * System.out.println("No es posible insertar la carta");
-			 * System.out.println(cartaElegida); System.out.println("En el tablero");
-			 * System.out.println(tablero);
-			 * System.out.println("El jugador pierde el turno!!");
-			 */
-			return;
-		}
 		int x = -(tablero.getTamanio() - 1);
 		int y = -(tablero.getTamanio() - 1);
 		int rotaciones = 0;
-		while (tablero.ponerCarta(cartaElegida, x, y,false) == false) {
+		while (tablero.ponerCarta(cartaElegida, x, y,false) == false && y < tablero.getTamanio()) {
 			// probamos todas las rotaciones posibles
 			cartaElegida.rotarCarta();
 			rotaciones++;

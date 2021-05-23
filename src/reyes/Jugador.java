@@ -61,15 +61,17 @@ public class Jugador {
 	public int eligeCarta(List<Carta> cartasAElegir, Scanner entrada) {
 		// TODO: Prompt al jugador preguntando qué carta quiere elegir de las
 		// disponibles
-		for (int i = 0; i < cartasAElegir.size(); i++) {
-			Carta c = cartasAElegir.get(i);
-			if (c != null) {
-				System.out.println((i + 1) + ":");
-				System.out.println(c);
+		int cartaElegida = 0;
+		do {
+			for (int i = 0; i < cartasAElegir.size(); i++) {
+				Carta c = cartasAElegir.get(i);
+				if (c != null) {
+					System.out.println((i + 1) + ":");
+					System.out.println(c);
+				}
 			}
-		}
-
-		int cartaElegida = FuncionesGenerales.intXTecladoEntre(0, cartasAElegir.size(), "Elija una carta:", entrada);
+			cartaElegida = FuncionesGenerales.intXTecladoEntre(0, cartasAElegir.size(), "Elija una carta:", entrada);
+		}while(cartasAElegir.get(cartaElegida-1) == null);
 
 		return cartaElegida - 1;
 	}
