@@ -7,75 +7,95 @@ import java.util.List;
 
 import org.junit.Test;
 
+import reyes.Bot;
 import reyes.Carta;
+import reyes.Jugador;
+import reyes.KingDominoExcepcion;
 import reyes.Partida;
 
 public class PartidaTest {
 
 	@Test
-	public void armarMazo() {
-		Partida p = new Partida();
-		List<Carta> mazo = p.armarMazo();
-
-		assertEquals(48, mazo.size());
-	}
-
-	@Test
-	public void mezclarMazo() {
-		Partida p = new Partida();
-		List<Carta> mazo = p.armarMazo();
-
-		mazo = p.mezclarMazo(mazo);
-		assertEquals(48, mazo.size());
-	}
-
-	@Test
-	public void quitarNCartasDelMazo() {
-		Partida p = new Partida();
-		List<Carta> mazo = p.armarMazo();
-		List<Carta> cartasOrdenadas = new ArrayList<Carta>();
-
-		int i = 0;
-		int nCartas = 4;
-		int tamanioOriginalMazo = mazo.size();
-		while (mazo.size() >= 1) {
-			p.quitarNCartasDelMazo(mazo, nCartas, cartasOrdenadas);
-			i++;
-		}
-		assertEquals(tamanioOriginalMazo/nCartas, i);
-	}
-	
-	@Test
-	public void iniciarPartida() {
-		int cantidadJugadores = 3;
+	public void partidaDe3Jugadores() throws KingDominoExcepcion {
 		int cantidadCartas = 48;
 		int tamTablero = 5;
-		Partida p = new Partida();
-		//paritda por defecto, 2 jugadores, 5x5, 48 cartas
-		assertEquals(true, p.iniciarPartida());
-		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas); //3 jug
-		assertEquals(true, p.iniciarPartida());
-		cantidadJugadores++;
-		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas); // 4 jug
-		assertEquals(true, p.iniciarPartida());
-		
-		cantidadJugadores++;
-		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas); // 5 jug
-		assertEquals(false, p.iniciarPartida()); //es invalido >4 jugadores
-		cantidadJugadores = 1;
-		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas);
-		assertEquals(false, p.iniciarPartida()); //es invalido <2 jugadores
-		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas+1);
-		assertEquals(false, p.iniciarPartida()); //es invalido != 48 cartas
-		//aunque en el futuro podríamos añadir modos con diferente cantidad de cartas.
-		//el código ya está preparado para eso.
-		
-		//El gran duelo
-		cantidadJugadores = 2;
-		tamTablero = 7;
-		cantidadCartas = 48;
-		p = new Partida(cantidadJugadores,tamTablero,cantidadCartas);
+		List<Jugador> jugadores = new ArrayList<Jugador>(3);
+		jugadores.add(new Jugador("Jugador 1",tamTablero));
+		jugadores.add(new Jugador("Jugador 2",tamTablero));
+		jugadores.add(new Bot("BotTest!",tamTablero));
+		Partida p = new Partida(jugadores, tamTablero, cantidadCartas); // 3 jug
 		assertEquals(true, p.iniciarPartida());
 	}
 
+	@Test
+	public void partidaDe4Jugadores() throws KingDominoExcepcion {
+		int cantidadCartas = 48;
+		int tamTablero = 5;
+		List<Jugador> jugadores = new ArrayList<Jugador>(4);
+		jugadores.add(new Jugador("Jugador 1",tamTablero));
+		jugadores.add(new Jugador("Jugador 2",tamTablero));
+		jugadores.add(new Jugador("Jugador 3",tamTablero));
+		jugadores.add(new Bot("BotTest!",tamTablero));
+		Partida p = new Partida(jugadores, tamTablero, cantidadCartas); // 4 jug
+		assertEquals(true, p.iniciarPartida());
+	}
+
+	@Test(expected = KingDominoExcepcion.class)
+	public void partidaDe5Jugadores() throws KingDominoExcepcion {
+		int cantidadCartas = 48;
+		int tamTablero = 5;
+		List<Jugador> jugadores = new ArrayList<Jugador>(5);
+		jugadores.add(new Jugador("Jugador 1",tamTablero));
+		jugadores.add(new Jugador("Jugador 2",tamTablero));
+		jugadores.add(new Jugador("Jugador 3",tamTablero));
+		jugadores.add(new Jugador("Jugador 4",tamTablero));
+		jugadores.add(new Bot("BotTest!",tamTablero));
+		Partida p = new Partida(jugadores, tamTablero, cantidadCartas); // 5 jug
+	}
+
+	@Test(expected = KingDominoExcepcion.class)
+	public void partidaDe1Jugador() throws KingDominoExcepcion {
+		int cantidadCartas = 48;
+		int tamTablero = 5;
+		List<Jugador> jugadores = new ArrayList<Jugador>(5);
+		jugadores.add(new Bot("BotTest!",tamTablero));
+		Partida p = new Partida(jugadores, tamTablero, cantidadCartas); // 1 jug
+	}
+
+	@Test(expected = KingDominoExcepcion.class)
+	public void partidaIlegalCartas() throws KingDominoExcepcion {
+		int cantidadCartas = 49;
+		int tamTablero = 5;
+		List<Jugador> jugadores = new ArrayList<Jugador>(2);
+		jugadores.add(new Jugador("Jugador 1",tamTablero));
+		jugadores.add(new Jugador("Jugador 2",tamTablero));
+		Partida p = new Partida(jugadores, tamTablero, cantidadCartas + 1);
+		// es invalido != 48 cartas
+		// aunque en el futuro podríamos añadir modos con diferente cantidad de cartas.
+		// el código ya está preparado para eso.
+	}
+
+	@Test
+	public void elGranDuelo() throws KingDominoExcepcion {
+		int cantidadCartas = 48;
+		int tamTablero = 7;
+		List<Jugador> jugadores = new ArrayList<Jugador>(2);
+		jugadores.add(new Bot("BotTest!",tamTablero));
+		jugadores.add(new Jugador("Jugador 1",tamTablero));
+		
+		Partida p = new Partida(jugadores, tamTablero, cantidadCartas);
+		assertEquals(true, p.iniciarPartida());
+	}
+
+	@Test
+	public void iniciarPartidaDefault() {
+		Partida p = new Partida();
+		// paritda por defecto, 2 jugadores, 5x5, 48 cartas
+		assertEquals(true, p.iniciarPartida());
+	}
+
+	@Test
+	public void partidaModelo() {
+
+	}
 }
