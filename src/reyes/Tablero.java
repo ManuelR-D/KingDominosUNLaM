@@ -13,8 +13,8 @@ public class Tablero {
 
 	public Tablero(int tamTablero) {
 		this.tamTablero = tamTablero;
-		centro = tamTablero;
-		this.tablero = new Ficha[(tamTablero*2)-1][(tamTablero*2)-1];
+		centro = tamTablero - 1;
+		this.tablero = new Ficha[(tamTablero * 2) - 1][(tamTablero * 2) - 1];
 		this.tablero[centro][centro] = new Ficha("Castillo", 0, centro, centro);
 		xMin = xMax = yMin = yMax = centro;
 	}
@@ -23,25 +23,25 @@ public class Tablero {
 		return tablero;
 	}
 
-	public List<String> puntajeTotal() {
-		List<String> puntajesParcialesYTotal = new ArrayList<String>();
+	public int puntajeTotal(boolean mostrarRegiones) {
 		int acumPuntos = 0;
 		int contRegiones = 0;
-		for (int i = 0; i < tablero.length; i++) {
-			for (int j = 0; j < tablero[i].length; j++) {
+		for (int i = xMin; i <= xMax; i++) {
+			for (int j = yMin; j <= yMax; j++) {
 
 				int puntajeParcialPorRegion = contarPuntajeParcial(i, j);
 				acumPuntos += puntajeParcialPorRegion;
-				if (puntajeParcialPorRegion > 0) {
+				if (mostrarRegiones && puntajeParcialPorRegion > 0) {
 					contRegiones++;
 					String tipo = tablero[i][j].getTipo();
-					puntajesParcialesYTotal
-							.add(contRegiones + "-" + tipo + "=" + puntajeParcialPorRegion + " puntos.\n");
+					System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcialPorRegion + " puntos.\n");
 				}
 			}
 		}
-		puntajesParcialesYTotal.add("PUNTAJE TOTAL:" + acumPuntos);
-		return puntajesParcialesYTotal;
+		if (mostrarRegiones) {
+			System.out.println("PUNTAJE TOTAL:" + acumPuntos);
+		}
+		return acumPuntos;
 	}
 
 	private int contarPuntajeParcial(int x, int y) {
@@ -51,6 +51,8 @@ public class Tablero {
 			return 0;
 
 		List<Integer> puntosYCoronas = new ArrayList<Integer>(2);
+		// En la primer posicion del ArrayList se guardan los puntos por region
+		// En la segunda posicion se guarda la cantidad de coronas por region
 
 		puntosYCoronas.add(0);
 		puntosYCoronas.add(0);
@@ -90,36 +92,35 @@ public class Tablero {
 	/*
 	 * Las coordenadas x,y ya vienen con centro relativo al castillo del jugador.
 	 */
-	public boolean ponerCarta(Carta carta, int yRelativa, int xRelativa) {
+	public boolean ponerCarta(Carta carta, int columnaRelativa, int filaRelativa, boolean mostrarMensaje) {
 		Ficha[] fichas = carta.getFichas();
-		int xReal = centro + xRelativa;
-		int yReal = centro + yRelativa; // este eje esta invertido
+		carta.moverCarta(centro, centro);
+		carta.moverCarta(-filaRelativa, columnaRelativa);
 
-		carta.moverCarta(xReal, yReal);
+		if (esPosibleInsertar(carta, mostrarMensaje)) {
 
-		if (esPosibleInsertar(carta)) {
-			
 			int f1X = fichas[0].getX();
 			int f1Y = fichas[0].getY();
 			int f2X = fichas[1].getX();
 			int f2Y = fichas[1].getY();
+			actualizarLimites(f1X, f1Y, f2X, f2Y, LIMITE_CONSTRUCCION);
 			tablero[f1X][f1Y] = fichas[0];
 			tablero[f2X][f2Y] = fichas[1];
 			cantTerrenoColocado++;
 			return true;
 		} else {
-			carta.moverCarta(-xReal, -yReal);
+			carta.setDefault();
 			return false;
 		}
 	}
 
-	private boolean esPosibleInsertar(Carta carta) {
+	private boolean esPosibleInsertar(Carta carta, boolean mostrarMensaje) {
 		Ficha[] fichas = carta.getFichas();
 		int f1X = fichas[0].getX();
 		int f1Y = fichas[0].getY();
 		int f2X = fichas[1].getX();
 		int f2Y = fichas[1].getY();
-		// System.out.println(f1X + "," + f1Y + ";" + f2X + "," + f2Y);
+
 		if (f1X >= tablero.length || f1X < 0 || f1Y >= tablero.length || f1Y < 0 || f2X >= tablero.length || f2X < 0
 				|| f2Y >= tablero.length || f2Y < 0) {
 			return false;
@@ -127,22 +128,68 @@ public class Tablero {
 		// Si ya hay alguna "ficha" colocada en la posicion de la carta entonces
 		// devuelvo false
 		if (tablero[f1X][f1Y] != null || tablero[f2X][f2Y] != null) {
+			if (mostrarMensaje) {
+				System.out.println("ERROR- YA HAY UNA CARTA EN ESA POSICION");
+			}
 			return false;
 		}
 		// Si no hay tipos adyacentes compatibles, no se puede poner la carta
 		if (!tipoAdyacenteCompatible(carta)) {
+			if (mostrarMensaje) {
+				System.out.println("ERROR- NO HAY TIPOS ADYACENTES COMPATIBLES");
+			}
 			return false;
 		}
 
 		// comprobamos que no salga del limite
-		if (!comprobarLimite(f1X, f1Y, f2X, f2Y, LIMITE_CONSTRUCCION)) {
+		if (!comprobarLimiteSinModificar(f1X, f1Y, f2X, f2Y, LIMITE_CONSTRUCCION)) {
+			if (mostrarMensaje) {
+				System.out.println("ERROR- SE EXCEDE EL LIMITE DE CONSTRUCCION");
+			}
 			return false;
 		}
 
 		return true;
 	}
 
-	private boolean comprobarLimite(int f1X, int f1Y, int f2X, int f2Y, int limite) {
+	private boolean comprobarLimiteSinModificar(int f1X, int f1Y, int f2X, int f2Y, int limite) {
+		int xMinAux = xMin;
+		int xMaxAux = xMax;
+		int yMinAux = yMin;
+		int yMaxAux = yMax;
+
+		if (f1X < xMinAux)
+			xMinAux = f1X;
+
+		if (f1X > xMaxAux)
+			xMaxAux = f1X;
+
+		if (f1Y < yMinAux)
+			yMinAux = f1Y;
+
+		if (f1Y > yMaxAux)
+			yMaxAux = f1Y;
+
+		if (f2X < xMinAux)
+			xMinAux = f2X;
+
+		if (f2X > xMaxAux)
+			xMaxAux = f2X;
+
+		if (f2Y < yMinAux)
+			yMinAux = f2Y;
+
+		if (f2Y > yMaxAux)
+			yMaxAux = f2Y;
+
+		if (xMaxAux - xMinAux >= limite || yMaxAux - yMinAux >= limite) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private boolean actualizarLimites(int f1X, int f1Y, int f2X, int f2Y, int limite) {
 		int xMinAux = xMin;
 		int xMaxAux = xMax;
 		int yMinAux = yMin;
@@ -241,9 +288,9 @@ public class Tablero {
 	@Override
 	public String toString() {
 		String ret = "";
-		for (int i=xMin;i<=xMax;i++) {
-			for (int j=yMin;j<=yMax;j++) {
-				Ficha ficha=tablero[i][j];
+		for (int i = xMin; i <= xMax; i++) {
+			for (int j = yMin; j <= yMax; j++) {
+				Ficha ficha = tablero[i][j];
 				if (ficha != null)
 					ret += String.format("%8s/%s|", ficha.getTipo(), ficha.getCantCoronas());
 				else
@@ -254,28 +301,32 @@ public class Tablero {
 		return ret;
 	}
 
-	public boolean esPosibleInsertarEnTodoElTablero(Carta cartaElegida) {
-		int x = -(tamTablero - 1);
-		int y = -(tamTablero - 1);
-		int rotaciones = 0;
-		while (ponerCarta(cartaElegida, x, y) == false && y < (tamTablero * 2)) {
-			// probamos todas las rotaciones posibles
-			cartaElegida.rotarCarta();
-			rotaciones++;
-			if (rotaciones == 3) {
-				rotaciones = 0;
-				// si fallamos en todas las rotaciones, cambiamos de posicion
-				if (x < (tamTablero - 1))
-					x++;
-				else {
-					x = -(tamTablero - 1);
-					y++;
+	public boolean esPosibleInsertarEnTodoElTablero(Carta carta) {
+		int yMinAux = yMin - 1;
+		int xMinAux = xMin - 1;
+		boolean noMostrarMensaje = false;
+
+		carta.moverCarta(xMin - 1, yMin - 1);
+
+		for (int i = xMin - 1; i <= xMax + 1; i++) {
+			for (int j = yMin - 1; j <= yMax + 1; j++) {
+				for (int r = 0; r < 4; r++) {
+					if (esPosibleInsertar(carta, noMostrarMensaje)) {
+						carta.setDefault();
+						return true;
+					} else {
+						carta.rotarCarta();
+					}
+
 				}
-				cartaElegida.rotarCarta();
+				carta.moverCarta(0, 1);
 			}
+			carta.setDefault();
+			carta.moverCarta(++xMinAux, yMinAux);
+
 		}
-		quitarCarta(cartaElegida);
-		return y < (tamTablero * 2);
+		carta.setDefault();
+		return false;
 	}
 
 	public void quitarCarta(Carta cartaElegida) {

@@ -1,62 +1,79 @@
 package reyes;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class Jugador {
 	public String nombre;
 	public Tablero tablero;
-	
+
 	public Jugador(String nombre, int tamTablero) {
 		this.nombre = nombre;
 		this.tablero = new Tablero(tamTablero);
 	}
-	
+
 	public String getNombre() {
 		return nombre;
 	}
 
-	/*public void eligeCarta(Carta cartaElegida, int numeroAleatorio) {
-		System.out.println(this.nombre+" elige la carta "+numeroAleatorio);
+	/*
+	 * public void eligeCarta(Carta cartaElegida, int numeroAleatorio) {
+	 * System.out.println(this.nombre+" elige la carta "+numeroAleatorio);
+	 * 
+	 * }
+	 */
 
-	}*/
-
-	public void insertaEnTablero(Carta cartaElegida) {
-		if(!tablero.esPosibleInsertarEnTodoElTablero(cartaElegida)) {
-			/*System.out.println("No es posible insertar la carta");
-			System.out.println(cartaElegida);
+	public void insertaEnTablero(Carta carta, Scanner entrada) {
+		if (!tablero.esPosibleInsertarEnTodoElTablero(carta)) {
+			System.out.println("No es posible insertar la carta");
+			System.out.println(carta);
 			System.out.println("En el tablero");
 			System.out.println(tablero);
-			System.out.println("El jugador pierde el turno!!");*/
+			System.out.println("El jugador pierde el turno!!");
 			return;
 		}
-		int tamTablero=tablero.getTamanio();
-		int x = FuncionesGenerales.numeroAleatorioEntre(-(tamTablero-1), tamTablero-1);
-		int y = FuncionesGenerales.numeroAleatorioEntre(-(tamTablero-1), tamTablero-1);
-		int rotaciones = 0;
-		while(tablero.ponerCarta(cartaElegida, x, y) == false) {
-			//probamos todas las rotaciones posibles
-			cartaElegida.rotarCarta();
-			rotaciones++;
-			if(rotaciones == 3) {
-				rotaciones = 0;
-				//si fallamos en todas las rotaciones, cambiamos de posicion
-				x = FuncionesGenerales.numeroAleatorioEntre(-(tamTablero-1), tamTablero-1);
-				y = FuncionesGenerales.numeroAleatorioEntre(-(tamTablero-1), tamTablero-1);
-				cartaElegida.rotarCarta();
-			}
-		}
-		//System.out.println(this.nombre + "\n" + cartaElegida + "\n" + tablero);
+		int x, y;
+		int tamTablero = tablero.getTamanio() - 1;
+		do {
+			char opcion = 0;
+			do {
+				System.out.println("Tablero actual:");
+				System.out.println(tablero);
+				if (opcion == 's')
+					carta.rotarCarta();
+				System.out.println("Desea rotar la carta?(s/n):");
+				System.out.println(carta);
+				opcion = entrada.next().charAt(0);
+			} while (opcion == 's');
+
+
+			String cadena = "Inserte x[" + -tamTablero + "/" + tamTablero + "]:";
+			x = FuncionesGenerales.intXTecladoEntre(-tamTablero, tamTablero, cadena, entrada);
+			cadena = "Inserte y[" + -tamTablero + "/" + tamTablero + "]:";
+			y = FuncionesGenerales.intXTecladoEntre(-tamTablero, tamTablero, cadena, entrada);
+
+		} while (!tablero.ponerCarta(carta, x, y,true));
+		System.out.println("Tablero actualizado:");
+		System.out.println(tablero);
+
 	}
 
-	public int eligeCarta(List<Carta> cartasAElegir) {
-		//TODO: Prompt al jugador preguntando qué carta quiere elegir de las disponibles
-		int numeroElegido;
-		do {
-			numeroElegido = FuncionesGenerales.numeroAleatorioEntre(0, cartasAElegir.size()-1);
-		}while(cartasAElegir.get(numeroElegido) == null);
-		return numeroElegido;
+	public int eligeCarta(List<Carta> cartasAElegir, Scanner entrada) {
+		// TODO: Prompt al jugador preguntando qué carta quiere elegir de las
+		// disponibles
+		for (int i = 0; i < cartasAElegir.size(); i++) {
+			Carta c = cartasAElegir.get(i);
+			if (c != null) {
+				System.out.println((i + 1) + ":");
+				System.out.println(c);
+			}
+		}
+
+		int cartaElegida = FuncionesGenerales.intXTecladoEntre(0, cartasAElegir.size(), "Elija una carta:", entrada);
+
+		return cartaElegida - 1;
 	}
-	
+
 	public int getCantTerrenoColocado() {
 		return tablero.getCantTerrenoColocado();
 	}

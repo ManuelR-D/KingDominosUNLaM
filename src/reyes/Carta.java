@@ -2,24 +2,21 @@ package reyes;
 
 public class Carta implements Comparable<Carta> {
 	private int idCarta;
-	private int x = 0, y = 0;
 	private Ficha[] fichas = new Ficha[2];
 	private int rotacion = 1;
 
 	public Carta(int idCarta, String tipoIzq, int cantCoronasI, String tipoDer, int cantCoronasD) {
 		this.idCarta = idCarta;
-		fichas[0] = new Ficha(tipoIzq, cantCoronasI, x, y);
-		fichas[1] = new Ficha(tipoDer, cantCoronasD, x, y + 1);
+		fichas[0] = new Ficha(tipoIzq, cantCoronasI, 0, 0);
+		fichas[1] = new Ficha(tipoDer, cantCoronasD, 0, 1);
 	}
 
 	public void setDefault() {
-		this.x = 0;
-		this.y = 0;
 		this.rotacion = 1;
-		this.fichas[0].x = x;
-		this.fichas[0].y = y;
-		this.fichas[1].x = x;
-		this.fichas[1].y = y + 1;
+		this.fichas[0].x = 0;
+		this.fichas[0].y = 0;
+		this.fichas[1].x = 0;
+		this.fichas[1].y = 1;
 	}
 
 	public Ficha[] getFichas() {
@@ -88,11 +85,11 @@ public class Carta implements Comparable<Carta> {
 		return this.idCarta - otraCarta.idCarta;
 	}
 
-	public void moverCarta(int filaAbs, int columnaAbs) {
-		this.fichas[0].x += filaAbs;
-		this.fichas[0].y += columnaAbs;
-		this.fichas[1].x += filaAbs;
-		this.fichas[1].y += columnaAbs;
+	public void moverCarta(int fila, int columna) {
+		this.fichas[0].x += fila;
+		this.fichas[0].y += columna;
+		this.fichas[1].x += fila;
+		this.fichas[1].y += columna;
 	}
 
 }
