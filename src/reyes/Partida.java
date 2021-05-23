@@ -3,6 +3,7 @@ package reyes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 public class Partida {
@@ -54,13 +55,17 @@ public class Partida {
 		mazo.mezclarMazo();
 
 		int rondas = 0;
+		Scanner entrada = new Scanner(System.in);
 		while (mazo.getTam() > 1) {
 			System.out.println("--------Ronda: " + ++rondas + "--------");
 			cartasAElegirSig.clear();
 			mazo.quitarPrimerasNCartas(4, cartasAElegirSig);
 			cartasAElegirSig.sort(Carta::compareTo);
-			elegirCartas(cartasAElegirSig, turnos);
+			elegirCartas(cartasAElegirSig, turnos, entrada);
 		}
+		//entrada.close(); Los scanner asociados a System.in no se tienen que cerrar
+		//puesto que genera errores más adelante, debido a que se cierra System.in
+		//la JVM es la encargada de cerrar esa entrada si lo considera necesario
 
 		System.out.println("-------Partida finalizada!!!-------");
 
@@ -76,15 +81,7 @@ public class Partida {
 		for (Jugador jugador : jugadores) {
 			System.out.println("-------Tablero de Jugador " + jugador.nombre + "-------");
 			System.out.println(jugador.tablero);
-			List<String> puntajesTotales = jugador.tablero.puntajeTotal();
-			for (int i = 0; i < puntajesTotales.size(); i++) {
-				String puntaje = puntajesTotales.get(i);
-				System.out.println(puntaje);
-				if (i == puntajesTotales.size() - 1) {
-					int puntajeFinal = Integer.valueOf(puntaje.split(":")[1]);
-					puntajesFinales.add(puntajeFinal);
-				}
-			}
+			puntajesFinales.add(jugador.tablero.puntajeTotal(true));
 		}
 		return puntajesFinales;
 	}
@@ -155,29 +152,36 @@ public class Partida {
 		return ganadoresPorTerreno;
 	}
 
-	private void elegirCartas(List<Carta> cartasAElegir, List<Integer> turnos) {
+	private void elegirCartas(List<Carta> cartasAElegir, List<Integer> turnos, Scanner entrada) {
+
 		int numeroElegido;
 		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
+
 		for (int i = 0; i < turnos.size(); i++) {
 			int turno = turnos.get(i);
-			if (i == cartasAElegir.size() - 1) {
-				// el ultimo jugador en elegir, no tiene decision
+
+			if (i == cartasAElegir.size() - 1) { // el ultimo jugador en elegir, no tiene decision
 				numeroElegido = 0;
-				while (cartasAElegir.get(numeroElegido) == null)
+				while(cartasAElegir.get(numeroElegido) == null)
 					numeroElegido++;
-			} else
-				numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir);
-			jugadores.get(turno).insertaEnTablero(cartasAElegir.get(numeroElegido));
-			cartasAElegir.set(numeroElegido, null);
+			} else {
+				numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
+			}
 			// Los numeros elegidos se guardan en un map, ya que el menor de estos decide
 			// quien comienza el turno siguiente
+			System.out.println(jugadores.get(turno).getNombre() + " elige carta " + (numeroElegido + 1));
+			jugadores.get(turno).insertaEnTablero(cartasAElegir.get(numeroElegido), entrada);
+			cartasAElegir.set(numeroElegido, null);
 			nuevoOrdenDeTurnos.put(numeroElegido, turno);
 		}
 		turnos.clear();
-		for (Map.Entry<Integer, Integer> entrada : nuevoOrdenDeTurnos.entrySet()) {
+		for (Map.Entry<Integer, Integer> entry : nuevoOrdenDeTurnos.entrySet()) {
 			// modifico turnos de acuerdo al numero elegido
-			turnos.add(entrada.getValue());
+			turnos.add(entry.getValue());
 		}
+
+		if(turnos.size() != nuevoOrdenDeTurnos.size())
+			System.out.println("check");
 	}
 
 	private List<Integer> determinarTurnosIniciales() {
