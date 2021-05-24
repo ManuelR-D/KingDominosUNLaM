@@ -64,7 +64,7 @@ public class Partida {
 		mazo.mezclarMazo();
 		//seteamos el tablero para cada jugador
 		for (Jugador jugador : jugadores) {
-			jugador.tablero = new Tablero(this.tamanioTablero);
+			jugador.setTablero(this.tamanioTablero);
 		}
 
 		int rondas = 0;

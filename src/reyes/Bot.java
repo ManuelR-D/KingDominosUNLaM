@@ -14,6 +14,11 @@ public class Bot extends Jugador {
 		super(nombre, contrasenia);
 		// TODO Auto-generated constructor stub
 	}
+	
+	@Override
+	public void setTablero(int tamanioTablero) {
+		this.tablero= new TableroBot(tamanioTablero);
+	}
 
 	@Override
 	public int eligeCarta(List<Carta> cartasAElegir, Scanner entrada) {

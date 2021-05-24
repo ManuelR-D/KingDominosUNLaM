@@ -3,23 +3,25 @@ package reyes;
 import java.util.List;
 import java.util.Scanner;
 
-public class Jugador extends Usuario{
+public class Jugador extends Usuario {
 	public String nombre;
 	public Tablero tablero;
 
 	public Jugador(String nombre, int tamTablero) {
-		super(nombre,"");
+		super(nombre, "");
 		this.nombre = nombre;
 		this.tablero = new Tablero(tamTablero);
 	}
+
 	public Jugador(Usuario user) {
 		super(user);
 		this.nombre = user.nombreUsuario;
 	}
 
 	public Jugador(String nombre, String contrasenia) {
-		super(nombre,contrasenia);
+		super(nombre, contrasenia);
 	}
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -47,13 +49,12 @@ public class Jugador extends Usuario{
 				opcion = entrada.next().charAt(0);
 			} while (opcion == 's' || opcion == 'S');
 
-
 			String cadena = "Inserte x[" + -tamTablero + "/" + tamTablero + "]:";
 			x = FuncionesGenerales.intXTecladoEntre(-tamTablero, tamTablero, cadena, entrada);
 			cadena = "Inserte y[" + -tamTablero + "/" + tamTablero + "]:";
 			y = FuncionesGenerales.intXTecladoEntre(-tamTablero, tamTablero, cadena, entrada);
 
-		} while (!tablero.ponerCarta(carta, x, y,true));
+		} while (!tablero.ponerCarta(carta, x, y, true));
 		System.out.println("Tablero actualizado:");
 		System.out.println(tablero);
 
@@ -61,6 +62,8 @@ public class Jugador extends Usuario{
 
 	public int eligeCarta(List<Carta> cartasAElegir, Scanner entrada) {
 		int cartaElegida = 0;
+		System.out.println("Tablero(" + nombre + ")");
+		System.out.println(tablero);
 		do {
 			for (int i = 0; i < cartasAElegir.size(); i++) {
 				Carta c = cartasAElegir.get(i);
@@ -69,13 +72,18 @@ public class Jugador extends Usuario{
 					System.out.println(c);
 				}
 			}
-			cartaElegida = FuncionesGenerales.intXTecladoEntre(0, cartasAElegir.size(), "Elija una carta:", entrada);
-		}while(cartasAElegir.get(cartaElegida-1) == null);
+			String cad = "Elija una carta(" + nombre + "):";
+			cartaElegida = FuncionesGenerales.intXTecladoEntre(0, cartasAElegir.size(), cad, entrada);
+		} while (cartasAElegir.get(cartaElegida - 1) == null);
 
 		return cartaElegida - 1;
 	}
 
 	public int getCantTerrenoColocado() {
 		return tablero.getCantTerrenoColocado();
+	}
+
+	public void setTablero(int tamanioTablero) {
+		this.tablero = new Tablero(tamanioTablero);
 	}
 }
