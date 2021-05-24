@@ -3,25 +3,26 @@ package reyes;
 import java.util.List;
 import java.util.Scanner;
 
-public class Jugador {
+public class Jugador extends Usuario{
 	public String nombre;
 	public Tablero tablero;
 
 	public Jugador(String nombre, int tamTablero) {
+		super(nombre,"");
 		this.nombre = nombre;
 		this.tablero = new Tablero(tamTablero);
 	}
+	public Jugador(Usuario user) {
+		super(user);
+		this.nombre = user.nombreUsuario;
+	}
 
+	public Jugador(String nombre, String contrasenia) {
+		super(nombre,contrasenia);
+	}
 	public String getNombre() {
 		return nombre;
 	}
-
-	/*
-	 * public void eligeCarta(Carta cartaElegida, int numeroAleatorio) {
-	 * System.out.println(this.nombre+" elige la carta "+numeroAleatorio);
-	 * 
-	 * }
-	 */
 
 	public void insertaEnTablero(Carta carta, Scanner entrada) {
 		if (!tablero.esPosibleInsertarEnTodoElTablero(carta)) {
@@ -39,12 +40,12 @@ public class Jugador {
 			do {
 				System.out.println("Tablero actual:");
 				System.out.println(tablero);
-				if (opcion == 's')
+				if (opcion == 's' || opcion == 'S')
 					carta.rotarCarta();
 				System.out.println("Desea rotar la carta?(s/n):");
 				System.out.println(carta);
 				opcion = entrada.next().charAt(0);
-			} while (opcion == 's');
+			} while (opcion == 's' || opcion == 'S');
 
 
 			String cadena = "Inserte x[" + -tamTablero + "/" + tamTablero + "]:";
@@ -59,8 +60,6 @@ public class Jugador {
 	}
 
 	public int eligeCarta(List<Carta> cartasAElegir, Scanner entrada) {
-		// TODO: Prompt al jugador preguntando qué carta quiere elegir de las
-		// disponibles
 		int cartaElegida = 0;
 		do {
 			for (int i = 0; i < cartasAElegir.size(); i++) {

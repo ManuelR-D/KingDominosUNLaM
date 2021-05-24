@@ -10,6 +10,11 @@ public class Bot extends Jugador {
 		this.tablero = new TableroBot(tamTablero);
 	}
 
+	public Bot(String nombre, String contrasenia) {
+		super(nombre, contrasenia);
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public int eligeCarta(List<Carta> cartasAElegir, Scanner entrada) {
 		int puntajeMax = -1;

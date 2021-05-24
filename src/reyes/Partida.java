@@ -26,6 +26,15 @@ public class Partida {
 		jugadores.add(new Jugador("Jugador 1", tamanioTablero));
 	}
 
+	public Partida(List<Jugador> jugadores) throws KingDominoExcepcion {
+		this.cantidadCartas = DEFAULT_CANT_CARTAS;
+		this.tamanioTablero = DEFAULT_TAM_TABLERO;
+		this.jugadores = jugadores;
+		this.cantidadJugadores = jugadores.size();
+		if (cantidadJugadores > 4 || cantidadJugadores < 2) {
+			throw new KingDominoExcepcion("La cantidad de jugadores es invalida!!");
+		}
+	}
 	public Partida(List<Jugador> jugadores, int tamanioTablero, int cantidadCartas) throws KingDominoExcepcion {
 
 		if (cantidadCartas != 48) {
@@ -53,6 +62,10 @@ public class Partida {
 		// armamos y mezclamos el mazo
 		mazo = new Mazo(cantidadCartas);
 		mazo.mezclarMazo();
+		//seteamos el tablero para cada jugador
+		for (Jugador jugador : jugadores) {
+			jugador.tablero = new Tablero(this.tamanioTablero);
+		}
 
 		int rondas = 0;
 		Scanner entrada = new Scanner(System.in);
