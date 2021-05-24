@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tablero {
-	private static final int LIMITE_CONSTRUCCION = 5;
 	protected Ficha[][] tablero;
 	private int tamTablero;
 	private int cantTerrenoColocado = 0;
@@ -103,7 +102,7 @@ public class Tablero {
 			int f1Y = fichas[0].getY();
 			int f2X = fichas[1].getX();
 			int f2Y = fichas[1].getY();
-			actualizarLimites(f1X, f1Y, f2X, f2Y, LIMITE_CONSTRUCCION);
+			actualizarLimites(f1X, f1Y, f2X, f2Y, tamTablero);
 			tablero[f1X][f1Y] = fichas[0];
 			tablero[f2X][f2Y] = fichas[1];
 			cantTerrenoColocado++;
@@ -142,7 +141,7 @@ public class Tablero {
 		}
 
 		// comprobamos que no salga del limite
-		if (!comprobarLimiteSinModificar(f1X, f1Y, f2X, f2Y, LIMITE_CONSTRUCCION)) {
+		if (!comprobarLimiteSinModificar(f1X, f1Y, f2X, f2Y, tamTablero)) {
 			if (mostrarMensaje) {
 				System.out.println("ERROR- SE EXCEDE EL LIMITE DE CONSTRUCCION");
 			}

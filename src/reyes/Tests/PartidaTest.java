@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.Test;
 
 import reyes.Bot;
-import reyes.Carta;
 import reyes.Jugador;
 import reyes.KingDominoExcepcion;
 import reyes.Partida;
@@ -87,12 +86,18 @@ public class PartidaTest {
 		assertEquals(true, p.iniciarPartida());
 	}
 
-//	@Test
-//	public void iniciarPartidaDefault() {
-//		Partida p = new Partida();
-//		// paritda por defecto, 2 jugadores, 5x5, 48 cartas
-//		assertEquals(true, p.iniciarPartida());
-//	}
+	@Test
+	public void iniciarPartidaDefault() throws KingDominoExcepcion {
+		int cantidadCartas = 48;
+		int tamTablero = 5;
+		List<Jugador> jugadores = new ArrayList<Jugador>(2);
+		jugadores.add(new Jugador("Jugador 1",tamTablero));
+		jugadores.add(new Jugador("Jugador 2",tamTablero));
+		
+		Partida p = new Partida(jugadores, tamTablero, cantidadCartas);
+		// paritda por defecto, 2 jugadores, 5x5, 48 cartas
+		assertEquals(true, p.iniciarPartida());
+	}
 
 	@Test
 	public void partidaHumanoVsBot() throws KingDominoExcepcion {

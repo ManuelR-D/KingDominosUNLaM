@@ -12,7 +12,7 @@ public class TableroTest {
 	@Test
 	public void testPuntajeTotal() {
 		
-		Tablero t = new Tablero(3);
+		Tablero t = new Tablero(5);
 		
 		Carta c1 = new Carta(1,"Oasis",1,"Oasis",0);
 		t.ponerCarta(c1, -2, 0, false);
@@ -22,8 +22,7 @@ public class TableroTest {
 		t.ponerCarta(c3, -1, -1, false);
 		Carta c4= new Carta(4,"Bosque",3,"Pradera",0);
 		t.ponerCarta(c4, -2, 1, false);
-
-
+		
 		int ret = t.puntajeTotal(false);
 		assertEquals(30, ret);
 
@@ -31,7 +30,7 @@ public class TableroTest {
 
 	@Test
 	public void testPuntajeTotal2() {
-		Tablero t = new Tablero(3);
+		Tablero t = new Tablero(5);
 		
 		Carta c1 = new Carta(1,"Pradera",0,"Oasis",2);
 		t.ponerCarta(c1, -2, 0, false);
