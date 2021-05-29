@@ -14,7 +14,7 @@ import reyes.Partida;
 
 public class PartidaTest {
 
-	@Test
+/*	@Test
 	public void partidaDe3Jugadores() throws KingDominoExcepcion {
 		int cantidadCartas = 48;
 		int tamTablero = 5;
@@ -73,7 +73,7 @@ public class PartidaTest {
 		// aunque en el futuro podríamos añadir modos con diferente cantidad de cartas.
 		// el código ya está preparado para eso.
 	}
-
+*/
 	@Test
 	public void elGranDuelo() throws KingDominoExcepcion {
 		int cantidadCartas = 48;
@@ -85,7 +85,7 @@ public class PartidaTest {
 		Partida p = new Partida(jugadores, tamTablero, cantidadCartas);
 		assertEquals(true, p.iniciarPartida());
 	}
-
+/*
 	@Test
 	public void iniciarPartidaDefault() throws KingDominoExcepcion {
 		int cantidadCartas = 48;
@@ -109,5 +109,5 @@ public class PartidaTest {
 		
 		Partida p = new Partida(jugadores, tamTablero, cantidadCartas);
 		assertEquals(true, p.iniciarPartida());
-	}
+	}*/
 }

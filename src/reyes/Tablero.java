@@ -8,13 +8,13 @@ public class Tablero {
 	private int tamTablero;
 	private int cantTerrenoColocado = 0;
 	private int centro;
-	private int xMin, xMax, yMin, yMax;
+	public int xMin, xMax, yMin, yMax;
 
 	public Tablero(int tamTablero) {
 		this.tamTablero = tamTablero;
 		centro = tamTablero - 1;
 		this.tablero = new Ficha[(tamTablero * 2) - 1][(tamTablero * 2) - 1];
-		this.tablero[centro][centro] = new Ficha("Castillo", 0, centro, centro);
+		this.tablero[centro][centro] = new Ficha("Castillo", 0, centro, centro,-1);
 		xMin = xMax = yMin = yMax = centro;
 	}
 
@@ -291,7 +291,7 @@ public class Tablero {
 			for (int j = yMin; j <= yMax; j++) {
 				Ficha ficha = tablero[i][j];
 				if (ficha != null)
-					ret += String.format("%8s/%s|", ficha.getTipo(), ficha.getCantCoronas());
+					ret += String.format("%8s/%s/%s|", ficha.getTipo(), ficha.getCantCoronas(),ficha.idFicha);
 				else
 					ret += String.format("%10s|", " ");
 			}

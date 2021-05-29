@@ -3,13 +3,17 @@ package reyes;
 public class Ficha {
 	String Tipo;
 	int x, y, cantCoronas;
+	public int idFicha;
+	public int rotacion = 1;
 	boolean puntajeContado=false;
-	
-	public Ficha(String tipo, int cantCoronas, int x, int y) {
+	public static int fichas = 0;
+	public Ficha(String tipo, int cantCoronas, int x, int y, int idFicha) {
 		Tipo = tipo;
 		this.cantCoronas = cantCoronas;
 		this.x=x;
 		this.y=y;
+		fichas++;
+		this.idFicha = idFicha;
 	}
 	public int getX() {
 		return x;

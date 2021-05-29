@@ -6,13 +6,16 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+import SwingApp.VentanaJueguito;
+
+
 public class Partida {
 	private Mazo mazo;
 	private List<Jugador> jugadores;
 	private static final int DEFAULT_TAM_TABLERO = 5;
 	private static final int DEFAULT_CANT_CARTAS = 48;
 	private static final int DEFAULT_CANT_JUGADORES = 2;
-	private int tamanioTablero;
+	public int tamanioTablero;
 	private int cantidadCartas;
 	private int cantidadJugadores;
 
@@ -37,7 +40,7 @@ public class Partida {
 	}
 	public Partida(List<Jugador> jugadores, int tamanioTablero, int cantidadCartas) throws KingDominoExcepcion {
 
-		if (cantidadCartas != 48) {
+		/*if (cantidadCartas != 48) {
 			throw new KingDominoExcepcion(
 					"La cantidad de cartas tiene que ser 48! (limitación por parte del enunciado)");
 			// El código puede funcionar sin problemas con cualquier cantidad de cartas
@@ -45,7 +48,7 @@ public class Partida {
 			// Sin embargo, el enunciado tiene la limitación de 48 para todos los modos.
 			// Se puede quitar esta validación en el futuro si quisieramos agregar otros
 			// modos.
-		}
+		}*/
 		this.cantidadJugadores = jugadores.size();
 		if (cantidadJugadores > 4 || cantidadJugadores < 2) {
 			throw new KingDominoExcepcion("La cantidad de jugadores es invalida!!");
@@ -54,7 +57,7 @@ public class Partida {
 		this.tamanioTablero = tamanioTablero;
 		this.jugadores = jugadores;
 	}
-
+	
 	public boolean iniciarPartida() {
 
 		List<Integer> turnos = determinarTurnosIniciales();
@@ -85,7 +88,7 @@ public class Partida {
 		List<Integer> puntajesFinales = calcularPuntajesFinales();
 
 		determinarGanadores(puntajesFinales);
-
+		VentanaJueguito.mostrarPartida(this);
 		return true;
 	}
 
@@ -211,4 +214,10 @@ public class Partida {
 
 		return turnos;
 	}
+
+	public List<Jugador> getJugadores() {
+		return jugadores;
+	}
+	
+	
 }
