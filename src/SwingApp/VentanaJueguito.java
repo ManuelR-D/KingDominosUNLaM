@@ -37,14 +37,14 @@ public class VentanaJueguito extends JFrame {
 	 */
 	public VentanaJueguito(Partida p) throws IOException{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1280, 900);
+		setBounds(100, 100, 1920, 1080);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		List<Jugador> jugadores = p.getJugadores();
 		contentPane.setLayout(new GridLayout(2, jugadores.size(), 50, 50));
 		for (Jugador jugador : jugadores) {
-			JPanel panel = new PanelJueguito(jugador);
+			JPanel panel = new PanelJugador(jugador);
 			contentPane.add(panel);
 		}
 		
