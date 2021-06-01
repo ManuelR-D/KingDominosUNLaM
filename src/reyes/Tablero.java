@@ -5,16 +5,16 @@ import java.util.List;
 
 public class Tablero {
 	protected Ficha[][] tablero;
-	private int tamTablero;
+	protected int tamTablero;
 	private int cantTerrenoColocado = 0;
-	private int centro;
-	private int xMin, xMax, yMin, yMax;
+	protected int centro;
+	public int xMin, xMax, yMin, yMax;
 
 	public Tablero(int tamTablero) {
 		this.tamTablero = tamTablero;
 		centro = tamTablero - 1;
 		this.tablero = new Ficha[(tamTablero * 2) - 1][(tamTablero * 2) - 1];
-		this.tablero[centro][centro] = new Ficha("Castillo", 0, centro, centro);
+		this.tablero[centro][centro] = new Ficha("Castillo", 0, centro, centro,-1, null);
 		xMin = xMax = yMin = yMax = centro;
 	}
 
@@ -113,7 +113,7 @@ public class Tablero {
 		}
 	}
 
-	private boolean esPosibleInsertar(Carta carta, boolean mostrarMensaje) {
+	protected boolean esPosibleInsertar(Carta carta, boolean mostrarMensaje) {
 		Ficha[] fichas = carta.getFichas();
 		int f1X = fichas[0].getX();
 		int f1Y = fichas[0].getY();
@@ -188,7 +188,7 @@ public class Tablero {
 		}
 	}
 
-	private boolean actualizarLimites(int f1X, int f1Y, int f2X, int f2Y, int limite) {
+	protected boolean actualizarLimites(int f1X, int f1Y, int f2X, int f2Y, int limite) {
 		int xMinAux = xMin;
 		int xMaxAux = xMax;
 		int yMinAux = yMin;
@@ -229,7 +229,7 @@ public class Tablero {
 		}
 	}
 
-	private boolean tipoAdyacenteCompatible(Carta carta) {
+	protected boolean tipoAdyacenteCompatible(Carta carta) {
 		Ficha[] fichas = carta.getFichas();
 		int f1X = fichas[0].getX();
 		int f1Y = fichas[0].getY();
@@ -273,7 +273,7 @@ public class Tablero {
 		return false;
 	}
 
-	private boolean compararFichas(String f1T, Ficha fComparacion) {
+	protected boolean compararFichas(String f1T, Ficha fComparacion) {
 		if (fComparacion == null)
 			return false;
 		String fTipo = fComparacion.getTipo();
@@ -291,7 +291,7 @@ public class Tablero {
 			for (int j = yMin; j <= yMax; j++) {
 				Ficha ficha = tablero[i][j];
 				if (ficha != null)
-					ret += String.format("%8s/%s|", ficha.getTipo(), ficha.getCantCoronas());
+					ret += String.format("%8s/%s/%s|", ficha.getTipo(), ficha.getCantCoronas(),ficha.idFicha);
 				else
 					ret += String.format("%10s|", " ");
 			}

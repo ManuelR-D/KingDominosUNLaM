@@ -1,5 +1,6 @@
 package reyes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class Sala {
 	public String toString() {
 		return "Sala [" + idSala + "]" + nombreSala +" Jugadores en la sala: " + jugadoresEnSala.size();
 	}
-	public void crearPartida() throws KingDominoExcepcion {
+	public void crearPartida() throws KingDominoExcepcion, IOException {
 		Partida partida = new Partida(jugadoresEnSala);
 		partida.iniciarPartida();
 	}

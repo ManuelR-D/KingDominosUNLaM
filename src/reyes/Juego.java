@@ -1,5 +1,6 @@
 package reyes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -10,14 +11,14 @@ public class Juego {
 	private List<Sala> salas = new ArrayList<Sala>();
 	private Menu Menu;
 	
-	public static void main(String[] args) throws KingDominoExcepcion {
+	public static void main(String[] args) throws KingDominoExcepcion, IOException {
 		Juego test = new Juego();
 		test.usuarios.add(new Bot("Bot1","123"));
 		test.iniciarSalaYMostrar();
 	}
 	
 	
-	private void iniciarSalaYMostrar() throws KingDominoExcepcion {
+	private void iniciarSalaYMostrar() throws KingDominoExcepcion, IOException {
 		Scanner in = new Scanner(System.in);
 		this.Menu = new Menu(this);
         System.out.println("Ingrese nombre de usuario");

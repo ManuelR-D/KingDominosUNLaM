@@ -2,6 +2,7 @@ package reyes.Tests;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import reyes.Partida;
 
 public class PartidaTest {
 
-	@Test
+/*	@Test
 	public void partidaDe3Jugadores() throws KingDominoExcepcion {
 		int cantidadCartas = 48;
 		int tamTablero = 5;
@@ -73,9 +74,9 @@ public class PartidaTest {
 		// aunque en el futuro podríamos añadir modos con diferente cantidad de cartas.
 		// el código ya está preparado para eso.
 	}
-
+*/
 	@Test
-	public void elGranDuelo() throws KingDominoExcepcion {
+	public void elGranDuelo() throws KingDominoExcepcion, IOException {
 		int cantidadCartas = 48;
 		int tamTablero = 7;
 		List<Jugador> jugadores = new ArrayList<Jugador>(2);
@@ -85,7 +86,7 @@ public class PartidaTest {
 		Partida p = new Partida(jugadores, tamTablero, cantidadCartas);
 		assertEquals(true, p.iniciarPartida());
 	}
-
+/*
 	@Test
 	public void iniciarPartidaDefault() throws KingDominoExcepcion {
 		int cantidadCartas = 48;
@@ -109,5 +110,5 @@ public class PartidaTest {
 		
 		Partida p = new Partida(jugadores, tamTablero, cantidadCartas);
 		assertEquals(true, p.iniciarPartida());
-	}
+	}*/
 }
