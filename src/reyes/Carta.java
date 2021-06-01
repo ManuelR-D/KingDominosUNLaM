@@ -1,14 +1,14 @@
 package reyes;
 
 public class Carta implements Comparable<Carta> {
-	private int idCarta;
+	public int idCarta;
 	private Ficha[] fichas = new Ficha[2];
 	private int rotacion = 1;
 
 	public Carta(int idCarta, String tipoIzq, int cantCoronasI, String tipoDer, int cantCoronasD) {
 		this.idCarta = idCarta;
-		fichas[0] = new Ficha(tipoIzq, cantCoronasI, 0, 0,this.idCarta*2);
-		fichas[1] = new Ficha(tipoDer, cantCoronasD, 0, 1,this.idCarta*2+1);
+		fichas[0] = new Ficha(tipoIzq, cantCoronasI, 0, 0,this.idCarta*2, this);
+		fichas[1] = new Ficha(tipoDer, cantCoronasD, 0, 1,this.idCarta*2+1, this);
 	}
 
 	public void setDefault() {

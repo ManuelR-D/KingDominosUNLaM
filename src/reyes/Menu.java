@@ -1,6 +1,7 @@
 package reyes;
 
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Menu {
@@ -17,7 +18,7 @@ public class Menu {
 		this.user = user;
 	}
 	
-	public void iniciarMenu() throws KingDominoExcepcion {
+	public void iniciarMenu() throws KingDominoExcepcion, IOException {
 		char op = 1;
 		while(op < 3 && op >= 0)
 		{
@@ -72,7 +73,7 @@ public class Menu {
 		return op;
 	}
 	
-	private void esperarEnSala() throws InterruptedException, KingDominoExcepcion {
+	private void esperarEnSala() throws InterruptedException, KingDominoExcepcion, IOException {
 		char op;
 		while(user.salaActual != null && user.salaActual.getCantJugadoresEnSala() < 4) {
 			System.out.println("Se esperan mas jugadores");

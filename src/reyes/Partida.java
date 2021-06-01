@@ -1,5 +1,6 @@
 package reyes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class Partida {
 	}
 	public Partida(List<Jugador> jugadores, int tamanioTablero, int cantidadCartas) throws KingDominoExcepcion {
 
-		/*if (cantidadCartas != 48) {
+		if (cantidadCartas != 48) {
 			throw new KingDominoExcepcion(
 					"La cantidad de cartas tiene que ser 48! (limitación por parte del enunciado)");
 			// El código puede funcionar sin problemas con cualquier cantidad de cartas
@@ -48,7 +49,7 @@ public class Partida {
 			// Sin embargo, el enunciado tiene la limitación de 48 para todos los modos.
 			// Se puede quitar esta validación en el futuro si quisieramos agregar otros
 			// modos.
-		}*/
+		}
 		this.cantidadJugadores = jugadores.size();
 		if (cantidadJugadores > 4 || cantidadJugadores < 2) {
 			throw new KingDominoExcepcion("La cantidad de jugadores es invalida!!");
@@ -58,7 +59,7 @@ public class Partida {
 		this.jugadores = jugadores;
 	}
 	
-	public boolean iniciarPartida() {
+	public boolean iniciarPartida() throws IOException {
 
 		List<Integer> turnos = determinarTurnosIniciales();
 		List<Carta> cartasAElegirSig = new ArrayList<Carta>();
@@ -72,12 +73,15 @@ public class Partida {
 
 		int rondas = 0;
 		Scanner entrada = new Scanner(System.in);
+		VentanaJueguito ventana = new VentanaJueguito(this);
+		
 		while (mazo.getTam() > 1) {
 			System.out.println("--------Ronda: " + ++rondas + "--------");
 			cartasAElegirSig.clear();
 			mazo.quitarPrimerasNCartas(4, cartasAElegirSig);
 			cartasAElegirSig.sort(Carta::compareTo);
-			elegirCartas(cartasAElegirSig, turnos, entrada);
+			elegirCartas(cartasAElegirSig, turnos, ventana,entrada);
+			
 		}
 		//entrada.close(); Los scanner asociados a System.in no se tienen que cerrar
 		//puesto que genera errores más adelante, debido a que se cierra System.in
@@ -87,8 +91,8 @@ public class Partida {
 
 		List<Integer> puntajesFinales = calcularPuntajesFinales();
 
-		determinarGanadores(puntajesFinales);
-		VentanaJueguito.mostrarPartida(this);
+		
+		ventana.terminarPartida(determinarGanadores(puntajesFinales));
 		return true;
 	}
 
@@ -102,18 +106,21 @@ public class Partida {
 		return puntajesFinales;
 	}
 
-	private void determinarGanadores(List<Integer> puntajesFinales) {
+	private List<Jugador> determinarGanadores(List<Integer> puntajesFinales) {
 		List<Integer> ganadoresPorPunto = obtenerGanadoresPorPuntos(puntajesFinales);
+		List<Jugador> ganadores = new ArrayList<Jugador>(jugadores.size());
 		if (ganadoresPorPunto.size() == 1) {
 			System.out.println("Ha ganado " + jugadores.get(ganadoresPorPunto.get(0)).getNombre());
-			return;
+			ganadores.add(jugadores.get(ganadoresPorPunto.get(0)));
+			return ganadores;
 		}
 
 		List<Integer> ganadoresPorTerreno = obtenerGanadoresPorTerreno(ganadoresPorPunto);
 
 		if (ganadoresPorTerreno.size() == 1) {
 			System.out.println("Ha ganado " + jugadores.get(ganadoresPorTerreno.get(0)).getNombre());
-			return;
+			ganadores.add(jugadores.get(ganadoresPorTerreno.get(0)));
+			return ganadores;
 		}
 
 		// Si hay mas de un ganador por terreno se comparte la victoria
@@ -122,7 +129,9 @@ public class Partida {
 		System.out.println("Ganadores:");
 		for (int i = 0; i < ganadoresPorTerreno.size(); i++) {
 			System.out.println(jugadores.get(ganadoresPorTerreno.get(i)).getNombre());
+			ganadores.add(jugadores.get(ganadoresPorTerreno.get(i)));
 		}
+		return ganadores;
 
 	}
 
@@ -168,33 +177,25 @@ public class Partida {
 		return ganadoresPorTerreno;
 	}
 
-	private void elegirCartas(List<Carta> cartasAElegir, List<Integer> turnos, Scanner entrada) {
+	private void elegirCartas(List<Carta> cartasAElegir, List<Integer> turnos, VentanaJueguito entrada, Scanner teclado) throws IOException {
 
 		int numeroElegido;
 		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
 
 		for (int i = 0; i < turnos.size(); i++) {
+			entrada.mostrarCartas(cartasAElegir);
+			entrada.actualizarTableros(jugadores);
 			int turno = turnos.get(i);
-
-			if (i == cartasAElegir.size() - 1) { // el ultimo jugador en elegir, no tiene decision
-				numeroElegido = 0;
-				while(cartasAElegir.get(numeroElegido) == null)
-					numeroElegido++;
-			} else {
-				numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
-			}
-			// Los numeros elegidos se guardan en un map, ya que el menor de estos decide
-			// quien comienza el turno siguiente
-			System.out.println(jugadores.get(turno).getNombre() + " elige carta " + (numeroElegido + 1));
-			jugadores.get(turno).insertaEnTablero(cartasAElegir.get(numeroElegido), entrada);
+			numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
+			//System.out.println(jugadores.get(turno).getNombre() + " elige carta " + (numeroElegido));
+			//System.out.println(numeroElegido);
+			jugadores.get(turno).insertaEnTablero(cartasAElegir.get(numeroElegido), entrada, teclado);
 			cartasAElegir.set(numeroElegido, null);
 			nuevoOrdenDeTurnos.put(numeroElegido, turno);
 		}
 		turnos.clear();
-		for (Map.Entry<Integer, Integer> entry : nuevoOrdenDeTurnos.entrySet()) {
-			// modifico turnos de acuerdo al numero elegido
+		for (Map.Entry<Integer, Integer> entry : nuevoOrdenDeTurnos.entrySet())
 			turnos.add(entry.getValue());
-		}
 
 		if(turnos.size() != nuevoOrdenDeTurnos.size())
 			System.out.println("check");

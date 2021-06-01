@@ -3,6 +3,8 @@ package reyes;
 import java.util.List;
 import java.util.Scanner;
 
+import SwingApp.VentanaJueguito;
+
 public class Bot extends Jugador {
 
 	public Bot(String nombre, int tamTablero) {
@@ -21,7 +23,7 @@ public class Bot extends Jugador {
 	}
 
 	@Override
-	public int eligeCarta(List<Carta> cartasAElegir, Scanner entrada) {
+	public int eligeCarta(List<Carta> cartasAElegir, VentanaJueguito ventana) {
 		int puntajeMax = -1;
 		int numeroElegido = -1;
 		boolean noMostrarRegiones=false;
@@ -30,7 +32,7 @@ public class Bot extends Jugador {
 			Carta carta = cartasAElegir.get(i);
 			if (carta != null) {
 				// si no la eligieron ya...
-				insertaEnTablero(carta,entrada);
+				insertaEnTablero(carta,null,null);
 				int puntajeActual = tablero.puntajeTotal(noMostrarRegiones);
 				if (puntajeMax < puntajeActual) {
 					puntajeMax = puntajeActual;
@@ -43,7 +45,7 @@ public class Bot extends Jugador {
 	}
 
 	@Override
-	public void insertaEnTablero(Carta cartaElegida, Scanner entrada) {
+	public void insertaEnTablero(Carta cartaElegida, VentanaJueguito ventana, Scanner entrada) {
 		int x = -(tablero.getTamanio() - 1);
 		int y = -(tablero.getTamanio() - 1);
 		int rotaciones = 0;

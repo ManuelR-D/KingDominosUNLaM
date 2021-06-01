@@ -2,6 +2,7 @@ package reyes.Tests;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class PartidaTest {
 	}
 */
 	@Test
-	public void elGranDuelo() throws KingDominoExcepcion {
+	public void elGranDuelo() throws KingDominoExcepcion, IOException {
 		int cantidadCartas = 48;
 		int tamTablero = 7;
 		List<Jugador> jugadores = new ArrayList<Jugador>(2);
