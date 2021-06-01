@@ -3,15 +3,15 @@ package reyes;
 import java.util.Scanner;
 
 public class Usuario {
-	public String nombreUsuario;
+	private String nombreUsuario;
 	private String contraseña;
 	private int idUsuario;
-	public Sala salaActual;
-	public int cantVictorias;
-	public int cantDerrotas;
-	public int cantPartidasJugadas;
-	public int cantDominosJugados; 
-	public int puntajeMaximo; 
+	private Sala salaActual;
+//	private int cantVictorias;
+//	private int cantDerrotas;
+//	private int cantPartidasJugadas;
+//	private int cantDominosJugados; 
+//	private int puntajeMaximo; 
 	
 	public Usuario(String nombreUsuario, String contraseña) {
 		this.nombreUsuario = nombreUsuario;
@@ -47,5 +47,11 @@ public class Usuario {
 	@Override
 	public String toString() {
 		return "Usuario: " + nombreUsuario;
+	}
+	public String getNombreUsuario() {
+		return nombreUsuario;
+	}
+	public Sala getSalaActual() {
+		return salaActual;
 	}
 }

@@ -22,7 +22,7 @@ public class Menu {
 		char op = 1;
 		while(op < 3 && op >= 0)
 		{
-			if(user.salaActual != null) {
+			if(user.getSalaActual() != null) {
 				try {
 					esperarEnSala();
 					op=1;
@@ -75,29 +75,30 @@ public class Menu {
 	
 	private void esperarEnSala() throws InterruptedException, KingDominoExcepcion, IOException {
 		char op;
-		while(user.salaActual != null && user.salaActual.getCantJugadoresEnSala() < 4) {
+		Sala sActual=user.getSalaActual();
+		while(sActual != null && sActual.getCantJugadoresEnSala() < 4) {
 			System.out.println("Se esperan mas jugadores");
-			user.salaActual.mostrarJugadoresEnSala();
+			sActual.mostrarJugadoresEnSala();
 			System.out.println("1: Salir de sala");
 			System.out.println("2: Refrescar");
 			System.out.println("3: Añadir Bots");
-			if(user.salaActual.getCantJugadoresEnSala() > 1)
+			if(sActual.getCantJugadoresEnSala() > 1)
 				System.out.println("4: Iniciar partida");
 			op = (char) input.nextByte();
 			if (op == 1) {
 				user.salirSala();
 			}else if (op == 4) {
-				user.salaActual.crearPartida();
+				sActual.crearPartida();
 			}else if (op == 3) {
 				for (Usuario user : juego.getUsuarios()) {
 					if (!user.equals(this.user)) {
-						user.unirseSala(this.user.salaActual);
+						user.unirseSala(this.user.getSalaActual());
 					}
 				}
 			}
 		}
-		if(user.salaActual != null && user.salaActual.getCantJugadoresEnSala() >= 4) {
-			user.salaActual.crearPartida();
+		if(sActual != null && sActual.getCantJugadoresEnSala() >= 4) {
+			sActual.crearPartida();
 		}
 	}
 }

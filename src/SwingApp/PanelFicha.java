@@ -69,12 +69,12 @@ public class PanelFicha extends JPanel  {
 		BufferedImage pic = null;
 		if (f == null)
 			return null;
-		else if (f.idFicha == -1)
+		else if (f.getId() == -1)
 			return new JLabel(new ImageIcon(VentanaJueguito.bufferCastillo.getSubimage(0, 0, LARGO_FICHA, ALTO_FICHA)));
 		else
-			pic = getTexturaCarta(f.idFicha / 2, f.idFicha % 2 == 0);
+			pic = getTexturaCarta(f.getId() / 2, f.getId() % 2 == 0);
 		ImageIcon ii = new ImageIcon(pic);
-		RotatedIcon rt = new RotatedIcon(ii,90*(f.rotacion-1));
+		RotatedIcon rt = new RotatedIcon(ii,90*(f.getRotacion()-1));
 		return new JLabel(rt);
 	}
 

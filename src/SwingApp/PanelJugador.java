@@ -17,7 +17,7 @@ public class PanelJugador extends JPanel {
 	public PanelJugador(Jugador j) throws IOException {
 		setLayout(null);
 		this.j = j;
-		Label nombre = new Label(j.nombre);
+		Label nombre = new Label(j.getNombre());
 		nombre.setBounds(50, 0, 100, 25);
 		this.add(nombre);
 		PanelTablero tablero = new PanelTablero(j.tablero);

@@ -12,7 +12,7 @@ import java.util.Scanner;
 import SwingApp.VentanaJueguito;
 
 public class Jugador extends Usuario {
-	public String nombre;
+	private String nombre;
 	public Tablero tablero;
 
 	public Jugador(String nombre, int tamTablero) {
@@ -23,7 +23,7 @@ public class Jugador extends Usuario {
 
 	public Jugador(Usuario user) {
 		super(user);
-		this.nombre = user.nombreUsuario;
+		this.nombre = user.getNombreUsuario();
 	}
 
 	public Jugador(String nombre, String contrasenia) {
@@ -62,7 +62,7 @@ public class Jugador extends Usuario {
 				if (c != null) {
 					System.out.println((i + 1) + ":");
 					System.out.println(c);
-					if (c.idCarta == cartaElegida)
+					if (c.getId() == cartaElegida)
 						cartaElegida = i;
 				}
 				

@@ -41,7 +41,7 @@ public class Sala {
 	}
 	public void quitarJugadorDeSala(Usuario usuario) {
 		for (Jugador jugador : jugadoresEnSala) {
-			if(jugador.nombreUsuario == usuario.nombreUsuario)
+			if(jugador.getNombreUsuario() == usuario.getNombreUsuario())
 				this.jugadoresEnSala.remove(jugador);
 		}
 	}

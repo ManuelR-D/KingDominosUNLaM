@@ -81,7 +81,7 @@ public class VentanaJueguito extends JFrame {
 		VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
 		dibujarTableros(p.getJugadores());
 
-		this.setTitle(p.getJugadores().get(0).nombre);
+		this.setTitle(p.getJugadores().get(0).getNombre());
 		// this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		// this.setUndecorated(true);
 		this.setVisible(true);
@@ -111,7 +111,7 @@ public class VentanaJueguito extends JFrame {
 		contentPane.remove(pSeleccion);
 		String msg = "Ganadores: ";
 		for (Jugador jugador : list) {
-			msg += jugador.nombre + " con " + jugador.tablero.puntajeTotal(false) + " puntos ";
+			msg += jugador.getNombre() + " con " + jugador.tablero.puntajeTotal(false) + " puntos ";
 		}
 		JLabel msgLabel = new JLabel(msg);
 		msgLabel.setFont(new Font("Serif", Font.PLAIN, 24));

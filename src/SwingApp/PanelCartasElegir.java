@@ -33,7 +33,7 @@ public class PanelCartasElegir extends PanelTablero {
 		
 	}
 	protected void onRotarCartaClick() {
-		fElegida.carta.rotarCarta();
+		fElegida.getCarta().rotarCarta();
 		onCartaElegida(fElegida);
 	}
 	@Override
@@ -47,10 +47,10 @@ public class PanelCartasElegir extends PanelTablero {
 		});
 	}
 	public synchronized void onCartaElegida(Ficha f) {
-		idCartaElegida = f.idFicha/2;
+		idCartaElegida = f.getId()/2;
 		this.fElegida = f;
 		this.removeAll();
-		TableroSeleccion tS = new TableroSeleccion(4,f.carta);
+		TableroSeleccion tS = new TableroSeleccion(4,f.getCarta());
 		try {
 			mostrarTablero(tS);
 		} catch (IOException e1) {

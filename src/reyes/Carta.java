@@ -1,24 +1,26 @@
 package reyes;
 
 public class Carta implements Comparable<Carta> {
-	public int idCarta;
+	private int id;
 	private Ficha[] fichas = new Ficha[2];
 	private int rotacion = 1;
 
 	public Carta(int idCarta, String tipoIzq, int cantCoronasI, String tipoDer, int cantCoronasD) {
-		this.idCarta = idCarta;
-		fichas[0] = new Ficha(tipoIzq, cantCoronasI, 0, 0,this.idCarta*2, this);
-		fichas[1] = new Ficha(tipoDer, cantCoronasD, 0, 1,this.idCarta*2+1, this);
+		this.id = idCarta;
+		fichas[0] = new Ficha(tipoIzq, cantCoronasI, 0, 0,this.id*2, this);
+		fichas[1] = new Ficha(tipoDer, cantCoronasD, 0, 1,this.id*2+1, this);
 	}
 
 	public void setDefault() {
 		this.rotacion = 1;
-		this.fichas[0].x = 0;
-		this.fichas[0].y = 0;
-		this.fichas[1].x = 0;
-		this.fichas[1].y = 1;
+		this.fichas[0].setX(0);
+		this.fichas[0].setY(0);
+		this.fichas[1].setX(0);
+		this.fichas[1].setY(1);
 	}
-
+	public int getId() {
+		return id;
+	}
 	public Ficha[] getFichas() {
 		return fichas;
 	}
@@ -47,8 +49,8 @@ public class Carta implements Comparable<Carta> {
 			break;
 		}
 		rotacion++;
-		fichas[0].rotacion = rotacion;
-		fichas[1].rotacion = rotacion;
+		fichas[0].setRotacion(rotacion);
+		fichas[1].setRotacion(rotacion);
 	}
 
 	@Override
@@ -84,14 +86,14 @@ public class Carta implements Comparable<Carta> {
 
 	@Override
 	public int compareTo(Carta otraCarta) {
-		return this.idCarta - otraCarta.idCarta;
+		return this.id - otraCarta.id;
 	}
 
 	public void moverCarta(int fila, int columna) {
-		this.fichas[0].x += fila;
-		this.fichas[0].y += columna;
-		this.fichas[1].x += fila;
-		this.fichas[1].y += columna;
+		this.fichas[0].setX(this.fichas[0].getX()+fila);
+		this.fichas[0].setY(this.fichas[0].getY()+columna);
+		this.fichas[1].setX(this.fichas[1].getX()+fila);
+		this.fichas[1].setY(this.fichas[1].getY()+columna);
 	}
 
 }

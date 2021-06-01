@@ -16,7 +16,7 @@ public class Partida {
 	private static final int DEFAULT_TAM_TABLERO = 5;
 	private static final int DEFAULT_CANT_CARTAS = 48;
 	private static final int DEFAULT_CANT_JUGADORES = 2;
-	public int tamanioTablero;
+	private int tamanioTablero;
 	private int cantidadCartas;
 	private int cantidadJugadores;
 
@@ -99,7 +99,7 @@ public class Partida {
 	private List<Integer> calcularPuntajesFinales() {
 		List<Integer> puntajesFinales = new ArrayList<Integer>();
 		for (Jugador jugador : jugadores) {
-			System.out.println("-------Tablero de Jugador " + jugador.nombre + "-------");
+			System.out.println("-------Tablero de Jugador " + jugador.getNombre() + "-------");
 			System.out.println(jugador.tablero);
 			puntajesFinales.add(jugador.tablero.puntajeTotal(true));
 		}

@@ -55,8 +55,8 @@ public class PanelTablero extends JPanel {
 	protected void mostrarTablero(Tablero tablero) throws IOException {
 
 		Ficha[][] f = tablero.getTablero();
-		for (int i = Math.max(tablero.xMin-1, 0), y = 0; i <= Math.min(tablero.xMax + 1, f.length-1); i++, y++) {
-			for (int j = Math.max(tablero.yMin-1, 0), x = 0; j <= Math.min(tablero.yMax + 1, f[i].length - 1); j++, x++) {
+		for (int i = Math.max(tablero.getxMin()-1, 0), y = 0; i <= Math.min(tablero.getxMax() + 1, f.length-1); i++, y++) {
+			for (int j = Math.max(tablero.getyMin()-1, 0), x = 0; j <= Math.min(tablero.getyMax() + 1, f[i].length - 1); j++, x++) {
 				if(!fichasEnTablero.contains(f[i][j])) {
 					PanelFicha panelFicha = new PanelFicha(f[i][j]);
 					panelFicha.setBounds((x * PanelFicha.LARGO_FICHA),// + offset_x, 
