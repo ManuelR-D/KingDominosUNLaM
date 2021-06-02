@@ -3,6 +3,8 @@ package reyes;
 import java.util.ArrayList;
 import java.util.List;
 
+import SwingApp.VentanaJueguito;
+
 public class Tablero {
 	protected Ficha[][] tablero;
 	protected int tamTablero;
@@ -112,6 +114,31 @@ public class Tablero {
 			return false;
 		}
 	}
+	/*
+	 * Sobrecarga del metodo ponerCarta para que reciba la ventana como parametro
+	 */
+	public boolean ponerCarta(Carta carta, int columnaRelativa, int filaRelativa, boolean mostrarMensaje,VentanaJueguito ventana) {
+		Ficha[] fichas = carta.getFichas();
+		carta.moverCarta(centro, centro);
+		carta.moverCarta(-filaRelativa, columnaRelativa);
+
+		if (esPosibleInsertar(carta, mostrarMensaje,ventana)) {
+
+			int f1X = fichas[0].getX();
+			int f1Y = fichas[0].getY();
+			int f2X = fichas[1].getX();
+			int f2Y = fichas[1].getY();
+			actualizarLimites(f1X, f1Y, f2X, f2Y, tamTablero);
+			tablero[f1X][f1Y] = fichas[0];
+			tablero[f2X][f2Y] = fichas[1];
+			cantTerrenoColocado++;
+			return true;
+		} else {
+			carta.setDefault();
+			return false;
+		}
+	}
+
 
 	protected boolean esPosibleInsertar(Carta carta, boolean mostrarMensaje) {
 		Ficha[] fichas = carta.getFichas();
@@ -144,6 +171,46 @@ public class Tablero {
 		if (!comprobarLimiteSinModificar(f1X, f1Y, f2X, f2Y, tamTablero)) {
 			if (mostrarMensaje) {
 				System.out.println("ERROR- SE EXCEDE EL LIMITE DE CONSTRUCCION");
+			}
+			return false;
+		}
+
+		return true;
+	}
+	/*
+	 * Sobrecarga del metodo para que reciba la ventana como argumento
+	 */
+	protected boolean esPosibleInsertar(Carta carta, boolean mostrarMensaje, VentanaJueguito ventana) {
+		Ficha[] fichas = carta.getFichas();
+		int f1X = fichas[0].getX();
+		int f1Y = fichas[0].getY();
+		int f2X = fichas[1].getX();
+		int f2Y = fichas[1].getY();
+
+		if (f1X >= tablero.length || f1X < 0 || f1Y >= tablero.length || f1Y < 0 || f2X >= tablero.length || f2X < 0
+				|| f2Y >= tablero.length || f2Y < 0) {
+			return false;
+		}
+		// Si ya hay alguna "ficha" colocada en la posicion de la carta entonces
+		// devuelvo false
+		if (tablero[f1X][f1Y] != null || tablero[f2X][f2Y] != null) {
+			if (mostrarMensaje) {
+				ventana.mostrarMensaje("ERROR- YA HAY UNA CARTA EN ESA POSICION");
+			}
+			return false;
+		}
+		// Si no hay tipos adyacentes compatibles, no se puede poner la carta
+		if (!tipoAdyacenteCompatible(carta)) {
+			if (mostrarMensaje) {
+				ventana.mostrarMensaje("ERROR- NO HAY TIPOS ADYACENTES COMPATIBLES");
+			}
+			return false;
+		}
+
+		// comprobamos que no salga del limite
+		if (!comprobarLimiteSinModificar(f1X, f1Y, f2X, f2Y, tamTablero)) {
+			if (mostrarMensaje) {
+				ventana.mostrarMensaje("ERROR- SE EXCEDE EL LIMITE DE CONSTRUCCION");
 			}
 			return false;
 		}

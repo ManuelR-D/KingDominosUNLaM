@@ -43,7 +43,7 @@ public class Jugador extends Usuario {
 		do {
 			posicion = ventana.obtenerInputCoordenadas(this);
 			System.out.println(carta);
-		} while (!tablero.ponerCarta(carta, posicion[0], posicion[1], true));
+		} while (!tablero.ponerCarta(carta, posicion[0], posicion[1], true,ventana));
 		System.out.println("Tablero actualizado:");
 		System.out.println(tablero);
 

@@ -186,6 +186,7 @@ public class Partida {
 			entrada.mostrarCartas(cartasAElegir);
 			entrada.actualizarTableros(jugadores);
 			int turno = turnos.get(i);
+			entrada.mostrarMensaje("Turno del jugador:"+jugadores.get(turno).getNombre());
 			numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
 			//System.out.println(jugadores.get(turno).getNombre() + " elige carta " + (numeroElegido));
 			//System.out.println(numeroElegido);

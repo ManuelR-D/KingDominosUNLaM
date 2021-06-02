@@ -72,7 +72,6 @@ public class PanelTablero extends JPanel {
 		}
 	}
 	protected void cargarPropiedadesFicha(PanelFicha panelFicha) {
-		// TODO Auto-generated method stub
 		
 	}
 

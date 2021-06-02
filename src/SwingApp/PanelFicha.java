@@ -6,11 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,7 +20,7 @@ import javax.swing.JPanel;
 
 import reyes.Ficha;
 
-public class PanelFicha extends JPanel  {
+public class PanelFicha extends JPanel{
 
 	private Ficha f;
 	static final int LARGO_CARTA = 160;
@@ -44,11 +46,20 @@ public class PanelFicha extends JPanel  {
 			this.add(btn);*/
 			JPanel panelVacio = new JPanel();
 			panelVacio.setBackground(new Color(200,200,200));
+			panelVacio.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 			panelVacio.setBounds(0, 0, LARGO_FICHA, ALTO_FICHA);
 			panelVacio.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					hacerCosas();
+				}
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					panelVacio.setBackground(new Color(0x63CAA7));
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					panelVacio.setBackground(new Color(200,200,200));
 				}
 			});
 			this.add(panelVacio);

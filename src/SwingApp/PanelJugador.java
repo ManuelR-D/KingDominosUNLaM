@@ -22,7 +22,7 @@ public class PanelJugador extends JPanel {
 		this.add(nombre);
 		PanelTablero tablero = new PanelTablero(j.tablero);
 		this.t = tablero;
-		t.setBounds(0,0,PanelFicha.LARGO_CARTA*j.tablero.getTamanio(),
+		t.setBounds(0,0,PanelFicha.LARGO_FICHA*j.tablero.getTamanio(),
 							   PanelFicha.ALTO_FICHA*j.tablero.getTamanio());
 		this.add(t);
 	}

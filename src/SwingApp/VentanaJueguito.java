@@ -46,6 +46,7 @@ public class VentanaJueguito extends JFrame {
 	private List<PanelJugador> tableros;
 	private PanelCartasElegir pSeleccion;
 	private Carta cartaActual = null;
+	private JLabel informacion;
 
 	private static CountDownLatch latchCartaElegida = new CountDownLatch(1);
 	public static volatile int[] coordenadasElegidas = new int[2];
@@ -76,6 +77,10 @@ public class VentanaJueguito extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new GridLayout(p.getJugadores().size() / 2, p.getJugadores().size() / 2, 50, 50));
 		setContentPane(contentPane);
+		
+		informacion=new JLabel();
+		informacion.setVisible(true);
+		this.add(informacion);
 
 		VentanaJueguito.bufferCastillo = ImageIO.read(texturaCastillo);
 		VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
@@ -171,6 +176,10 @@ public class VentanaJueguito extends JFrame {
 
 	public static CountDownLatch getLatchcartaelegida() {
 		return latchCartaElegida;
+	}
+
+	public void mostrarMensaje(String msj) {
+		informacion.setText(msj);
 	}
 
 }
