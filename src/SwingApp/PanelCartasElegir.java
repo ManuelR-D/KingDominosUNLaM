@@ -18,11 +18,6 @@ import reyes.TableroSeleccion;
 public class PanelCartasElegir extends PanelTablero {
 	Ficha fElegida;
 	TableroSeleccion tS;
-	/**
-	 * Create the panel.
-	 * 
-	 * @throws IOException
-	 */
 	private Tablero t;
 	public static volatile Integer idCartaElegida = Integer.MIN_VALUE;
 	private CountDownLatch startLatch = new CountDownLatch(1);
@@ -54,11 +49,10 @@ public class PanelCartasElegir extends PanelTablero {
 		try {
 			mostrarTablero(tS);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		JButton btn_rot = new JButton("Rotar");
-		btn_rot.setBounds(0,4*PanelFicha.ALTO_CARTA,PanelFicha.LARGO_CARTA*2,PanelFicha.ALTO_CARTA*2);
+		btn_rot.setBounds(0,5*PanelFicha.ALTO_FICHA,PanelFicha.LARGO_FICHA*2,PanelFicha.ALTO_FICHA);
 		this.add(btn_rot);
 		btn_rot.addMouseListener(new MouseAdapter() {
 			@Override

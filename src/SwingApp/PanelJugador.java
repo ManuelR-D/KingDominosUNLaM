@@ -10,10 +10,7 @@ import reyes.Jugador;
 public class PanelJugador extends JPanel {
 	private PanelTablero t;
 	Jugador j;
-	/**
-	 * Create the panel.
-	 * @throws IOException 
-	 */
+
 	public PanelJugador(Jugador j) throws IOException {
 		setLayout(null);
 		this.j = j;

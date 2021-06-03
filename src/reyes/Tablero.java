@@ -114,13 +114,10 @@ public class Tablero {
 			return false;
 		}
 	}
-	/*
-	 * Sobrecarga del metodo ponerCarta para que reciba la ventana como parametro
-	 */
-	public boolean ponerCarta(Carta carta, int columnaRelativa, int filaRelativa, boolean mostrarMensaje,VentanaJueguito ventana) {
+
+	public boolean ponerCarta(Carta carta, int columna, int fila, boolean mostrarMensaje,VentanaJueguito ventana) {
 		Ficha[] fichas = carta.getFichas();
-		carta.moverCarta(centro, centro);
-		carta.moverCarta(-filaRelativa, columnaRelativa);
+		carta.moverCarta(fila, columna);
 
 		if (esPosibleInsertar(carta, mostrarMensaje,ventana)) {
 

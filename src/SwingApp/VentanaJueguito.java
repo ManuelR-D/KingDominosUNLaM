@@ -142,7 +142,6 @@ public class VentanaJueguito extends JFrame {
 		try {
 			pSeleccion.getStartLatch().await();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("Holiwis");
@@ -160,7 +159,6 @@ public class VentanaJueguito extends JFrame {
 					try {
 						VentanaJueguito.latchCartaElegida.await();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
