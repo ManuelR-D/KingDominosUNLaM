@@ -128,7 +128,7 @@ public class VentanaJueguito extends JFrame {
 
 	public int mostrarCartas(List<Carta> cartasAElegir) throws IOException {
 		contentPane.remove(pSeleccion);
-		pSeleccion = new PanelCartasElegir(new TableroSeleccion(5, cartasAElegir), 1, 1);
+		pSeleccion = new PanelCartasElegir(new TableroSeleccion(cartasAElegir), 1, 1);
 		pSeleccion.setBounds(0, 20, PanelFicha.LARGO_CARTA * 4, PanelFicha.ALTO_CARTA * 4);
 		contentPane.add(pSeleccion);
 		contentPane.invalidate();

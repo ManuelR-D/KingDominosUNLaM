@@ -1,22 +1,12 @@
 package SwingApp;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.awt.Color;
-import java.awt.Label;
 
-import reyes.Carta;
+import javax.swing.JPanel;
+
 import reyes.Ficha;
-import reyes.Jugador;
 import reyes.Tablero;
 
 public class PanelTablero extends JPanel {
@@ -25,11 +15,7 @@ public class PanelTablero extends JPanel {
 	private static final long serialVersionUID = -3826925585139282813L;
 	int offset_x = 0;
 	int offset_y = 0;
-	/**
-	 * Create the panel.
-	 * 
-	 * @throws IOException
-	 */
+
 	public PanelTablero(Tablero t) throws IOException {
 		
 		setLayout(null);
