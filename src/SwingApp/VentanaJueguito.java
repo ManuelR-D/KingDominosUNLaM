@@ -1,38 +1,27 @@
 package SwingApp;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 
-import jdk.jfr.ContentType;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import reyes.Bot;
 import reyes.Carta;
 import reyes.Jugador;
 import reyes.Partida;
-import reyes.Tablero;
 import reyes.TableroSeleccion;
-
-import java.awt.GridLayout;
-import java.awt.Label;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-
-import java.util.concurrent.CountDownLatch;
 
 public class VentanaJueguito extends JFrame {
 
@@ -43,10 +32,9 @@ public class VentanaJueguito extends JFrame {
 	static BufferedImage bufferCastillo;
 	static BufferedImage bufferCarta;
 	private JPanel contentPane;
-	private List<PanelJugador> tableros;
-	private PanelCartasElegir pSeleccion;
-	private Carta cartaActual = null;
+	private PanelTableroSeleccion pSeleccion;
 	private JLabel informacion;
+	private TablerosJugadores tablerosJugadores;
 
 	private static CountDownLatch latchCartaElegida = new CountDownLatch(1);
 	public static volatile int[] coordenadasElegidas = new int[2];
@@ -62,6 +50,7 @@ public class VentanaJueguito extends JFrame {
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
+					System.out.println("Error creando ventana");
 				}
 			}
 		});
@@ -70,46 +59,41 @@ public class VentanaJueguito extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaJueguito(Partida p) throws IOException {
+	public VentanaJueguito(Partida p){
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1800, 800);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new GridLayout(p.getJugadores().size() / 2, p.getJugadores().size() / 2, 50, 50));
+//		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+//		contentPane.setLayout(new GridLayout(p.getJugadores().size() / 2, p.getJugadores().size() / 2, 50, 50));
+		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
-		
-		informacion=new JLabel();
+
+		informacion = new JLabel();
 		informacion.setVisible(true);
 		this.add(informacion);
 
-		VentanaJueguito.bufferCastillo = ImageIO.read(texturaCastillo);
-		VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
-		dibujarTableros(p.getJugadores());
+		try {
+			VentanaJueguito.bufferCastillo = ImageIO.read(texturaCastillo);
+			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Error generando imagenes clase VentanaJuegito");
+		}
+		tablerosJugadores = new TablerosJugadores(p.getJugadores());
+		tablerosJugadores.setLayout(new GridLayout(2, 2));
+		this.add(tablerosJugadores,BorderLayout.CENTER);
 
 		this.setTitle(p.getJugadores().get(0).getNombre());
-		// this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		// this.setUndecorated(true);
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		this.pSeleccion = new PanelCartasElegir(new TableroSeleccion(), 0, 0);
-		this.add(pSeleccion);
+//		this.pSeleccion = new PanelTableroSeleccion(new TableroSeleccion(), 0, 0);
+//		pSeleccion.setLayout(null);
+//		this.add(pSeleccion);
 
 	}
 
-
-	public void dibujarTableros(List<Jugador> jugadores) throws IOException {
-		this.tableros = new ArrayList<PanelJugador>(jugadores.size());
-		for (Jugador jugador : jugadores) {
-			PanelJugador panel = new PanelJugador(jugador);
-			contentPane.add(panel);
-			this.tableros.add(panel);
-		}
-	}
-
-	public void actualizarTableros(List<Jugador> jugadores) throws IOException {
-		for (PanelJugador pJ : tableros) {
-			pJ.actualizarPanel();
-		}
-		contentPane.repaint();
+	public void actualizarTableros(List<Jugador> jugadores){
+		tablerosJugadores.actualizarTableros();
 	}
 
 	public void terminarPartida(List<Jugador> list) {
@@ -126,13 +110,18 @@ public class VentanaJueguito extends JFrame {
 		contentPane.repaint();
 	}
 
-	public int mostrarCartas(List<Carta> cartasAElegir) throws IOException {
-		contentPane.remove(pSeleccion);
-		pSeleccion = new PanelCartasElegir(new TableroSeleccion(cartasAElegir), 1, 1);
-		pSeleccion.setBounds(0, 20, PanelFicha.LARGO_CARTA * 4, PanelFicha.ALTO_CARTA * 4);
-		contentPane.add(pSeleccion);
-		contentPane.invalidate();
-		contentPane.validate();
+	public int mostrarCartas(List<Carta> cartasAElegir){
+		if(pSeleccion!=null) {
+			contentPane.remove(pSeleccion);			
+		}
+		pSeleccion = new PanelTableroSeleccion(new TableroSeleccion(cartasAElegir), 1, 1);
+		pSeleccion.setBorder(BorderFactory.createLineBorder(Color.black));
+		pSeleccion.setPreferredSize(new Dimension(PanelFicha.LARGO_FICHA*3,PanelFicha.ALTO_FICHA*5));
+//		pSeleccion.setLayout(null);
+//		pSeleccion.setBounds(0, 20, PanelFicha.LARGO_CARTA * 4, PanelFicha.ALTO_CARTA * 4);
+		contentPane.add(pSeleccion,BorderLayout.EAST);
+//		contentPane.invalidate();
+//		contentPane.validate();
 		contentPane.repaint();
 
 		return 0;
@@ -143,37 +132,26 @@ public class VentanaJueguito extends JFrame {
 			pSeleccion.getStartLatch().await();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+			System.out.println("Error en leerCartaElegida");
 		}
 		System.out.println("Holiwis");
-		int idCartaElegida = PanelCartasElegir.idCartaElegida;
-		PanelCartasElegir.idCartaElegida = Integer.MIN_VALUE;
+		this.repaint();
+		int idCartaElegida = PanelTableroSeleccion.idCartaElegida;
+		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
 		pSeleccion.setStartLatch(new CountDownLatch(1));
 		return idCartaElegida;
 	}
 
 	public synchronized int[] obtenerInputCoordenadas(Jugador jugador) {
-		int[] coordenadasElegidas = new int[2];
-		for (PanelJugador panelJugador : tableros) {
-			if (panelJugador.j.equals(jugador)) {
-				while (VentanaJueguito.coordenadasElegidas[0] == 0 && VentanaJueguito.coordenadasElegidas[1] == 0) {
-					try {
-						VentanaJueguito.latchCartaElegida.await();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		coordenadasElegidas[0] = VentanaJueguito.coordenadasElegidas[0];
-		coordenadasElegidas[1] = VentanaJueguito.coordenadasElegidas[1];
-		VentanaJueguito.coordenadasElegidas[0] = 0;
-		VentanaJueguito.coordenadasElegidas[1] = 0;
-		VentanaJueguito.latchCartaElegida = new CountDownLatch(1);
-		return coordenadasElegidas;
+		return tablerosJugadores.obtenerInputCoordenadas(jugador);
 	}
 
-	public static CountDownLatch getLatchcartaelegida() {
+	public static CountDownLatch getLatchCartaElegida() {
 		return latchCartaElegida;
+	}
+
+	public static void setLatchCartaElegida(CountDownLatch latchCartaElegida) {
+		VentanaJueguito.latchCartaElegida = latchCartaElegida;
 	}
 
 	public void mostrarMensaje(String msj) {

@@ -1,9 +1,10 @@
 package SwingApp;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.BorderFactory;
@@ -14,16 +15,16 @@ import reyes.Carta;
 import reyes.Ficha;
 import reyes.TableroSeleccion;
 
-public class PanelCartasElegir extends JPanel {
+public class PanelTableroSeleccion extends JPanel {
 	public static int idCartaElegida;
 	Carta cartaElegida;
 	private TableroSeleccion tableroSeleccion;
 	private CountDownLatch startLatch = new CountDownLatch(1);
 
-	public PanelCartasElegir(TableroSeleccion t, int offset_x, int offset_y) throws IOException {
+	public PanelTableroSeleccion(TableroSeleccion tablero, int offset_x, int offset_y){
 		this.setLayout(null);
-		this.tableroSeleccion = t;
-		mostrarTablero(t);
+		this.tableroSeleccion = tablero;
+		mostrarTablero(tablero);
 	}
 
 	protected void onRotarCartaClick() {
@@ -46,13 +47,9 @@ public class PanelCartasElegir extends JPanel {
 		idCartaElegida=carta.getId();
 		this.removeAll();
 		TableroSeleccion tS = new TableroSeleccion(carta);
-		try {
 			mostrarTablero(tS);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 		JButton btn_rot = new JButton("Rotar");
-		btn_rot.setBounds(0, 5 * PanelFicha.ALTO_FICHA, PanelFicha.LARGO_FICHA * 2, PanelFicha.ALTO_FICHA);
+		btn_rot.setBounds(0, 5 * PanelFicha.ALTO_FICHA, PanelFicha.LARGO_FICHA * 3, PanelFicha.ALTO_FICHA);
 		this.add(btn_rot);
 		btn_rot.addMouseListener(new MouseAdapter() {
 			@Override
@@ -73,7 +70,7 @@ public class PanelCartasElegir extends JPanel {
 		startLatch = countDownLatch;
 	}
 
-	protected void mostrarTablero(TableroSeleccion tablero) throws IOException {
+	protected void mostrarTablero(TableroSeleccion tablero){
 
 		Ficha[][] f = tablero.getTablero();
 		for (int i = 0, y = 0; i < 4; i++, y++) {
@@ -90,7 +87,7 @@ public class PanelCartasElegir extends JPanel {
 		}
 	}
 
-	public void actualizarTablero() throws IOException {
+	public void actualizarTablero(){
 		this.removeAll();
 		mostrarTablero(tableroSeleccion);
 		this.repaint();

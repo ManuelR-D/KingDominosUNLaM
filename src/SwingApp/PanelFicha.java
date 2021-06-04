@@ -22,10 +22,10 @@ public class PanelFicha extends JPanel {
 	static final int ALTO_FICHA = ALTO_CARTA;
 	private int x, y;
 
-	public PanelFicha(Ficha f, int y, int x) throws IOException {
+	public PanelFicha(Ficha f, int y, int x) {
 		this.x = x;
 		this.y = y;
-		setLayout(null);
+//		setLayout(null);
 		this.f = f;
 		if (f == null) {
 			JPanel panelVacio = new JPanel();
@@ -50,7 +50,8 @@ public class PanelFicha extends JPanel {
 			});
 			this.add(panelVacio);
 		} else {
-			JLabel pic = getTexturaFicha(f);
+			JLabel pic;
+			pic = getTexturaFicha(f);
 			pic.setBounds(0, 0, LARGO_FICHA, ALTO_FICHA);
 			this.add(pic);
 		}
@@ -58,27 +59,28 @@ public class PanelFicha extends JPanel {
 
 	public void fichaClickeada() {
 
-
 		VentanaJueguito.coordenadasElegidas[0] = x;
 		VentanaJueguito.coordenadasElegidas[1] = y;
 		System.out.println(VentanaJueguito.coordenadasElegidas[0] + ";" + VentanaJueguito.coordenadasElegidas[1]);
-		VentanaJueguito.getLatchcartaelegida().countDown();
+		VentanaJueguito.getLatchCartaElegida().countDown();
 	}
 
-	private JLabel getTexturaFicha(Ficha f) throws IOException {
+	private JLabel getTexturaFicha(Ficha f) {
 		BufferedImage pic = null;
 		if (f == null)
 			return null;
 		else if (f.getId() == -1)
 			return new JLabel(new ImageIcon(VentanaJueguito.bufferCastillo.getSubimage(0, 0, LARGO_FICHA, ALTO_FICHA)));
-		else
+		else {
 			pic = getTexturaCarta(f.getId() / 2, f.getId() % 2 == 0);
+
+		}
 		ImageIcon ii = new ImageIcon(pic);
 		RotatedIcon rt = new RotatedIcon(ii, 90 * (f.getRotacion() - 1));
 		return new JLabel(rt);
 	}
 
-	private BufferedImage getTexturaCarta(int idCarta, boolean izq) throws IOException {
+	private BufferedImage getTexturaCarta(int idCarta, boolean izq) {
 		int x = idCarta % 8 == 0 ? 7 : idCarta % 8 - 1;
 		int y = (idCarta) / 8 - x / 7;
 		// Obtenemos el recorte de la carta elegida
