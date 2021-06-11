@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import javax.imageio.ImageIO;
@@ -117,8 +118,18 @@ public class VentanaJueguito extends JFrame {
 		return idCartaElegida;
 	}
 
-	public void terminarPartida(List<Jugador> determinarGanadores) {
-		System.out.println("Clase VentanaJueguito funcion terminarPartida");		
+	public void terminarPartida(Map<Jugador, Integer> map) {
+		System.out.println("Clase VentanaJueguito funcion terminarPartida");
+		pSeleccion.setVisible(false);
+		String mensaje = "";
+		if(map.size()==1)
+			mensaje = "Ha ganado el jugador\n";
+		else
+			mensaje = "Han ganado los jugadores\n";
+		for (Map.Entry<Jugador, Integer> entry : map.entrySet()) {
+			mensaje+=entry.getKey().getNombre() + " con: " + entry.getValue() + " puntos" + "\n";
+		}
+		mostrarMensaje(mensaje);
 	}
 
 	public void mostrarCartasAElegir(List<Carta> cartasAElegir) {
