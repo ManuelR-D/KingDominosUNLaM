@@ -17,6 +17,8 @@ public class Carta implements Comparable<Carta> {
 		this.fichas[0].setY(0);
 		this.fichas[1].setX(0);
 		this.fichas[1].setY(1);
+		this.fichas[0].setRotacion(rotacion);
+		this.fichas[1].setRotacion(rotacion);
 	}
 	public int getId() {
 		return id;

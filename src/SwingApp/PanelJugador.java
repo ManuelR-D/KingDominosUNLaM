@@ -1,6 +1,5 @@
 package SwingApp;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import reyes.Jugador;
@@ -22,6 +21,4 @@ public class PanelJugador extends JPanel {
 		pTablero.actualizarTablero();
 		
 	}
-	
-
 }

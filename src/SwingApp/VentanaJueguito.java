@@ -113,7 +113,6 @@ public class VentanaJueguito extends JFrame {
 		this.repaint();
 		System.out.println("Saliendo de leerCartaElegida");
 		int idCartaElegida = PanelTableroSeleccion.idCartaElegida;
-		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
 		pSeleccion.setStartLatch(new CountDownLatch(1));
 		return idCartaElegida;
 	}
@@ -130,6 +129,7 @@ public class VentanaJueguito extends JFrame {
 		}
 		pSeleccion=new PanelTableroSeleccion(cartasAElegir);
 		pSeleccion.setBounds(TAM_TABLEROS+20, ALTO_VENTANA-ALTO_FICHA*4, LARGO_FICHA*2, ALTO_FICHA*4);
+		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
 		this.getContentPane().add(pSeleccion);
 		this.repaint();
 		

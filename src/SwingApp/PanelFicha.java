@@ -61,12 +61,11 @@ public class PanelFicha extends JPanel {
 	private BufferedImage getTexturaFicha(Ficha f) {
 		BufferedImage imagen = null;
 		if (f == null)
-			return imagen = VentanaJueguito.bufferVacio;
+			return imagen = null;
 		else if (f.getId() == -1)
 			return VentanaJueguito.bufferCastillo.getSubimage(0, 0, LARGO_FICHA, ALTO_FICHA);
 		else {
 			imagen = getTexturaCarta(f.getId() / 2, f.getId() % 2 == 0);
-
 		}
 		return imagen;
 	}
@@ -82,7 +81,8 @@ public class PanelFicha extends JPanel {
 				: myPicture.getSubimage(LARGO_FICHA, 0, LARGO_FICHA, ALTO_FICHA);
 	}
 	public void fichaClickeada() {
-
+		if(PanelTableroSeleccion.idCartaElegida == Integer.MIN_VALUE)
+			return;
 		VentanaJueguito.coordenadasElegidas[0] = x;
 		VentanaJueguito.coordenadasElegidas[1] = y;
 		System.out.println(VentanaJueguito.coordenadasElegidas[0] + ";" + VentanaJueguito.coordenadasElegidas[1]);

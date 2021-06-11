@@ -20,7 +20,7 @@ public class PanelTableroSeleccion extends JPanel {
 	private static final long serialVersionUID = 6840011839081352510L;
 	private CountDownLatch startLatch = new CountDownLatch(1);
 	Carta cartaElegida;
-	public static int idCartaElegida;
+	public static volatile int idCartaElegida;
 
 	public PanelTableroSeleccion(List<Carta> cartasAElegir) {
 		int largo = VentanaJueguito.LARGO_FICHA;
