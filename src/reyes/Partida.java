@@ -100,8 +100,8 @@ public class Partida {
 		List<Integer> puntajesFinales = new ArrayList<Integer>();
 		for (Jugador jugador : jugadores) {
 			System.out.println("-------Tablero de Jugador " + jugador.getNombre() + "-------");
-			System.out.println(jugador.tablero);
-			puntajesFinales.add(jugador.tablero.puntajeTotal(true));
+			System.out.println(jugador.getTablero());
+			puntajesFinales.add(jugador.getTablero().puntajeTotal(true));
 		}
 		return puntajesFinales;
 	}
@@ -183,7 +183,7 @@ public class Partida {
 		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
 
 		for (int i = 0; i < turnos.size(); i++) {
-			entrada.mostrarCartas(cartasAElegir);
+			entrada.mostrarCartasAElegir(cartasAElegir);
 			entrada.actualizarTableros(jugadores);
 			int turno = turnos.get(i);
 			entrada.mostrarMensaje("Turno del jugador:"+jugadores.get(turno).getNombre());

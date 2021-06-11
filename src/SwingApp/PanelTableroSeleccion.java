@@ -1,10 +1,10 @@
 package SwingApp;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.GridLayout;
+import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.BorderFactory;
@@ -13,53 +13,40 @@ import javax.swing.JPanel;
 
 import reyes.Carta;
 import reyes.Ficha;
-import reyes.TableroSeleccion;
+import reyes.Jugador;
 
 public class PanelTableroSeleccion extends JPanel {
-	public static int idCartaElegida;
-	Carta cartaElegida;
-	private TableroSeleccion tableroSeleccion;
+
+	private static final long serialVersionUID = 6840011839081352510L;
 	private CountDownLatch startLatch = new CountDownLatch(1);
+	Carta cartaElegida;
+	public static int idCartaElegida;
 
-	public PanelTableroSeleccion(TableroSeleccion tablero, int offset_x, int offset_y){
-		this.setLayout(null);
-		this.tableroSeleccion = tablero;
-		mostrarTablero(tablero);
-	}
-
-	protected void onRotarCartaClick() {
-		cartaElegida.rotarCarta();
-		onCartaElegida(cartaElegida);
-	}
-
-	protected void cargarPropiedadesFicha(PanelFicha panelFicha) {
-		panelFicha.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelFicha.setBorder(BorderFactory.createLineBorder(Color.MAGENTA));
-				onCartaElegida(panelFicha.getFicha().getCarta());
+	public PanelTableroSeleccion(List<Carta> cartasAElegir) {
+		int largo = VentanaJueguito.LARGO_FICHA;
+		int alto = VentanaJueguito.ALTO_FICHA;
+		setLayout(null);
+		for (int i = 0, x = 0; i < cartasAElegir.size(); i++, x++) {
+			Ficha[] fichasActuales = new Ficha[2];
+			if(cartasAElegir.get(i)!=null) {
+				cartasAElegir.get(i).setDefault();
+				 fichasActuales= cartasAElegir.get(i).getFichas();				
+			}else {
+				fichasActuales[0]=null;
+				fichasActuales[1]=null;
 			}
-		});
-	}
-
-	public synchronized void onCartaElegida(Carta carta) {
-		this.cartaElegida = carta;
-		idCartaElegida=carta.getId();
-		this.removeAll();
-		TableroSeleccion tS = new TableroSeleccion(carta);
-			mostrarTablero(tS);
-		JButton btn_rot = new JButton("Rotar");
-		btn_rot.setBounds(0, 5 * PanelFicha.ALTO_FICHA, PanelFicha.LARGO_FICHA * 3, PanelFicha.ALTO_FICHA);
-		this.add(btn_rot);
-		btn_rot.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				onRotarCartaClick();
-				cartaElegida.moverCarta(-1,-1);
+			for (int j = 0, y = 0; j < 2; j++, y++) {
+				PanelFicha ficha = new PanelFicha(fichasActuales[j], y, x);
+				ficha.setBounds(y * largo, x * alto, largo, alto);
+				ficha.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						onCartaElegida(ficha.getFicha().getCarta());
+					}
+				});
+				this.add(ficha);
 			}
-		});
-		this.repaint();
-		startLatch.countDown();
+		}
 	}
 
 	public CountDownLatch getStartLatch() {
@@ -69,28 +56,83 @@ public class PanelTableroSeleccion extends JPanel {
 	public void setStartLatch(CountDownLatch countDownLatch) {
 		startLatch = countDownLatch;
 	}
-
-	protected void mostrarTablero(TableroSeleccion tablero){
-
-		Ficha[][] f = tablero.getTablero();
-		for (int i = 0, y = 0; i < 4; i++, y++) {
-			for (int j = 0, x = 0; j < 3; j++, x++) {
-				if (f[i][j] != null) {
-					PanelFicha panelFicha = new PanelFicha(f[i][j], i, j);
-					panelFicha.setBounds((x * PanelFicha.LARGO_FICHA), // + offset_x,
-							(y * PanelFicha.ALTO_FICHA), // + offset_y,
-							PanelFicha.LARGO_FICHA, PanelFicha.ALTO_FICHA);
-					cargarPropiedadesFicha(panelFicha);
-					add(panelFicha);
-				}
-			}
-		}
+	
+	protected void onRotarCartaClick() {
+		cartaElegida.rotarCarta();
+		onCartaElegida(cartaElegida);
 	}
 
-	public void actualizarTablero(){
+	public synchronized void onCartaElegida(Carta carta) {
+		this.cartaElegida = carta;
+		idCartaElegida = carta.getId();
 		this.removeAll();
-		mostrarTablero(tableroSeleccion);
-		this.repaint();
-	}
+		
 
+		int largo = VentanaJueguito.LARGO_FICHA;
+		int alto = VentanaJueguito.ALTO_FICHA;
+		Ficha[] fichas=carta.getFichas();
+		int rotacion=fichas[0].getRotacion();
+		
+		setLayout(null);
+		
+		int x1 = 0,y1=0,x2=0,y2=0;
+		switch (rotacion) {
+		case 1:
+			x1=0;
+			y1=0;
+			x2=largo;
+			y2=0;
+			break;
+		case 2:
+			x1=0;
+			y1=0;
+			x2=0;
+			y2=alto;
+			break;
+		case 3:
+			x1=largo;
+			y1=0;
+			x2=0;
+			y2=0;
+			break;
+		case 4:
+			x1=0;
+			y1=largo;
+			x2=0;
+			y2=0;
+			break;
+
+		default:
+			break;
+		}
+
+		PanelFicha ficha1 = new PanelFicha(fichas[0], 0, 0);
+		ficha1.setBorder(BorderFactory.createLineBorder(Color.magenta,5));
+		ficha1.setBounds(x1,y1, largo, alto);
+		this.add(ficha1);
+		
+		PanelFicha ficha2 = new PanelFicha(fichas[1], 0, 0);
+		ficha2.setBounds(x2,y2, largo, alto);
+		this.add(ficha2);
+
+		JButton boton = new JButton("Rotar");
+		boton.setBounds(0, 3 * largo, largo * 2, alto);
+		this.add(boton);
+
+		boton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				onRotarCartaClick();
+			}
+		});
+		this.repaint();
+		startLatch.countDown();
+	}
+	
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.fillRect(0, 0, VentanaJueguito.LARGO_FICHA * 2, VentanaJueguito.ALTO_FICHA * 5);
+	}
 }

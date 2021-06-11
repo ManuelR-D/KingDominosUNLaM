@@ -80,4 +80,8 @@ public class Jugador extends Usuario {
 	public void setTablero(int tamanioTablero) {
 		this.tablero = new Tablero(tamanioTablero);
 	}
+
+	public Tablero getTablero() {
+		return tablero;
+	}
 }

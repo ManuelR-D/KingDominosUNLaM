@@ -16,6 +16,8 @@ public class GUITest {
 		List<Jugador> jugadores = new ArrayList<Jugador>(4);
 		jugadores.add(new Jugador("BotTest!", tamTablero));
 		jugadores.add(new Jugador("Jugador 1", tamTablero));
+		jugadores.add(new Jugador("Jugador 1", tamTablero));
+		jugadores.add(new Jugador("Jugador 1", tamTablero));
 		//jugadores.add(new Bot("Jugador 2", tamTablero));
 		//jugadores.add(new Bot("Jugador 3", tamTablero));
 

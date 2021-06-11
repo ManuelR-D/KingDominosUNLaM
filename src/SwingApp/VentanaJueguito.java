@@ -1,11 +1,8 @@
 package SwingApp;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,26 +13,30 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import reyes.Carta;
 import reyes.Jugador;
 import reyes.Partida;
-import reyes.TableroSeleccion;
 
 public class VentanaJueguito extends JFrame {
 
 	private static final long serialVersionUID = 4460429712849713216L;
 	private File texturaCarta = new File("./assets/highTest.png");
-	// private File texturaVacia = new File("./assets/vacio.png");
 	private File texturaCastillo = new File("./assets/castillo.png");
+	static File texturaVacia = new File("./assets/vacio.png");
 	static BufferedImage bufferCastillo;
 	static BufferedImage bufferCarta;
-	private JPanel contentPane;
-	private PanelTableroSeleccion pSeleccion;
-	private JLabel informacion;
-	private TablerosJugadores tablerosJugadores;
-
+	static BufferedImage bufferVacio;
+	static final int LARGO_FICHA = 80;
+	static final int ALTO_FICHA = 80;
+	static int LARGO_VENTANA;
+	static int ALTO_VENTANA;
+	static int TAM_TABLEROS;
+	PanelTableroSeleccion pSeleccion;
+	TablerosJugadores tableros;
+	JTextArea informacion;
+	
 	private static CountDownLatch latchCartaElegida = new CountDownLatch(1);
 	public static volatile int[] coordenadasElegidas = new int[2];
 
@@ -59,93 +60,40 @@ public class VentanaJueguito extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaJueguito(Partida p){
+	public VentanaJueguito(Partida p) {
+		setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1800, 800);
-		contentPane = new JPanel();
-//		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-//		contentPane.setLayout(new GridLayout(p.getJugadores().size() / 2, p.getJugadores().size() / 2, 50, 50));
-		contentPane.setLayout(new BorderLayout());
-		setContentPane(contentPane);
-
-		informacion = new JLabel();
-		informacion.setVisible(true);
-		this.add(informacion);
-
+		setBounds(100, 100, 800, 600);
 		try {
 			VentanaJueguito.bufferCastillo = ImageIO.read(texturaCastillo);
 			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
+			VentanaJueguito.bufferVacio = ImageIO.read(texturaVacia);
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Error generando imagenes clase VentanaJuegito");
+			System.out.println("Error generando imagenes clase VentanaJueguito");
 		}
-		tablerosJugadores = new TablerosJugadores(p.getJugadores());
-		tablerosJugadores.setLayout(new GridLayout(2, 2));
-		this.add(tablerosJugadores,BorderLayout.CENTER);
-
-		this.setTitle(p.getJugadores().get(0).getNombre());
+		LARGO_VENTANA=(int) this.getSize().getWidth();
+		ALTO_VENTANA=(int) this.getSize().getHeight();
+		TAM_TABLEROS=(LARGO_VENTANA-LARGO_FICHA*2)-20;
+		tableros=new TablerosJugadores(p.getJugadores());
+		tableros.setBounds(0,0,TAM_TABLEROS,TAM_TABLEROS);
+		getContentPane().add(tableros);
+		setUndecorated(true);
+		informacion=new JTextArea("Hola");
+		informacion.setEditable(false);
+		informacion.setBackground(new Color(138,3,3));
+		informacion.setForeground(Color.WHITE);
+		informacion.setBounds(TAM_TABLEROS+20,0 , LARGO_VENTANA-TAM_TABLEROS, ALTO_VENTANA-(ALTO_FICHA*4));
+		informacion.setBorder(BorderFactory.createLineBorder(Color.black));
+		getContentPane().add(informacion);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-//		this.pSeleccion = new PanelTableroSeleccion(new TableroSeleccion(), 0, 0);
-//		pSeleccion.setLayout(null);
-//		this.add(pSeleccion);
-
-	}
-
-	public void actualizarTableros(List<Jugador> jugadores){
-		tablerosJugadores.actualizarTableros();
-	}
-
-	public void terminarPartida(List<Jugador> list) {
-		contentPane.remove(pSeleccion);
-		String msg = "Ganadores: ";
-		for (Jugador jugador : list) {
-			msg += jugador.getNombre() + " con " + jugador.tablero.puntajeTotal(false) + " puntos ";
-		}
-		JLabel msgLabel = new JLabel(msg);
-		msgLabel.setFont(new Font("Serif", Font.PLAIN, 24));
-		contentPane.add(msgLabel);
-		contentPane.invalidate();
-		contentPane.validate();
-		contentPane.repaint();
-	}
-
-	public int mostrarCartas(List<Carta> cartasAElegir){
-		if(pSeleccion!=null) {
-			contentPane.remove(pSeleccion);			
-		}
-		pSeleccion = new PanelTableroSeleccion(new TableroSeleccion(cartasAElegir), 1, 1);
-		pSeleccion.setBorder(BorderFactory.createLineBorder(Color.black));
-		pSeleccion.setPreferredSize(new Dimension(PanelFicha.LARGO_FICHA*3,PanelFicha.ALTO_FICHA*5));
-//		pSeleccion.setLayout(null);
-//		pSeleccion.setBounds(0, 20, PanelFicha.LARGO_CARTA * 4, PanelFicha.ALTO_CARTA * 4);
-		contentPane.add(pSeleccion,BorderLayout.EAST);
-//		contentPane.invalidate();
-//		contentPane.validate();
-		contentPane.repaint();
-
-		return 0;
-	}
-
-	public synchronized int leerCartaElegida() {
-		try {
-			pSeleccion.getStartLatch().await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			System.out.println("Error en leerCartaElegida");
-		}
-		System.out.println("Holiwis");
-		this.repaint();
-		int idCartaElegida = PanelTableroSeleccion.idCartaElegida;
-		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
-		pSeleccion.setStartLatch(new CountDownLatch(1));
-		return idCartaElegida;
 	}
 
 	public synchronized int[] obtenerInputCoordenadas(Jugador jugador) {
-		return tablerosJugadores.obtenerInputCoordenadas(jugador);
+		return tableros.obtenerInputCoordenadas(jugador);
 	}
-
+	
 	public static CountDownLatch getLatchCartaElegida() {
 		return latchCartaElegida;
 	}
@@ -154,8 +102,54 @@ public class VentanaJueguito extends JFrame {
 		VentanaJueguito.latchCartaElegida = latchCartaElegida;
 	}
 
-	public void mostrarMensaje(String msj) {
-		informacion.setText(msj);
+	public synchronized int leerCartaElegida() {
+		System.out.println("Funcion leerCartaElegida");
+		try {
+			pSeleccion.getStartLatch().await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			System.out.println("Error en leerCartaElegida");
+		}
+		this.repaint();
+		System.out.println("Saliendo de leerCartaElegida");
+		int idCartaElegida = PanelTableroSeleccion.idCartaElegida;
+		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
+		pSeleccion.setStartLatch(new CountDownLatch(1));
+		return idCartaElegida;
 	}
 
+	public void terminarPartida(List<Jugador> determinarGanadores) {
+		System.out.println("Clase VentanaJueguito funcion terminarPartida");		
+	}
+
+	public void mostrarCartasAElegir(List<Carta> cartasAElegir) {
+//		System.out.println("Clase VentanaJueguito funcion mostrarCartasAELegir");
+		if(pSeleccion!=null) {
+			this.remove(pSeleccion);
+			
+		}
+		pSeleccion=new PanelTableroSeleccion(cartasAElegir);
+		pSeleccion.setBounds(TAM_TABLEROS+20, ALTO_VENTANA-ALTO_FICHA*4, LARGO_FICHA*2, ALTO_FICHA*4);
+		this.getContentPane().add(pSeleccion);
+		this.repaint();
+		
+	}
+
+	public void actualizarTableros(List<Jugador> jugadores) {
+		System.out.println("Clase VentanaJueguito funcion actualizarTableros");
+		tableros.actualizarTableros();
+	}
+
+	public void mostrarMensaje(String string) {
+		informacion.setText(string);
+	}
+	
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		LARGO_VENTANA=(int) this.getSize().getWidth();
+		ALTO_VENTANA=(int) this.getSize().getHeight();
+		TAM_TABLEROS=(LARGO_VENTANA-LARGO_FICHA*2)-20;
+		g.fillRect(TAM_TABLEROS+5,0, 10, ALTO_VENTANA);
+	}
 }

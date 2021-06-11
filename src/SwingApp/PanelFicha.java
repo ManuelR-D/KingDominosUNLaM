@@ -1,14 +1,12 @@
 package SwingApp;
 
-import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import reyes.Ficha;
@@ -21,63 +19,56 @@ public class PanelFicha extends JPanel {
 	static final int LARGO_FICHA = LARGO_CARTA / 2;
 	static final int ALTO_FICHA = ALTO_CARTA;
 	private int x, y;
+	private BufferedImage bufferFicha;
+	double escala;
 
 	public PanelFicha(Ficha f, int y, int x) {
 		this.x = x;
 		this.y = y;
-//		setLayout(null);
 		this.f = f;
-		if (f == null) {
-			JPanel panelVacio = new JPanel();
-			panelVacio.setBackground(new Color(200, 200, 200));
-			panelVacio.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-			panelVacio.setBounds(0, 0, LARGO_FICHA, ALTO_FICHA);
-			panelVacio.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					fichaClickeada();
-				}
+		this.escala=1;
 
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					panelVacio.setBackground(new Color(0x63CAA7));
-				}
+//		this.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				fichaClickeada();
+//			}
+//
+//		});
 
-				@Override
-				public void mouseExited(MouseEvent e) {
-					panelVacio.setBackground(new Color(200, 200, 200));
-				}
-			});
-			this.add(panelVacio);
-		} else {
-			JLabel pic;
-			pic = getTexturaFicha(f);
-			pic.setBounds(0, 0, LARGO_FICHA, ALTO_FICHA);
-			this.add(pic);
-		}
+		bufferFicha = getTexturaFicha(f);
+
 	}
 
-	public void fichaClickeada() {
+	public PanelFicha(Ficha f, int y, int x, double escala) {
+		this.x = x;
+		this.y = y;
+		this.f = f;
+		this.escala=escala;
+//
+//		this.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				fichaClickeada();
+//			}
+//
+//		});
 
-		VentanaJueguito.coordenadasElegidas[0] = x;
-		VentanaJueguito.coordenadasElegidas[1] = y;
-		System.out.println(VentanaJueguito.coordenadasElegidas[0] + ";" + VentanaJueguito.coordenadasElegidas[1]);
-		VentanaJueguito.getLatchCartaElegida().countDown();
+		bufferFicha = getTexturaFicha(f);
+
 	}
 
-	private JLabel getTexturaFicha(Ficha f) {
-		BufferedImage pic = null;
+	private BufferedImage getTexturaFicha(Ficha f) {
+		BufferedImage imagen = null;
 		if (f == null)
-			return null;
+			return imagen = VentanaJueguito.bufferVacio;
 		else if (f.getId() == -1)
-			return new JLabel(new ImageIcon(VentanaJueguito.bufferCastillo.getSubimage(0, 0, LARGO_FICHA, ALTO_FICHA)));
+			return VentanaJueguito.bufferCastillo.getSubimage(0, 0, LARGO_FICHA, ALTO_FICHA);
 		else {
-			pic = getTexturaCarta(f.getId() / 2, f.getId() % 2 == 0);
+			imagen = getTexturaCarta(f.getId() / 2, f.getId() % 2 == 0);
 
 		}
-		ImageIcon ii = new ImageIcon(pic);
-		RotatedIcon rt = new RotatedIcon(ii, 90 * (f.getRotacion() - 1));
-		return new JLabel(rt);
+		return imagen;
 	}
 
 	private BufferedImage getTexturaCarta(int idCarta, boolean izq) {
@@ -90,9 +81,47 @@ public class PanelFicha extends JPanel {
 		return izq ? myPicture.getSubimage(0, 0, LARGO_FICHA, ALTO_FICHA)
 				: myPicture.getSubimage(LARGO_FICHA, 0, LARGO_FICHA, ALTO_FICHA);
 	}
+	public void fichaClickeada() {
+
+		VentanaJueguito.coordenadasElegidas[0] = x;
+		VentanaJueguito.coordenadasElegidas[1] = y;
+		System.out.println(VentanaJueguito.coordenadasElegidas[0] + ";" + VentanaJueguito.coordenadasElegidas[1]);
+		VentanaJueguito.getLatchCartaElegida().countDown();
+	}
 
 	public Ficha getFicha() {
 		return this.f;
+	}
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D) g;
+		AffineTransform affineTransform = new AffineTransform();
+//		g2d.scale(escala, escala);
+		affineTransform.scale(escala, escala);
+		if (f != null) {
+			int rotacion = f.getRotacion() - 1;
+//        System.out.println(rotacion);
+			if (rotacion != 0) {
+				affineTransform.rotate((rotacion) * Math.PI / 2);
+				switch (rotacion) {
+				case 1:
+					affineTransform.translate(0, -bufferFicha.getWidth());
+					break;
+				case 2:
+					affineTransform.translate(-bufferFicha.getHeight(), -bufferFicha.getWidth());
+					break;
+				case 3:
+					affineTransform.translate(-bufferFicha.getHeight(), 0);
+					break;
+
+				default:
+					break;
+				}
+			}
+		}
+		g2d.drawImage(bufferFicha, affineTransform, null);
 	}
 
 }

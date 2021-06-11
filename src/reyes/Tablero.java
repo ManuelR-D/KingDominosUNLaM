@@ -418,4 +418,7 @@ public class Tablero {
 	public int getyMax() {
 		return yMax;
 	}
+	public int getCentro() {
+		return centro;
+	}
 }
