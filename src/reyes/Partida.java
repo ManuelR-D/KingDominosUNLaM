@@ -2,6 +2,7 @@ package reyes;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -16,7 +17,7 @@ public class Partida {
 	private static final int DEFAULT_TAM_TABLERO = 5;
 	private static final int DEFAULT_CANT_CARTAS = 48;
 	private static final int DEFAULT_CANT_JUGADORES = 2;
-	public int tamanioTablero;
+	private int tamanioTablero;
 	private int cantidadCartas;
 	private int cantidadJugadores;
 
@@ -99,28 +100,30 @@ public class Partida {
 	private List<Integer> calcularPuntajesFinales() {
 		List<Integer> puntajesFinales = new ArrayList<Integer>();
 		for (Jugador jugador : jugadores) {
-			System.out.println("-------Tablero de Jugador " + jugador.nombre + "-------");
-			System.out.println(jugador.tablero);
-			puntajesFinales.add(jugador.tablero.puntajeTotal(true));
+			System.out.println("-------Tablero de Jugador " + jugador.getNombre() + "-------");
+			System.out.println(jugador.getTablero());
+			puntajesFinales.add(jugador.getTablero().puntajeTotal(true));
 		}
 		return puntajesFinales;
 	}
 
-	private List<Jugador> determinarGanadores(List<Integer> puntajesFinales) {
-		List<Integer> ganadoresPorPunto = obtenerGanadoresPorPuntos(puntajesFinales);
+	private Map<Jugador,Integer> determinarGanadores(List<Integer> puntajesFinales) {
+		Map<Jugador,Integer> ganadoresPorPunto = obtenerGanadoresPorPuntos(puntajesFinales);
+		return ganadoresPorPunto.size() == 1 ? ganadoresPorPunto : obtenerGanadoresPorTerreno(ganadoresPorPunto);
+ 		/*
 		List<Jugador> ganadores = new ArrayList<Jugador>(jugadores.size());
+		
 		if (ganadoresPorPunto.size() == 1) {
-			System.out.println("Ha ganado " + jugadores.get(ganadoresPorPunto.get(0)).getNombre());
-			ganadores.add(jugadores.get(ganadoresPorPunto.get(0)));
-			return ganadores;
+			//System.out.println("Ha ganado " + jugadores.get(ganadoresPorPunto.get(0)).getNombre());
+			//ganadores.add(jugadores.get(ganadoresPorPunto.get(0)));
+			return ganadoresPorPunto;
 		}
 
-		List<Integer> ganadoresPorTerreno = obtenerGanadoresPorTerreno(ganadoresPorPunto);
-
+		return obtenerGanadoresPorTerreno(ganadoresPorPunto);
 		if (ganadoresPorTerreno.size() == 1) {
-			System.out.println("Ha ganado " + jugadores.get(ganadoresPorTerreno.get(0)).getNombre());
-			ganadores.add(jugadores.get(ganadoresPorTerreno.get(0)));
-			return ganadores;
+			//System.out.println("Ha ganado " + jugadores.get(ganadoresPorTerreno.get(0)).getNombre());
+			//ganadores.add(jugadores.get(ganadoresPorTerreno.get(0)));
+			return ganadoresPorTerreno;
 		}
 
 		// Si hay mas de un ganador por terreno se comparte la victoria
@@ -131,47 +134,46 @@ public class Partida {
 			System.out.println(jugadores.get(ganadoresPorTerreno.get(i)).getNombre());
 			ganadores.add(jugadores.get(ganadoresPorTerreno.get(i)));
 		}
-		return ganadores;
+		return ganadoresPorTerreno;*/
 
 	}
 
-	private List<Integer> obtenerGanadoresPorPuntos(List<Integer> puntajesFinales) {
+	private Map<Jugador, Integer> obtenerGanadoresPorPuntos(List<Integer> puntajesFinales) {
 		int maxPuntaje = 0;
-		List<Integer> ganadoresPorPunto = new ArrayList<Integer>();
-
+		//List<Integer> ganadoresPorPunto = new ArrayList<Integer>();
+		Map<Jugador,Integer> ganadoresPorPunto = new HashMap<Jugador,Integer>();
 		System.out.println("PUNTAJES FINALES:");
 		for (int i = 0; i < puntajesFinales.size(); i++) {
 			Integer puntaje = puntajesFinales.get(i);
 			System.out.println(jugadores.get(i).getNombre() + ":" + puntaje);
 			if (puntaje > maxPuntaje) {
 				maxPuntaje = puntaje;
+				//ganadoresPorPunto.clear();
+				//ganadoresPorPunto.add(i);
 				ganadoresPorPunto.clear();
-				ganadoresPorPunto.add(i);
-			} else {
-				if (puntaje == maxPuntaje) {
-					ganadoresPorPunto.add(i);
-				}
+				ganadoresPorPunto.put(jugadores.get(i),puntaje);
+			} else if(puntaje == maxPuntaje){
+				ganadoresPorPunto.put(jugadores.get(i),puntaje);
 			}
 		}
 		return ganadoresPorPunto;
 	}
 
-	private List<Integer> obtenerGanadoresPorTerreno(List<Integer> ganadoresPorPunto) {
+	private Map<Jugador, Integer> obtenerGanadoresPorTerreno(Map<Jugador,Integer> ganadoresPorPunto) {
 		// Si hay mas de un ganador por puntos, se define por cantidad de terreno
 		int maxTerreno = 0;
-		List<Integer> ganadoresPorTerreno = new ArrayList<Integer>();
+		//List<Integer> ganadoresPorTerreno = new ArrayList<Integer>();
+		Map<Jugador,Integer> ganadoresPorTerreno = new HashMap<Jugador,Integer>();
 		System.out.println("EMPATE POR PUNTOS");
 		for (int i = 0; i < ganadoresPorPunto.size(); i++) {
-			int cantTerreno = jugadores.get(ganadoresPorPunto.get(0)).getCantTerrenoColocado();
+			int cantTerreno = jugadores.get(i).getCantTerrenoColocado();
 			System.out.println(jugadores.get(i).getNombre() + ":" + cantTerreno);
 			if (cantTerreno > maxTerreno) {
 				maxTerreno = cantTerreno;
 				ganadoresPorTerreno.clear();
-				ganadoresPorTerreno.add(i);
-			} else {
-				if (cantTerreno == maxTerreno) {
-					ganadoresPorTerreno.add(i);
-				}
+				ganadoresPorTerreno.put(jugadores.get(i),cantTerreno);
+			} else if(cantTerreno == maxTerreno) {
+				ganadoresPorTerreno.put(jugadores.get(i),cantTerreno);
 			}
 		}
 		return ganadoresPorTerreno;
@@ -183,9 +185,10 @@ public class Partida {
 		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
 
 		for (int i = 0; i < turnos.size(); i++) {
-			entrada.mostrarCartas(cartasAElegir);
+			entrada.mostrarCartasAElegir(cartasAElegir);
 			entrada.actualizarTableros(jugadores);
 			int turno = turnos.get(i);
+			entrada.mostrarMensaje("Turno del jugador:"+jugadores.get(turno).getNombre());
 			numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
 			//System.out.println(jugadores.get(turno).getNombre() + " elige carta " + (numeroElegido));
 			//System.out.println(numeroElegido);

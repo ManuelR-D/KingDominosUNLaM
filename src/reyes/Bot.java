@@ -39,6 +39,7 @@ public class Bot extends Jugador {
 					numeroElegido = i;
 				}
 				tablero.quitarCarta(carta);
+				carta.setDefault();
 			}
 		}
 		return numeroElegido;

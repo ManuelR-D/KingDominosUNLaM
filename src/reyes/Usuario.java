@@ -3,15 +3,15 @@ package reyes;
 import java.util.Scanner;
 
 public class Usuario {
-	public String nombreUsuario;
+	private String nombreUsuario;
 	private String contraseña;
 	private int idUsuario;
-	public Sala salaActual;
-	public int cantVictorias;
-	public int cantDerrotas;
-	public int cantPartidasJugadas;
-	public int cantDominosJugados; 
-	public int puntajeMaximo; 
+	private Sala salaActual;
+//	private int cantVictorias;
+//	private int cantDerrotas;
+//	private int cantPartidasJugadas;
+//	private int cantDominosJugados; 
+//	private int puntajeMaximo; 
 	
 	public Usuario(String nombreUsuario, String contraseña) {
 		this.nombreUsuario = nombreUsuario;
@@ -33,6 +33,32 @@ public class Usuario {
 		return nuevaSala;
 		
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + idUsuario;
+		result = prime * result + ((nombreUsuario == null) ? 0 : nombreUsuario.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Usuario other = (Usuario) obj;
+		if (idUsuario != other.idUsuario)
+			return false;
+		if (nombreUsuario == null) {
+			if (other.nombreUsuario != null)
+				return false;
+		} else if (!nombreUsuario.equals(other.nombreUsuario))
+			return false;
+		return true;
+	}
 	public void salirSala() {
 		salaActual.quitarJugadorDeSala(this);
 		this.salaActual = null;
@@ -47,5 +73,11 @@ public class Usuario {
 	@Override
 	public String toString() {
 		return "Usuario: " + nombreUsuario;
+	}
+	public String getNombreUsuario() {
+		return nombreUsuario;
+	}
+	public Sala getSalaActual() {
+		return salaActual;
 	}
 }

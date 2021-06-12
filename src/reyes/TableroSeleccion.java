@@ -2,65 +2,47 @@ package reyes;
 
 import java.util.List;
 
-public class TableroSeleccion extends Tablero {
+public class TableroSeleccion {
+	Ficha[][] tablero;
+
 	public TableroSeleccion() {
-		super(4);
-		this.tablero[4 - 1][4 - 1] = null;
+		tablero = new Ficha[4][3];
 	}
 
-	public TableroSeleccion(int tamTablero, List<Carta> cartasAElegir) {
-		super(tamTablero);
-		this.tablero[tamTablero - 1][tamTablero - 1] = null;
-		int[][] posiciones = { {0,0},
-							   {2,0},
-							   {0,1},
-							   {2,1}};
-		int i = 0;
-		for (Carta carta : cartasAElegir) {
-			if(carta != null) {
-				ponerCarta(carta, posiciones[i][0], posiciones[i][1], true);
+	public TableroSeleccion(List<Carta> cartasAElegir) {
+
+		this();
+
+		for (int i = 0; i < cartasAElegir.size(); i++) {
+			Carta carta = cartasAElegir.get(i);
+			if (carta != null) {
+				ponerCarta(carta, i);
 				carta.setDefault();
-				i++;
 			}
 		}
 	}
 
-	public TableroSeleccion(int tamTablero, Carta c) {
-		super(tamTablero);
-		this.tablero[tamTablero - 1][tamTablero - 1] = null;
-
-		ponerCarta(c, 0, 0, false);
-		//c.setPosicionDefault();
+	public TableroSeleccion(Carta carta) {
+		
+		this();
+		carta.moverCarta(1, 1);
+		ponerCarta(carta, 0);
 	}
 
-	@Override
-	public boolean ponerCarta(Carta carta, int columnaAbsoluta, int filaAbsoluta, boolean mostrarMensaje) {
+	public void ponerCarta(Carta carta, int indice) {
 		Ficha[] fichas = carta.getFichas();
-		//carta.moverCarta(centro, centro);
-		//carta.moverCarta(-filaRelativa, columnaRelativa);
-		int f1X = fichas[0].getX() + filaAbsoluta + 2;
-		int f1Y = fichas[0].getY() + columnaAbsoluta + 2;
-		int f2X = fichas[1].getX() + filaAbsoluta + 2;
-		int f2Y = fichas[1].getY() + columnaAbsoluta + 2;
-		actualizarLimites(f1X, f1Y, f2X, f2Y, tamTablero);
+
+		int f1X = fichas[0].getX() + indice;
+		int f1Y = fichas[0].getY();
+		int f2X = fichas[1].getX() + indice;
+		int f2Y = fichas[1].getY();
+
 		tablero[f1X][f1Y] = fichas[0];
 		tablero[f2X][f2Y] = fichas[1];
-		return true;
 	}
 
-	@Override
-	public boolean esPosibleInsertarEnTodoElTablero(Carta carta) {
-		return true;
-	}
-
-	@Override
-	protected boolean esPosibleInsertar(Carta carta, boolean mostrarMensaje) {
-		return true;
-	}
-
-	@Override
-	protected boolean tipoAdyacenteCompatible(Carta carta) {
-		return true;
+	public Ficha[][] getTablero() {
+		return tablero;
 	}
 
 }

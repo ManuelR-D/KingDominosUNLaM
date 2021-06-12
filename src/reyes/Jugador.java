@@ -12,7 +12,7 @@ import java.util.Scanner;
 import SwingApp.VentanaJueguito;
 
 public class Jugador extends Usuario {
-	public String nombre;
+	private String nombre;
 	public Tablero tablero;
 
 	public Jugador(String nombre, int tamTablero) {
@@ -23,7 +23,7 @@ public class Jugador extends Usuario {
 
 	public Jugador(Usuario user) {
 		super(user);
-		this.nombre = user.nombreUsuario;
+		this.nombre = user.getNombreUsuario();
 	}
 
 	public Jugador(String nombre, String contrasenia) {
@@ -43,7 +43,7 @@ public class Jugador extends Usuario {
 		do {
 			posicion = ventana.obtenerInputCoordenadas(this);
 			System.out.println(carta);
-		} while (!tablero.ponerCarta(carta, posicion[0], posicion[1], true));
+		} while (!tablero.ponerCarta(carta, posicion[0], posicion[1], true,ventana));
 		System.out.println("Tablero actualizado:");
 		System.out.println(tablero);
 
@@ -62,7 +62,7 @@ public class Jugador extends Usuario {
 				if (c != null) {
 					System.out.println((i + 1) + ":");
 					System.out.println(c);
-					if (c.idCarta == cartaElegida)
+					if (c.getId() == cartaElegida)
 						cartaElegida = i;
 				}
 				
@@ -79,5 +79,9 @@ public class Jugador extends Usuario {
 
 	public void setTablero(int tamanioTablero) {
 		this.tablero = new Tablero(tamanioTablero);
+	}
+
+	public Tablero getTablero() {
+		return tablero;
 	}
 }
