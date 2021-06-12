@@ -14,7 +14,7 @@ public class GUITest {
 		int cantidadCartas = 48;
 		int tamTablero = 5;
 		List<Jugador> jugadores = new ArrayList<Jugador>(4);
-		jugadores.add(new Bot("BotTest!", tamTablero));
+		jugadores.add(new Jugador("BotTest!", tamTablero));
 		jugadores.add(new Bot("Jugador 1", tamTablero));
 		//jugadores.add(new Jugador("Jugador 1", tamTablero));
 		//jugadores.add(new Jugador("Jugador 1", tamTablero));
