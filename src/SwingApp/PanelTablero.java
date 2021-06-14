@@ -4,11 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import reyes.Ficha;
@@ -22,11 +25,26 @@ public class PanelTablero extends JPanel {
 	int offset_y = 0;
 	int tamTableroVisual;
 	int numJugador;
+	PanelFicha[][] matrizPaneles;
+	private Map<String,Color> mapaColores;
+//	private int xMaxAux,xMinAux,yMaxAux,yMinAux;
+	JLayeredPane panelConDimension;
 
 	public PanelTablero(Tablero tablero, int tamTableroVisual) {
 		setLayout(null);
 		this.tablero = tablero;
 		this.tamTableroVisual = tamTableroVisual;
+		matrizPaneles = new PanelFicha[tablero.getTamanio() * 2 - 1][tablero.getTamanio() * 2 - 1];
+		
+//		xMaxAux=xMinAux=yMaxAux=yMinAux=tablero.getCentro();
+		
+		mapaColores=new HashMap<String,Color>();
+		mapaColores.put("Campo", new Color(251,196,48,150));
+		mapaColores.put("Bosque",new Color(37,81,32,150));
+		mapaColores.put("Agua",new Color(0,153,215,150));
+		mapaColores.put("Pradera",new Color(235,229,74,150));
+		mapaColores.put("Oasis",new Color(165,138,94,150));
+		mapaColores.put("Mina",new Color(103,97,87,150));	
 	}
 
 	@Override
@@ -35,9 +53,22 @@ public class PanelTablero extends JPanel {
 		g.fillRect(0, 0, tamTableroVisual, tamTableroVisual);
 	}
 
-	public void actualizarTablero() {
-		this.removeAll();
+	public void reCrearTablero(String nombreJugador) {
+		int xMax = tablero.getxMax();
+		int xMin = tablero.getxMin();
+		int yMax = tablero.getyMax();
+		int yMin = tablero.getyMin();
 
+//		xMaxAux=xMax;
+//		xMinAux=xMin;
+//		yMaxAux=yMax;
+//		yMinAux=yMin;
+		
+		this.removeAll();
+		panelConDimension = new JLayeredPane();
+		panelConDimension.setLayout(null);
+		panelConDimension.setBounds(0, 0, tamTableroVisual, tamTableroVisual);
+		this.add(panelConDimension);
 		Ficha[][] fichas = tablero.getTablero();
 
 		// Calculos para realizar la escala
@@ -51,55 +82,16 @@ public class PanelTablero extends JPanel {
 		double tamFicha = tamTableroVisual / fichasMaximas;
 		double escala = tamFicha / VentanaJueguito.LARGO_FICHA;
 
-		int xMax = tablero.getxMax();
-		int xMin = tablero.getxMin();
-		int yMax = tablero.getyMax();
-		int yMin = tablero.getyMin();
+		int desplVertical = 0;
+		int desplHorizontal = 0;
+		
+		desplVertical=Math.min(tablero.getTamanio()-( xMax-xMin+1), 2);
+		desplHorizontal=Math.min(tablero.getTamanio()-(yMax-yMin+1), 2);
 
-		int centroTablero = tablero.getCentro();
-
-		int desplAbj = (xMax - centroTablero);
-		if (desplAbj > 2) {
-			desplAbj = 4 - desplAbj;
-		} else {
-			desplAbj = 2;
-		}
-
-		int desplArr = centroTablero - xMin;
-		if (desplArr > 2) {
-			desplArr = 4 - desplArr;
-		} else {
-			desplArr = 2;
-		}
-
-		if (((xMax - centroTablero) + (centroTablero - xMin)) == fichasMaximas-3) {
-			desplAbj = 0;
-			desplArr = 0;
-		}
-
-		int desplDer = yMax - centroTablero;
-		if (desplDer > 2) {
-			desplDer = 4 - desplDer;
-		} else {
-			desplDer = 2;
-		}
-
-		int desplIzq = centroTablero - yMin;
-		if (desplIzq > 2) {
-			desplIzq = 4 - desplIzq;
-		} else {
-			desplIzq = 2;
-		}
-
-		if (((yMax - centroTablero) + (centroTablero - yMin)) == fichasMaximas-3) {
-			desplIzq = 0;
-			desplDer = 0;
-		}
-
-		int inicioFilasAMostrar = Math.max(xMin - desplAbj, 0);
-		int finFilasAMostrar = Math.min(xMax + desplArr, fichas.length - 1);
-		int inicioColumnasAMostrar = Math.max(yMin - desplDer, 0);
-		int finColumnasAMostrar = Math.min(yMax + desplIzq, fichas.length - 1);
+		int inicioFilasAMostrar = Math.max(xMin - desplVertical,0);
+		int finFilasAMostrar = Math.min(xMax + desplVertical, fichas.length - 1);
+		int inicioColumnasAMostrar = Math.max(yMin - desplHorizontal, 0);
+		int finColumnasAMostrar = Math.min(yMax + desplHorizontal, fichas.length - 1);
 		int largo = (int) (PanelFicha.LARGO_FICHA * escala);
 		int alto = (int) (PanelFicha.ALTO_FICHA * escala);
 
@@ -120,28 +112,46 @@ public class PanelTablero extends JPanel {
 		for (int i = inicioFilasAMostrar, y = 0; i <= finFilasAMostrar; i++, y++) {
 			for (int j = inicioColumnasAMostrar, x = 0; j <= finColumnasAMostrar; j++, x++) {
 				PanelFicha panelFicha = new PanelFicha(fichas[i][j], i, j, escala);
+				matrizPaneles[i][j] = panelFicha;
 				panelFicha.setBounds((x * alto) + centradoAlto, (y * largo) + centradoLargo, largo, alto);
+				panelFicha.setBorder(BorderFactory.createLineBorder(Color.black));
 				panelFicha.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						panelFicha.fichaClickeada();
 					}
-
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						panelFicha.setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 5));
-					}
-
-					@Override
-					public void mouseExited(MouseEvent e) {
-						panelFicha.setBorder(null);
-					}
 				});
-				add(panelFicha);
+				panelConDimension.add(panelFicha, 0);
 
 			}
 		}
+		JLabel nombre = new JLabel(nombreJugador);
+		nombre.setBounds(0, 0, tamTableroVisual, alto);
+		nombre.setBackground(Color.red);
+		nombre.setForeground(Color.red);
+		panelConDimension.add(nombre, 1);
 		this.repaint();
+	}
+
+	public void pintarFicha(int i, int j) {
+		PanelFicha pFicha = matrizPaneles[i][j];
+		/*
+		 * Por alguna razon llegan panelFicha nulo, y lo mas raro es que a veces llegan
+		 * panelFicha no nulo pero con pFicha.getFicha igual a null
+		 */
+		if (pFicha != null && pFicha.getFicha() != null) {
+			String tipo = pFicha.getFicha().getTipo();
+
+
+			Color color=mapaColores.get(tipo);
+			pFicha.setBorder(BorderFactory.createLineBorder(color, VentanaJueguito.LARGO_FICHA));
+			
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

@@ -20,6 +20,7 @@ public class Partida {
 	private int tamanioTablero;
 	private int cantidadCartas;
 	private int cantidadJugadores;
+	VentanaJueguito ventana;
 
 	public Partida() {
 		this.tamanioTablero = DEFAULT_TAM_TABLERO;
@@ -73,20 +74,17 @@ public class Partida {
 		}
 
 		int rondas = 0;
-		Scanner entrada = new Scanner(System.in);
-		VentanaJueguito ventana = new VentanaJueguito(this);
+		ventana= new VentanaJueguito(this);
 		
 		while (mazo.getTam() > 1) {
 			System.out.println("--------Ronda: " + ++rondas + "--------");
 			cartasAElegirSig.clear();
 			mazo.quitarPrimerasNCartas(4, cartasAElegirSig);
 			cartasAElegirSig.sort(Carta::compareTo);
-			elegirCartas(cartasAElegirSig, turnos, ventana,entrada);
+			jugarRonda(cartasAElegirSig, turnos, ventana);
 			
 		}
-		//entrada.close(); Los scanner asociados a System.in no se tienen que cerrar
-		//puesto que genera errores más adelante, debido a que se cierra System.in
-		//la JVM es la encargada de cerrar esa entrada si lo considera necesario
+
 
 		System.out.println("-------Partida finalizada!!!-------");
 
@@ -99,43 +97,19 @@ public class Partida {
 
 	private List<Integer> calcularPuntajesFinales() {
 		List<Integer> puntajesFinales = new ArrayList<Integer>();
-		for (Jugador jugador : jugadores) {
+		for(int i=0;i<jugadores.size();i++) {
+			Jugador jugador=jugadores.get(i);
 			System.out.println("-------Tablero de Jugador " + jugador.getNombre() + "-------");
 			System.out.println(jugador.getTablero());
-			puntajesFinales.add(jugador.getTablero().puntajeTotal(true));
+			puntajesFinales.add(jugador.getTablero().puntajeTotal(true,ventana,i));
 		}
+
 		return puntajesFinales;
 	}
 
 	private Map<Jugador,Integer> determinarGanadores(List<Integer> puntajesFinales) {
 		Map<Jugador,Integer> ganadoresPorPunto = obtenerGanadoresPorPuntos(puntajesFinales);
 		return ganadoresPorPunto.size() == 1 ? ganadoresPorPunto : obtenerGanadoresPorTerreno(ganadoresPorPunto);
- 		/*
-		List<Jugador> ganadores = new ArrayList<Jugador>(jugadores.size());
-		
-		if (ganadoresPorPunto.size() == 1) {
-			//System.out.println("Ha ganado " + jugadores.get(ganadoresPorPunto.get(0)).getNombre());
-			//ganadores.add(jugadores.get(ganadoresPorPunto.get(0)));
-			return ganadoresPorPunto;
-		}
-
-		return obtenerGanadoresPorTerreno(ganadoresPorPunto);
-		if (ganadoresPorTerreno.size() == 1) {
-			//System.out.println("Ha ganado " + jugadores.get(ganadoresPorTerreno.get(0)).getNombre());
-			//ganadores.add(jugadores.get(ganadoresPorTerreno.get(0)));
-			return ganadoresPorTerreno;
-		}
-
-		// Si hay mas de un ganador por terreno se comparte la victoria
-
-		System.out.println("No se pudo desempatar, comparten la victoria :)");
-		System.out.println("Ganadores:");
-		for (int i = 0; i < ganadoresPorTerreno.size(); i++) {
-			System.out.println(jugadores.get(ganadoresPorTerreno.get(i)).getNombre());
-			ganadores.add(jugadores.get(ganadoresPorTerreno.get(i)));
-		}
-		return ganadoresPorTerreno;*/
-
 	}
 
 	private Map<Jugador, Integer> obtenerGanadoresPorPuntos(List<Integer> puntajesFinales) {
@@ -179,7 +153,7 @@ public class Partida {
 		return ganadoresPorTerreno;
 	}
 
-	private void elegirCartas(List<Carta> cartasAElegir, List<Integer> turnos, VentanaJueguito entrada, Scanner teclado) throws IOException {
+	private void jugarRonda(List<Carta> cartasAElegir, List<Integer> turnos, VentanaJueguito entrada) throws IOException {
 
 		int numeroElegido;
 		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
@@ -192,7 +166,7 @@ public class Partida {
 			numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
 			//System.out.println(jugadores.get(turno).getNombre() + " elige carta " + (numeroElegido));
 			//System.out.println(numeroElegido);
-			jugadores.get(turno).insertaEnTablero(cartasAElegir.get(numeroElegido), entrada, teclado);
+			jugadores.get(turno).insertaEnTablero(cartasAElegir.get(numeroElegido), entrada);
 			cartasAElegir.set(numeroElegido, null);
 			nuevoOrdenDeTurnos.put(numeroElegido, turno);
 		}

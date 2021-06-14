@@ -34,7 +34,7 @@ public class Jugador extends Usuario {
 		return nombre;
 	}
 
-	public void insertaEnTablero(Carta carta, VentanaJueguito ventana, Scanner entrada) {
+	public void insertaEnTablero(Carta carta, VentanaJueguito ventana) {
 		if (!tablero.esPosibleInsertarEnTodoElTablero(carta))
 			return;
 		int x, y;
@@ -42,11 +42,7 @@ public class Jugador extends Usuario {
 		int[] posicion = new int[2];
 		do {
 			posicion = ventana.obtenerInputCoordenadas(this);
-			System.out.println(carta);
 		} while (!tablero.ponerCarta(carta, posicion[0], posicion[1], true,ventana));
-		System.out.println("Tablero actualizado:");
-		System.out.println(tablero);
-
 	}
 
 	public int eligeCarta(List<Carta> cartasAElegir, VentanaJueguito entrada) throws IOException {

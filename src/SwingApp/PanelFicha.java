@@ -13,7 +13,7 @@ import reyes.Ficha;
 
 public class PanelFicha extends JPanel {
 
-	private Ficha f;
+	private Ficha ficha;
 	static final int LARGO_CARTA = 160;
 	static final int ALTO_CARTA = 80;
 	static final int LARGO_FICHA = LARGO_CARTA / 2;
@@ -25,16 +25,8 @@ public class PanelFicha extends JPanel {
 	public PanelFicha(Ficha f, int y, int x) {
 		this.x = x;
 		this.y = y;
-		this.f = f;
+		this.ficha = f;
 		this.escala=1;
-
-//		this.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				fichaClickeada();
-//			}
-//
-//		});
 
 		bufferFicha = getTexturaFicha(f);
 
@@ -43,16 +35,8 @@ public class PanelFicha extends JPanel {
 	public PanelFicha(Ficha f, int y, int x, double escala) {
 		this.x = x;
 		this.y = y;
-		this.f = f;
+		this.ficha = f;
 		this.escala=escala;
-//
-//		this.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				fichaClickeada();
-//			}
-//
-//		});
 
 		bufferFicha = getTexturaFicha(f);
 
@@ -90,7 +74,7 @@ public class PanelFicha extends JPanel {
 	}
 
 	public Ficha getFicha() {
-		return this.f;
+		return this.ficha;
 	}
 
 	@Override
@@ -100,8 +84,8 @@ public class PanelFicha extends JPanel {
 		AffineTransform affineTransform = new AffineTransform();
 //		g2d.scale(escala, escala);
 		affineTransform.scale(escala, escala);
-		if (f != null) {
-			int rotacion = f.getRotacion() - 1;
+		if (ficha != null) {
+			int rotacion = ficha.getRotacion() - 1;
 //        System.out.println(rotacion);
 			if (rotacion != 0) {
 				affineTransform.rotate((rotacion) * Math.PI / 2);

@@ -18,7 +18,15 @@ public class PanelJugador extends JPanel {
 	
 
 	public void actualizarTablero() {
-		pTablero.actualizarTablero();
-		
+		pTablero.reCrearTablero(jugador.getNombre());
 	}
+
+	
+
+
+	public void pintarFicha(int i,int j) {
+		pTablero.pintarFicha(i,j);
+	}
+
+
 }

@@ -75,18 +75,14 @@ public class TablerosJugadores extends JPanel{
 		VentanaJueguito.setLatchCartaElegida(new CountDownLatch(1));
 		return coordenadasElegidas;
 	}
-	
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2d=(Graphics2D) g;
-		tamTableros=VentanaJueguito.TAM_TABLEROS;
-		g2d.fillRect(0, 0, tamTableros, tamTableros);
-	}
 
 	public void actualizarTableros() {
 		for(PanelJugador tableroIndividual:tableros) {
 			tableroIndividual.actualizarTablero();
 		}
+	}
+
+	public void pintarFicha(int x, int y,int indice) {
+		tableros.get(indice).pintarFicha(x,y);
 	}
 }

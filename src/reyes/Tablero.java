@@ -30,7 +30,28 @@ public class Tablero {
 		for (int i = xMin; i <= xMax; i++) {
 			for (int j = yMin; j <= yMax; j++) {
 
-				int puntajeParcialPorRegion = contarPuntajeParcial(i, j);
+				int puntajeParcialPorRegion = contarPuntajeParcial(i, j,null,0);
+				acumPuntos += puntajeParcialPorRegion;
+				if (mostrarRegiones && puntajeParcialPorRegion > 0) {
+					contRegiones++;
+					String tipo = tablero[i][j].getTipo();
+					System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcialPorRegion + " puntos.\n");
+				}
+			}
+		}
+		if (mostrarRegiones) {
+			System.out.println("PUNTAJE TOTAL:" + acumPuntos);
+		}
+		return acumPuntos;
+	}
+	
+	public int puntajeTotal(boolean mostrarRegiones,VentanaJueguito ventana,int indice) {
+		int acumPuntos = 0;
+		int contRegiones = 0;
+		for (int i = xMin; i <= xMax; i++) {
+			for (int j = yMin; j <= yMax; j++) {
+
+				int puntajeParcialPorRegion = contarPuntajeParcial(i, j,ventana,indice);
 				acumPuntos += puntajeParcialPorRegion;
 				if (mostrarRegiones && puntajeParcialPorRegion > 0) {
 					contRegiones++;
@@ -45,10 +66,12 @@ public class Tablero {
 		return acumPuntos;
 	}
 
-	private int contarPuntajeParcial(int x, int y) {
+	private int contarPuntajeParcial(int x, int y,VentanaJueguito ventana, int indice) {
 		Ficha ficha = tablero[x][y];
 
 		if (ficha == null)
+			return 0;
+		if(ficha.getTipo().equals("Castillo"))
 			return 0;
 
 		List<Integer> puntosYCoronas = new ArrayList<Integer>(2);
@@ -58,12 +81,12 @@ public class Tablero {
 		puntosYCoronas.add(0);
 		puntosYCoronas.add(0);
 
-		puntajeRecursivo(ficha.getTipo(), x, y, puntosYCoronas);
+		puntajeRecursivo(ficha.getTipo(), x, y, puntosYCoronas,ventana,indice);
 
 		return puntosYCoronas.get(0) * puntosYCoronas.get(1);
 	}
 
-	private void puntajeRecursivo(String tipoRegion, int x, int y, List<Integer> puntosYCoronas) {
+	private void puntajeRecursivo(String tipoRegion, int x, int y, List<Integer> puntosYCoronas, VentanaJueguito ventana, int indice) {
 
 		if (!(x >= 0 && x < tablero.length && y >= 0 && y < tablero[x].length))
 			return;
@@ -76,14 +99,18 @@ public class Tablero {
 		if (!fichaActual.isPuntajeContado()) {
 			if (fichaActual.getTipo().equals(tipoRegion)) {
 				fichaActual.setPuntajeContado(true);
+				
+				if(ventana!=null) {
+					ventana.pintarFicha(x,y,indice);
+				}
 				int acumPuntos = puntosYCoronas.get(0) + 1;
 				puntosYCoronas.set(0, acumPuntos);
 				int cantCoronas = puntosYCoronas.get(1) + fichaActual.getCantCoronas();
 				puntosYCoronas.set(1, cantCoronas);
-				puntajeRecursivo(tipoRegion, x + 1, y, puntosYCoronas);
-				puntajeRecursivo(tipoRegion, x, y + 1, puntosYCoronas);
-				puntajeRecursivo(tipoRegion, x - 1, y, puntosYCoronas);
-				puntajeRecursivo(tipoRegion, x, y - 1, puntosYCoronas);
+				puntajeRecursivo(tipoRegion, x + 1, y, puntosYCoronas,ventana,indice);
+				puntajeRecursivo(tipoRegion, x, y + 1, puntosYCoronas,ventana,indice);
+				puntajeRecursivo(tipoRegion, x - 1, y, puntosYCoronas,ventana,indice);
+				puntajeRecursivo(tipoRegion, x, y - 1, puntosYCoronas,ventana,indice);
 			}
 		} else
 			return;

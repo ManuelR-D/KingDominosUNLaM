@@ -32,7 +32,7 @@ public class Bot extends Jugador {
 			Carta carta = cartasAElegir.get(i);
 			if (carta != null) {
 				// si no la eligieron ya...
-				insertaEnTablero(carta,null,null);
+				insertaEnTablero(carta,null);
 				int puntajeActual = tablero.puntajeTotal(noMostrarRegiones);
 				if (puntajeMax < puntajeActual) {
 					puntajeMax = puntajeActual;
@@ -46,7 +46,7 @@ public class Bot extends Jugador {
 	}
 
 	@Override
-	public void insertaEnTablero(Carta cartaElegida, VentanaJueguito ventana, Scanner entrada) {
+	public void insertaEnTablero(Carta cartaElegida, VentanaJueguito ventana) {
 		int x = -(tablero.getTamanio() - 1);
 		int y = -(tablero.getTamanio() - 1);
 		int rotaciones = 0;
