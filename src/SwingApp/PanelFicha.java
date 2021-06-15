@@ -2,8 +2,6 @@ package SwingApp;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
@@ -13,6 +11,7 @@ import reyes.Ficha;
 
 public class PanelFicha extends JPanel {
 
+	private static final long serialVersionUID = 5537172421677141208L;
 	private Ficha ficha;
 	static final int LARGO_CARTA = 160;
 	static final int ALTO_CARTA = 80;

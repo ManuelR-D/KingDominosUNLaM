@@ -2,10 +2,10 @@ package reyes;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.TreeMap;
 
 import SwingApp.VentanaJueguito;
@@ -179,18 +179,14 @@ public class Partida {
 	}
 
 	private List<Integer> determinarTurnosIniciales() {
-		List<Integer> turnos = new ArrayList<Integer>();
 		List<Integer> idJugadores = new ArrayList<Integer>(4);
 
 		for (int i = 0; i < cantidadJugadores; i++) {
 			idJugadores.add(i);
 		}
-		for (int i = 0; i < cantidadJugadores; i++) {
-			int numeroAleatorio = FuncionesGenerales.numeroAleatorioEntre(0, cantidadJugadores - i - 1);
-			turnos.add(idJugadores.remove(numeroAleatorio));
-		}
+		Collections.shuffle(idJugadores);
 
-		return turnos;
+		return idJugadores;
 	}
 
 	public List<Jugador> getJugadores() {

@@ -1,7 +1,6 @@
 package reyes;
 
 import java.util.List;
-import java.util.Scanner;
 
 import SwingApp.VentanaJueguito;
 

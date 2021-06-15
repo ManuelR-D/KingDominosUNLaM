@@ -3,6 +3,7 @@ package reyes;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -45,14 +46,7 @@ public class Mazo {
 	}
 	
 	public void mezclarMazo() {
-		List<Carta> cartasMezcladas = new ArrayList<Carta>(cartas.size());
-		int tam=cartas.size();
-		for (int i = 0; i < tam; i++) {
-			int numeroAleatorio = FuncionesGenerales.numeroAleatorioEntre(0, tam - i - 1);
-			cartasMezcladas.add(cartas.remove(numeroAleatorio));
-		}
-
-		 this.cartas = cartasMezcladas;
+		Collections.shuffle(cartas);
 	}
 	
 	public void quitarPrimerasNCartas(int n, List<Carta> cartasDevueltas) {
@@ -62,6 +56,9 @@ public class Mazo {
 
 	}
 	
+	public List<Carta> getCartas() {
+		return cartas;
+	}
 	public int getTam() {
 		return cartas.size();
 	}

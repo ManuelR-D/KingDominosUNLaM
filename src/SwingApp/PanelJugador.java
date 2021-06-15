@@ -5,6 +5,8 @@ import javax.swing.JPanel;
 import reyes.Jugador;
 
 public class PanelJugador extends JPanel {
+
+	private static final long serialVersionUID = 1226652105748390999L;
 	private PanelTablero pTablero;
 	Jugador jugador;
 

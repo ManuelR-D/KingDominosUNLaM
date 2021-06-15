@@ -1,21 +1,16 @@
 package SwingApp;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import reyes.Jugador;
 
 public class TablerosJugadores extends JPanel{
+
+	private static final long serialVersionUID = -5711758328587102246L;
 	int tamTablero;
 	int tamTableros=VentanaJueguito.TAM_TABLEROS;
 	List<PanelJugador> tableros;

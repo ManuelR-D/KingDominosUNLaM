@@ -13,7 +13,6 @@ import java.util.concurrent.CountDownLatch;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 import reyes.Carta;

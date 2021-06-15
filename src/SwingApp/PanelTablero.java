@@ -5,9 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -19,7 +17,7 @@ import reyes.Tablero;
 
 public class PanelTablero extends JPanel {
 	private Tablero tablero;
-	private Set<Ficha> fichasEnTablero = new HashSet<Ficha>();
+//	private Set<Ficha> fichasEnTablero = new HashSet<Ficha>();
 	private static final long serialVersionUID = -3826925585139282813L;
 	int offset_x = 0;
 	int offset_y = 0;
