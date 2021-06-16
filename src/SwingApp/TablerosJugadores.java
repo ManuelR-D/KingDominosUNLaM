@@ -1,5 +1,6 @@
 package SwingApp;
 
+import java.awt.Panel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -65,15 +66,21 @@ public class TablerosJugadores extends JPanel{
 		}
 		coordenadasElegidas[0] = VentanaJueguito.coordenadasElegidas[0];
 		coordenadasElegidas[1] = VentanaJueguito.coordenadasElegidas[1];
+		VentanaJueguito.setLatchCartaElegida(new CountDownLatch(1));
 		VentanaJueguito.coordenadasElegidas[0] = 0;
 		VentanaJueguito.coordenadasElegidas[1] = 0;
-		VentanaJueguito.setLatchCartaElegida(new CountDownLatch(1));
+		System.out.println("Se eligió: " + coordenadasElegidas[0] +";"+ coordenadasElegidas[1] );
 		return coordenadasElegidas;
 	}
 
 	public void actualizarTableros() {
 		for(PanelJugador tableroIndividual:tableros) {
-			tableroIndividual.actualizarTablero();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					tableroIndividual.actualizarTablero();
+				}
+			}).start();
 		}
 	}
 

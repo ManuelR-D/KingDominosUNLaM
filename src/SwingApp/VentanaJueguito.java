@@ -39,7 +39,8 @@ public class VentanaJueguito extends JFrame {
 
 	private static CountDownLatch latchCartaElegida = new CountDownLatch(1);
 	public static volatile int[] coordenadasElegidas = new int[2];
-
+	public static VentanaJueguito mainFrame;
+	public static PanelFicha fichaElegida;
 	/**
 	 * Launch the application.
 	 */
@@ -92,6 +93,8 @@ public class VentanaJueguito extends JFrame {
 		informacion.setBounds(TAM_TABLEROS + 20, 0, LARGO_VENTANA - TAM_TABLEROS, ALTO_VENTANA - (ALTO_FICHA * 4));
 		informacion.setBorder(BorderFactory.createLineBorder(Color.black));
 		getContentPane().add(informacion);
+		
+		VentanaJueguito.mainFrame = this;
 	}
 
 	public synchronized int[] obtenerInputCoordenadas(Jugador jugador) {
@@ -150,7 +153,7 @@ public class VentanaJueguito extends JFrame {
 
 	}
 
-	public void actualizarTableros(List<Jugador> jugadores) {
+	public void actualizarTableros() {
 		System.out.println("Clase VentanaJueguito funcion actualizarTableros");
 		tableros.actualizarTableros();
 	}
@@ -167,6 +170,10 @@ public class VentanaJueguito extends JFrame {
 
 	public void pintarFicha(int x, int y, int indice) {
 		tableros.pintarFicha(x, y, indice);
+	}
+
+	public void setPSeleccionVisible(boolean b) {
+		pSeleccion.setVisible(b);
 	}
 	
 }

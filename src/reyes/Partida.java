@@ -75,7 +75,7 @@ public class Partida {
 
 		int rondas = 0;
 		ventana= new VentanaJueguito(this);
-		
+		ventana.actualizarTableros();
 		while (mazo.getTam() > 1) {
 			System.out.println("--------Ronda: " + ++rondas + "--------");
 			cartasAElegirSig.clear();
@@ -87,7 +87,7 @@ public class Partida {
 
 
 		System.out.println("-------Partida finalizada!!!-------");
-
+		ventana.setPSeleccionVisible(false);
 		List<Integer> puntajesFinales = calcularPuntajesFinales();
 
 		
@@ -160,12 +160,14 @@ public class Partida {
 
 		for (int i = 0; i < turnos.size(); i++) {
 			entrada.mostrarCartasAElegir(cartasAElegir);
-			entrada.actualizarTableros(jugadores);
+			
+			long tiempoInicial = System.currentTimeMillis();
+			entrada.actualizarTableros();
+			System.out.println("Render tableros: " + (System.currentTimeMillis() - tiempoInicial));
+			
 			int turno = turnos.get(i);
 			entrada.mostrarMensaje("Turno del jugador:"+jugadores.get(turno).getNombre());
 			numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
-			//System.out.println(jugadores.get(turno).getNombre() + " elige carta " + (numeroElegido));
-			//System.out.println(numeroElegido);
 			jugadores.get(turno).insertaEnTablero(cartasAElegir.get(numeroElegido), entrada);
 			cartasAElegir.set(numeroElegido, null);
 			nuevoOrdenDeTurnos.put(numeroElegido, turno);

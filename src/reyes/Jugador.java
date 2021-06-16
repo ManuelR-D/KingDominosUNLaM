@@ -31,8 +31,6 @@ public class Jugador extends Usuario {
 	public void insertaEnTablero(Carta carta, VentanaJueguito ventana) {
 		if (!tablero.esPosibleInsertarEnTodoElTablero(carta))
 			return;
-//		int x, y;
-//		int tamTablero = tablero.getTamanio() - 1;
 		int[] posicion = new int[2];
 		do {
 			posicion = ventana.obtenerInputCoordenadas(this);

@@ -68,7 +68,6 @@ public class PanelFicha extends JPanel {
 			return;
 		VentanaJueguito.coordenadasElegidas[0] = x;
 		VentanaJueguito.coordenadasElegidas[1] = y;
-		System.out.println(VentanaJueguito.coordenadasElegidas[0] + ";" + VentanaJueguito.coordenadasElegidas[1]);
 		VentanaJueguito.getLatchCartaElegida().countDown();
 	}
 
@@ -106,5 +105,4 @@ public class PanelFicha extends JPanel {
 		}
 		g2d.drawImage(bufferFicha, affineTransform, null);
 	}
-
 }

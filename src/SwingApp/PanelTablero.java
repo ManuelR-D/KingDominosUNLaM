@@ -5,7 +5,9 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -17,13 +19,16 @@ import reyes.Tablero;
 
 public class PanelTablero extends JPanel {
 	private Tablero tablero;
-//	private Set<Ficha> fichasEnTablero = new HashSet<Ficha>();
+	private Set<Ficha> fichasEnTablero = new HashSet<Ficha>();
 	private static final long serialVersionUID = -3826925585139282813L;
-	int offset_x = 0;
-	int offset_y = 0;
+	int xMin= 0;
+	int xMax = 0;
+	int yMax = 0;
+	int yMin = 0;
 	int tamTableroVisual;
 	int numJugador;
 	PanelFicha[][] matrizPaneles;
+
 	private Map<String,Color> mapaColores;
 //	private int xMaxAux,xMinAux,yMaxAux,yMinAux;
 	JLayeredPane panelConDimension;
@@ -62,13 +67,16 @@ public class PanelTablero extends JPanel {
 //		yMaxAux=yMax;
 //		yMinAux=yMin;
 		
-		this.removeAll();
-		panelConDimension = new JLayeredPane();
-		panelConDimension.setLayout(null);
-		panelConDimension.setBounds(0, 0, tamTableroVisual, tamTableroVisual);
-		this.add(panelConDimension);
 		Ficha[][] fichas = tablero.getTablero();
-
+		boolean necesitaRedibujar = this.xMax != xMax || this.xMin != xMin || this.yMax != yMax || this.yMin != yMin;
+		if(necesitaRedibujar) {
+			this.removeAll();
+			panelConDimension = new JLayeredPane();
+			panelConDimension.setLayout(null);
+			panelConDimension.setBounds(0, 0, tamTableroVisual, tamTableroVisual);
+			this.add(panelConDimension);
+			fichasEnTablero.clear();
+		}
 		// Calculos para realizar la escala
 		/*
 		 * Por ejemplo si puedo colocar como maximo 5 fichas y coloque 2 a la derecha
@@ -93,42 +101,69 @@ public class PanelTablero extends JPanel {
 		int largo = (int) (PanelFicha.LARGO_FICHA * escala);
 		int alto = (int) (PanelFicha.ALTO_FICHA * escala);
 
-		int centradoLargo = 0;
-		;
-		int centradoAlto = 0;
+		final int centradoLargo = (xMax - xMin == tablero.getTamanio() - 1) ? largo : 0;
+
+		final int centradoAlto = (yMax - yMin == tablero.getTamanio() - 1) ? alto : 0;
 		/*
 		 * Estas variables son para acomodar el tablero cuando se haya llegado al limite
 		 * de construccion(por ej 5x5)
+		 * 
+		 * Edit: las paso a final y con ternario para que sean admisibles por Thread
 		 */
-		if (xMax - xMin == tablero.getTamanio() - 1) {
+		/*if (xMax - xMin == tablero.getTamanio() - 1) {
 			centradoLargo = largo;
 		}
 		if (yMax - yMin == tablero.getTamanio() - 1) {
 			centradoAlto = alto;
-		}
+		}*/
 
 		for (int i = inicioFilasAMostrar, y = 0; i <= finFilasAMostrar; i++, y++) {
 			for (int j = inicioColumnasAMostrar, x = 0; j <= finColumnasAMostrar; j++, x++) {
-				PanelFicha panelFicha = new PanelFicha(fichas[i][j], i, j, escala);
-				matrizPaneles[i][j] = panelFicha;
-				panelFicha.setBounds((x * alto) + centradoAlto, (y * largo) + centradoLargo, largo, alto);
-				panelFicha.setBorder(BorderFactory.createLineBorder(Color.black));
-				panelFicha.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						panelFicha.fichaClickeada();
-					}
-				});
-				panelConDimension.add(panelFicha, 0);
-
+				if(necesitaRedibujar || (!necesitaRedibujar && !fichasEnTablero.contains(fichas[i][j]))) {
+					new Thread(new Runnable() {
+						//dado que i,j,x,y son recursos criticos, mandamos copias.
+						int ith,jth,xth,yth;
+						public Runnable init(int i, int j, int x, int y) {
+							this.ith = i;
+							this.jth = j;
+							this.xth = x;
+							this.yth = y;
+							return this;
+						}
+						@Override
+						public void run() {
+							PanelFicha panelFicha = new PanelFicha(fichas[ith][jth], ith, jth, escala);
+							matrizPaneles[ith][jth] = panelFicha;
+							panelFicha.setBounds((xth * alto) + centradoAlto, (yth * largo) + centradoLargo, largo, alto);
+							panelFicha.setBorder(BorderFactory.createLineBorder(Color.black));
+							panelFicha.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseClicked(MouseEvent e) {
+									panelFicha.fichaClickeada();
+								}
+							});
+							panelConDimension.add(panelFicha, 0);
+							fichasEnTablero.add(fichas[ith][jth]);
+						}
+					}.init(i, j, x, y)).start();
+				}
 			}
 		}
-		JLabel nombre = new JLabel(nombreJugador);
-		nombre.setBounds(0, 0, tamTableroVisual, alto);
-		nombre.setBackground(Color.red);
-		nombre.setForeground(Color.red);
-		panelConDimension.add(nombre, 1);
-		this.repaint();
+		
+		//El nombre tiene que redibujarse al final, siempre, en caso contrario queda "debajo"
+		//de las fichas vacias.Estaria bueno cambiar esto
+		if(necesitaRedibujar) {
+			JLabel nombre = new JLabel(nombreJugador);
+			nombre.setBounds(0, 0, tamTableroVisual, alto);
+			nombre.setBackground(Color.red);
+			nombre.setForeground(Color.red);
+			panelConDimension.add(nombre, 1);
+		}
+		this.xMax = xMax;
+		this.xMin = xMin;
+		this.yMax = yMax;
+		this.yMin = yMin;
+		this.repaint();	
 	}
 
 	public void pintarFicha(int i, int j) {
@@ -151,5 +186,4 @@ public class PanelTablero extends JPanel {
 			}
 		}
 	}
-
 }
