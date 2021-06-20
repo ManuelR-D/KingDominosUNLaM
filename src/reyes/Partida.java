@@ -73,11 +73,11 @@ public class Partida {
 			jugador.setTablero(this.tamanioTablero);
 		}
 
-		int rondas = 0;
+//		int rondas = 0;
 		ventana= new VentanaJueguito(this);
 		ventana.actualizarTableros();
 		while (mazo.getTam() > 1) {
-			System.out.println("--------Ronda: " + ++rondas + "--------");
+//			System.out.println("--------Ronda: " + ++rondas + "--------");
 			cartasAElegirSig.clear();
 			mazo.quitarPrimerasNCartas(4, cartasAElegirSig);
 			cartasAElegirSig.sort(Carta::compareTo);
@@ -86,7 +86,7 @@ public class Partida {
 		}
 
 
-		System.out.println("-------Partida finalizada!!!-------");
+//		System.out.println("-------Partida finalizada!!!-------");
 		ventana.setPSeleccionVisible(false);
 		List<Integer> puntajesFinales = calcularPuntajesFinales();
 
@@ -99,8 +99,8 @@ public class Partida {
 		List<Integer> puntajesFinales = new ArrayList<Integer>();
 		for(int i=0;i<jugadores.size();i++) {
 			Jugador jugador=jugadores.get(i);
-			System.out.println("-------Tablero de Jugador " + jugador.getNombre() + "-------");
-			System.out.println(jugador.getTablero());
+//			System.out.println("-------Tablero de Jugador " + jugador.getNombre() + "-------");
+//			System.out.println(jugador.getTablero());
 			puntajesFinales.add(jugador.getTablero().puntajeTotal(true,ventana,i));
 		}
 
@@ -116,10 +116,10 @@ public class Partida {
 		int maxPuntaje = 0;
 		//List<Integer> ganadoresPorPunto = new ArrayList<Integer>();
 		Map<Jugador,Integer> ganadoresPorPunto = new HashMap<Jugador,Integer>();
-		System.out.println("PUNTAJES FINALES:");
+//		System.out.println("PUNTAJES FINALES:");
 		for (int i = 0; i < puntajesFinales.size(); i++) {
 			Integer puntaje = puntajesFinales.get(i);
-			System.out.println(jugadores.get(i).getNombre() + ":" + puntaje);
+//			System.out.println(jugadores.get(i).getNombre() + ":" + puntaje);
 			if (puntaje > maxPuntaje) {
 				maxPuntaje = puntaje;
 				//ganadoresPorPunto.clear();
@@ -138,10 +138,10 @@ public class Partida {
 		int maxTerreno = 0;
 		//List<Integer> ganadoresPorTerreno = new ArrayList<Integer>();
 		Map<Jugador,Integer> ganadoresPorTerreno = new HashMap<Jugador,Integer>();
-		System.out.println("EMPATE POR PUNTOS");
+//		System.out.println("EMPATE POR PUNTOS");
 		for (int i = 0; i < ganadoresPorPunto.size(); i++) {
 			int cantTerreno = jugadores.get(i).getCantTerrenoColocado();
-			System.out.println(jugadores.get(i).getNombre() + ":" + cantTerreno);
+//			System.out.println(jugadores.get(i).getNombre() + ":" + cantTerreno);
 			if (cantTerreno > maxTerreno) {
 				maxTerreno = cantTerreno;
 				ganadoresPorTerreno.clear();
@@ -176,8 +176,8 @@ public class Partida {
 		for (Map.Entry<Integer, Integer> entry : nuevoOrdenDeTurnos.entrySet())
 			turnos.add(entry.getValue());
 
-		if(turnos.size() != nuevoOrdenDeTurnos.size())
-			System.out.println("check");
+//		if(turnos.size() != nuevoOrdenDeTurnos.size())
+//			System.out.println("check");
 	}
 
 	private List<Integer> determinarTurnosIniciales() {

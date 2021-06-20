@@ -10,14 +10,14 @@ public class Tablero {
 	protected int tamTablero;
 	private int cantTerrenoColocado = 0;
 	protected int centro;
-	private int xMin, xMax, yMin, yMax;
+	private int fMin, fMax, cMin, cMax;
 
 	public Tablero(int tamTablero) {
 		this.tamTablero = tamTablero;
 		centro = tamTablero - 1;
 		this.tablero = new Ficha[(tamTablero * 2) - 1][(tamTablero * 2) - 1];
-		this.tablero[centro][centro] = new Ficha("Castillo", 0, centro, centro,-1, null);
-		xMin = xMax = yMin = yMax = centro;
+		this.tablero[centro][centro] = new Ficha("Castillo", 0, centro, centro, -1, null);
+		fMin = fMax = cMin = cMax = centro;
 	}
 
 	public Ficha[][] getTablero() {
@@ -26,54 +26,55 @@ public class Tablero {
 
 	public int puntajeTotal(boolean mostrarRegiones) {
 		int acumPuntos = 0;
-		int contRegiones = 0;
-		for (int i = xMin; i <= xMax; i++) {
-			for (int j = yMin; j <= yMax; j++) {
+//		int contRegiones = 0;
+		for (int i = fMin; i <= fMax; i++) {
+			for (int j = cMin; j <= cMax; j++) {
 
-				int puntajeParcialPorRegion = contarPuntajeParcial(i, j,null,0);
+				int puntajeParcialPorRegion = contarPuntajeParcial(i, j, null, 0);
 				acumPuntos += puntajeParcialPorRegion;
-				if (mostrarRegiones && puntajeParcialPorRegion > 0) {
-					contRegiones++;
-					String tipo = tablero[i][j].getTipo();
-					System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcialPorRegion + " puntos.\n");
-				}
+//				if (mostrarRegiones && puntajeParcialPorRegion > 0) {
+//					contRegiones++;
+//					String tipo = tablero[i][j].getTipo();
+////					System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcialPorRegion + " puntos.\n");
+//				}
 			}
 		}
 		if (mostrarRegiones) {
-			System.out.println("PUNTAJE TOTAL:" + acumPuntos);
+//			System.out.println("PUNTAJE TOTAL:" + acumPuntos);
 		}
 		return acumPuntos;
 	}
-	
-	public int puntajeTotal(boolean mostrarRegiones,VentanaJueguito ventana,int indice) {
+
+	public int puntajeTotal(boolean mostrarRegiones, VentanaJueguito ventana, int indice) {
 		int acumPuntos = 0;
-		int contRegiones = 0;
-		for (int i = xMin; i <= xMax; i++) {
-			for (int j = yMin; j <= yMax; j++) {
+//		int contRegiones = 0;
+		for (int i = fMin; i <= fMax; i++) {
+			for (int j = cMin; j <= cMax; j++) {
 
-				int puntajeParcialPorRegion = contarPuntajeParcial(i, j,ventana,indice);
+				int puntajeParcialPorRegion = contarPuntajeParcial(i, j, ventana, indice);
 				acumPuntos += puntajeParcialPorRegion;
-				if (mostrarRegiones && puntajeParcialPorRegion > 0) {
-					contRegiones++;
-					String tipo = tablero[i][j].getTipo();
-					System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcialPorRegion + " puntos.\n");
-				}
+//				if (mostrarRegiones && puntajeParcialPorRegion > 0) {
+//					contRegiones++;
+//					String tipo = tablero[i][j].getTipo();
+//					System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcialPorRegion + " puntos.\n");
+//				}
 			}
 		}
-		if (mostrarRegiones) {
-			System.out.println("PUNTAJE TOTAL:" + acumPuntos);
-		}
+//		if (mostrarRegiones) {
+//			System.out.println("PUNTAJE TOTAL:" + acumPuntos);
+//		}
 		return acumPuntos;
 	}
 
-	private int contarPuntajeParcial(int x, int y,VentanaJueguito ventana, int indice) {
+	private int contarPuntajeParcial(int x, int y, VentanaJueguito ventana, int indice) {
 		Ficha ficha = tablero[x][y];
 
 		if (ficha == null)
 			return 0;
-		if(ficha.getTipo().equals("Castillo"))
+		if (ficha.getTipo().equals("Castillo"))
 			return 0;
-
+		if(ficha.isPuntajeContado())
+			return 0;
 		List<Integer> puntosYCoronas = new ArrayList<Integer>(2);
 		// En la primer posicion del ArrayList se guardan los puntos por region
 		// En la segunda posicion se guarda la cantidad de coronas por region
@@ -81,39 +82,45 @@ public class Tablero {
 		puntosYCoronas.add(0);
 		puntosYCoronas.add(0);
 
-		puntajeRecursivo(ficha.getTipo(), x, y, puntosYCoronas,ventana,indice);
+		puntajeRecursivo(ficha.getTipo(), x, y, puntosYCoronas, ventana, indice);
 
-		return puntosYCoronas.get(0) * puntosYCoronas.get(1);
+		Integer acumPuntos = puntosYCoronas.get(0);
+		Integer acumCoronas = puntosYCoronas.get(1);
+		if (ventana != null) {
+			ventana.pintarFicha(x, y, indice, acumPuntos, acumCoronas);
+		}
+		return acumPuntos * acumCoronas;
+
 	}
 
-	private void puntajeRecursivo(String tipoRegion, int x, int y, List<Integer> puntosYCoronas, VentanaJueguito ventana, int indice) {
+	private void puntajeRecursivo(String tipoRegion, int fila, int columna, List<Integer> puntosYCoronas,
+			VentanaJueguito ventana, int indice) {
 
-		if (!(x >= 0 && x < tablero.length && y >= 0 && y < tablero[x].length))
+		if (!(fila >= 0 && fila < tablero.length) || !(columna >= 0 && columna < tablero.length))
 			return;
 
-		Ficha fichaActual = tablero[x][y];
+		Ficha fichaActual = tablero[fila][columna];
 
 		if (fichaActual == null)
+			return;
+		if (fichaActual.getTipo().equals("Castillo"))
 			return;
 
 		if (!fichaActual.isPuntajeContado()) {
 			if (fichaActual.getTipo().equals(tipoRegion)) {
 				fichaActual.setPuntajeContado(true);
-				
-				if(ventana!=null) {
-					ventana.pintarFicha(x,y,indice);
-				}
+
 				int acumPuntos = puntosYCoronas.get(0) + 1;
 				puntosYCoronas.set(0, acumPuntos);
 				int cantCoronas = puntosYCoronas.get(1) + fichaActual.getCantCoronas();
 				puntosYCoronas.set(1, cantCoronas);
-				puntajeRecursivo(tipoRegion, x + 1, y, puntosYCoronas,ventana,indice);
-				puntajeRecursivo(tipoRegion, x, y + 1, puntosYCoronas,ventana,indice);
-				puntajeRecursivo(tipoRegion, x - 1, y, puntosYCoronas,ventana,indice);
-				puntajeRecursivo(tipoRegion, x, y - 1, puntosYCoronas,ventana,indice);
+				puntajeRecursivo(tipoRegion, fila + 1, columna, puntosYCoronas, ventana, indice);
+				puntajeRecursivo(tipoRegion, fila, columna + 1, puntosYCoronas, ventana, indice);
+				puntajeRecursivo(tipoRegion, fila - 1, columna, puntosYCoronas, ventana, indice);
+				puntajeRecursivo(tipoRegion, fila, columna - 1, puntosYCoronas, ventana, indice);
 			}
-		} else
-			return;
+		}
+		return;
 
 	}
 
@@ -142,11 +149,11 @@ public class Tablero {
 		}
 	}
 
-	public boolean ponerCarta(Carta carta, int columna, int fila, boolean mostrarMensaje,VentanaJueguito ventana) {
+	public boolean ponerCarta(Carta carta, int columna, int fila, boolean mostrarMensaje, VentanaJueguito ventana) {
 		Ficha[] fichas = carta.getFichas();
 		carta.moverCarta(fila, columna);
 
-		if (esPosibleInsertar(carta, mostrarMensaje,ventana)) {
+		if (esPosibleInsertar(carta, mostrarMensaje, ventana)) {
 
 			int f1X = fichas[0].getX();
 			int f1Y = fichas[0].getY();
@@ -162,7 +169,6 @@ public class Tablero {
 			return false;
 		}
 	}
-
 
 	protected boolean esPosibleInsertar(Carta carta, boolean mostrarMensaje) {
 		Ficha[] fichas = carta.getFichas();
@@ -201,6 +207,7 @@ public class Tablero {
 
 		return true;
 	}
+
 	/*
 	 * Sobrecarga del metodo para que reciba la ventana como argumento
 	 */
@@ -243,10 +250,10 @@ public class Tablero {
 	}
 
 	private boolean comprobarLimiteSinModificar(int f1X, int f1Y, int f2X, int f2Y, int limite) {
-		int xMinAux = xMin;
-		int xMaxAux = xMax;
-		int yMinAux = yMin;
-		int yMaxAux = yMax;
+		int xMinAux = fMin;
+		int xMaxAux = fMax;
+		int yMinAux = cMin;
+		int yMaxAux = cMax;
 
 		if (f1X < xMinAux)
 			xMinAux = f1X;
@@ -280,10 +287,10 @@ public class Tablero {
 	}
 
 	protected boolean actualizarLimites(int f1X, int f1Y, int f2X, int f2Y, int limite) {
-		int xMinAux = xMin;
-		int xMaxAux = xMax;
-		int yMinAux = yMin;
-		int yMaxAux = yMax;
+		int xMinAux = fMin;
+		int xMaxAux = fMax;
+		int yMinAux = cMin;
+		int yMaxAux = cMax;
 
 		if (f1X < xMinAux)
 			xMinAux = f1X;
@@ -312,10 +319,10 @@ public class Tablero {
 		if (xMaxAux - xMinAux >= limite || yMaxAux - yMinAux >= limite) {
 			return false;
 		} else {
-			xMin = xMinAux;
-			xMax = xMaxAux;
-			yMin = yMinAux;
-			yMax = yMaxAux;
+			fMin = xMinAux;
+			fMax = xMaxAux;
+			cMin = yMinAux;
+			cMax = yMaxAux;
 			return true;
 		}
 	}
@@ -378,11 +385,11 @@ public class Tablero {
 	@Override
 	public String toString() {
 		String ret = "";
-		for (int i = xMin; i <= xMax; i++) {
-			for (int j = yMin; j <= yMax; j++) {
+		for (int i = fMin; i <= fMax; i++) {
+			for (int j = cMin; j <= cMax; j++) {
 				Ficha ficha = tablero[i][j];
 				if (ficha != null)
-					ret += String.format("%8s/%s/%s|", ficha.getTipo(), ficha.getCantCoronas(),ficha.getId());
+					ret += String.format("%8s/%s/%s|", ficha.getTipo(), ficha.getCantCoronas(), ficha.getId());
 				else
 					ret += String.format("%10s|", " ");
 			}
@@ -392,14 +399,14 @@ public class Tablero {
 	}
 
 	public boolean esPosibleInsertarEnTodoElTablero(Carta carta) {
-		int yMinAux = yMin - 1;
-		int xMinAux = xMin - 1;
+		int yMinAux = cMin - 1;
+		int xMinAux = fMin - 1;
 		boolean noMostrarMensaje = false;
 
-		carta.moverCarta(xMin - 1, yMin - 1);
+		carta.moverCarta(fMin - 1, cMin - 1);
 
-		for (int i = xMin - 1; i <= xMax + 1; i++) {
-			for (int j = yMin - 1; j <= yMax + 1; j++) {
+		for (int i = fMin - 1; i <= fMax + 1; i++) {
+			for (int j = cMin - 1; j <= cMax + 1; j++) {
 				for (int r = 0; r < 4; r++) {
 					if (esPosibleInsertar(carta, noMostrarMensaje)) {
 						carta.setDefault();
@@ -433,18 +440,23 @@ public class Tablero {
 	public int getCantTerrenoColocado() {
 		return cantTerrenoColocado;
 	}
-	public int getxMin() {
-		return xMin;
+
+	public int getFMin() {
+		return fMin;
 	}
-	public int getxMax() {
-		return xMax;
+
+	public int getFMax() {
+		return fMax;
 	}
-	public int getyMin() {
-		return yMin;
+
+	public int getCMin() {
+		return cMin;
 	}
-	public int getyMax() {
-		return yMax;
+
+	public int getCMax() {
+		return cMax;
 	}
+
 	public int getCentro() {
 		return centro;
 	}

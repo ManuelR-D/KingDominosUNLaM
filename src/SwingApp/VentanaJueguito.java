@@ -154,7 +154,7 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void actualizarTableros() {
-		System.out.println("Clase VentanaJueguito funcion actualizarTableros");
+//		System.out.println("Clase VentanaJueguito funcion actualizarTableros");
 		tableros.actualizarTableros();
 	}
 
@@ -168,8 +168,8 @@ public class VentanaJueguito extends JFrame {
 		g.fillRect(TAM_TABLEROS + 5, 0, 10, ALTO_VENTANA);
 	}
 
-	public void pintarFicha(int x, int y, int indice) {
-		tableros.pintarFicha(x, y, indice);
+	public void pintarFicha(int fila, int columna, int indice, int acumPuntos, int cantCoronas) {
+		tableros.pintarFicha(fila, columna, indice,acumPuntos,cantCoronas);
 	}
 
 	public void setPSeleccionVisible(boolean b) {

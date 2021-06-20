@@ -1,6 +1,5 @@
 package SwingApp;
 
-import java.awt.Panel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -75,16 +74,14 @@ public class TablerosJugadores extends JPanel{
 
 	public void actualizarTableros() {
 		for(PanelJugador tableroIndividual:tableros) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					tableroIndividual.actualizarTablero();
-				}
-			}).start();
+			tableroIndividual.actualizarTablero();
 		}
 	}
+	public void actualizarTablero(int indice,int fila,int columna) {
+		tableros.get(indice).actualizarTablero(fila,columna);
+	}
 
-	public void pintarFicha(int x, int y,int indice) {
-		tableros.get(indice).pintarFicha(x,y);
+	public void pintarFicha(int fila, int columna,int indice, int acumPuntos, int cantCoronas) {
+		tableros.get(indice).pintarFicha(fila,columna,acumPuntos,cantCoronas,indice);
 	}
 }

@@ -17,11 +17,14 @@ public class PanelJugador extends JPanel {
 		pTablero.setBounds(0,0,tamTablero,tamTablero);
 		this.add(pTablero);
 	}
+	public void actualizarTablero(int fila, int columna) {
+		pTablero.actualizarTablero(jugador.getNombre(),fila,columna);
+	}
+	public void pintarFicha(int fila,int columna, int acumPuntos, int cantCoronas, int indice) {
+		pTablero.pintarFicha(fila,columna,acumPuntos,cantCoronas,indice);
+	}
 	public void actualizarTablero() {
 		pTablero.reCrearTablero(jugador.getNombre());
-	}
-	public void pintarFicha(int i,int j) {
-		pTablero.pintarFicha(i,j);
 	}
 
 }
