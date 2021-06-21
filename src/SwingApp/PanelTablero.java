@@ -65,7 +65,10 @@ public class PanelTablero extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		Color cAnterior=g.getColor();
+		g.setColor(new Color(0xAB7632));
 		g.fillRect(0, 0, tamTableroVisual, tamTableroVisual);
+		g.setColor(cAnterior);
 	}
 
 //	public void reCrearTablero(String nombreJugador) {
@@ -318,8 +321,8 @@ public class PanelTablero extends JPanel {
 
 		JLabel nombre = new JLabel(nombreJugador);
 		nombre.setBounds(0, 0, tamTableroVisual, alto);
-		nombre.setBackground(Color.red);
-		nombre.setForeground(Color.red);
+//		nombre.setBackground(Color.red);
+		nombre.setForeground(new Color(0x40FFDE));
 		panelConDimension.add(nombre, 1);
 
 		this.fMax = fMax;
