@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 
 import reyes.Carta;
 import reyes.Ficha;
-import reyes.Jugador;
 
 public class PanelTableroSeleccion extends JPanel {
 

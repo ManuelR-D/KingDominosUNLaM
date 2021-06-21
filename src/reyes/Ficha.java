@@ -7,7 +7,7 @@ public class Ficha {
 	private int id;
 	private int rotacion = 1;
 	private boolean puntajeContado=false;
-	private static int fichas = 0;
+//	private static int fichas = 0;
 	
 	
 	public Ficha(String tipo, int cantCoronas, int x, int y, int idFicha, Carta c) {
@@ -15,7 +15,7 @@ public class Ficha {
 		this.cantCoronas = cantCoronas;
 		this.x=x;
 		this.y=y;
-		fichas++;
+//		fichas++;
 		this.id = idFicha;
 		this.carta = c;
 	}

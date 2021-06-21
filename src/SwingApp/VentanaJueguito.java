@@ -13,7 +13,6 @@ import java.util.concurrent.CountDownLatch;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 import reyes.Carta;
@@ -37,10 +36,11 @@ public class VentanaJueguito extends JFrame {
 	PanelTableroSeleccion pSeleccion;
 	TablerosJugadores tableros;
 	JTextArea informacion;
-	
+
 	private static CountDownLatch latchCartaElegida = new CountDownLatch(1);
 	public static volatile int[] coordenadasElegidas = new int[2];
-
+	public static VentanaJueguito mainFrame;
+	public static PanelFicha fichaElegida;
 	/**
 	 * Launch the application.
 	 */
@@ -64,7 +64,9 @@ public class VentanaJueguito extends JFrame {
 	public VentanaJueguito(Partida p) {
 		setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setBounds(100, 100, 800, 600);
+
 		try {
 			VentanaJueguito.bufferCastillo = ImageIO.read(texturaCastillo);
 			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
@@ -73,28 +75,39 @@ public class VentanaJueguito extends JFrame {
 			e.printStackTrace();
 			System.out.println("Error generando imagenes clase VentanaJueguito");
 		}
-		LARGO_VENTANA=(int) this.getSize().getWidth();
-		ALTO_VENTANA=(int) this.getSize().getHeight();
-		TAM_TABLEROS=(LARGO_VENTANA-LARGO_FICHA*2)-20;
-		tableros=new TablerosJugadores(p.getJugadores());
-		tableros.setBounds(0,0,TAM_TABLEROS,TAM_TABLEROS);
-		getContentPane().add(tableros);
 		setUndecorated(true);
-		informacion=new JTextArea("Hola");
+		informacion = new JTextArea("Hola");
 		informacion.setEditable(false);
-		informacion.setBackground(new Color(138,3,3));
+		informacion.setBackground(new Color(138, 3, 3));
 		informacion.setForeground(Color.WHITE);
-		informacion.setBounds(TAM_TABLEROS+20,0 , LARGO_VENTANA-TAM_TABLEROS, ALTO_VENTANA-(ALTO_FICHA*4));
-		informacion.setBorder(BorderFactory.createLineBorder(Color.black));
-		getContentPane().add(informacion);
+
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
+		LARGO_VENTANA = (int) this.getSize().getWidth();
+		ALTO_VENTANA = (int) this.getSize().getHeight();
+//		TAM_TABLEROS = (LARGO_VENTANA - LARGO_FICHA * 2) - 20;
+		TAM_TABLEROS = ALTO_VENTANA;
+		tableros = new TablerosJugadores(p.getJugadores());
+		tableros.setBounds(0, 0, TAM_TABLEROS, TAM_TABLEROS);
+		getContentPane().add(tableros);
+		informacion.setBounds(TAM_TABLEROS + 20, 0, LARGO_VENTANA - TAM_TABLEROS, ALTO_VENTANA - (ALTO_FICHA * 4));
+		informacion.setBorder(BorderFactory.createLineBorder(Color.black));
+		getContentPane().add(informacion);
+		try {
+			Sonido s = new Sonido("./assets/Sound/main.wav");
+			s.setVolume(0.1f);
+			s.play();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		VentanaJueguito.mainFrame = this;
 	}
 
 	public synchronized int[] obtenerInputCoordenadas(Jugador jugador) {
 		return tableros.obtenerInputCoordenadas(jugador);
 	}
-	
+
 	public static CountDownLatch getLatchCartaElegida() {
 		return latchCartaElegida;
 	}
@@ -115,52 +128,56 @@ public class VentanaJueguito extends JFrame {
 		System.out.println("Saliendo de leerCartaElegida");
 		int idCartaElegida = PanelTableroSeleccion.idCartaElegida;
 		pSeleccion.setStartLatch(new CountDownLatch(1));
+		Sonido.playCartaSeleccionada();
 		return idCartaElegida;
 	}
 
 	public void terminarPartida(Map<Jugador, Integer> map) {
 		System.out.println("Clase VentanaJueguito funcion terminarPartida");
 		pSeleccion.setVisible(false);
-		String mensaje = "";
-		if(map.size()==1)
-			mensaje = "Ha ganado el jugador\n";
-		else
-			mensaje = "Han ganado los jugadores\n";
+		String mensaje = map.size() == 1 ? "Ha ganado el jugador\n" : "Han ganado los jugadores\n" ;
 		for (Map.Entry<Jugador, Integer> entry : map.entrySet()) {
-			mensaje+=entry.getKey().getNombre() + " con: " + entry.getValue() + " puntos" + "\n";
+			mensaje += entry.getKey().getNombre() + " con: " + entry.getValue() + " puntos" + "\n";
 		}
 		mostrarMensaje(mensaje);
 	}
 
 	public void mostrarCartasAElegir(List<Carta> cartasAElegir) {
 //		System.out.println("Clase VentanaJueguito funcion mostrarCartasAELegir");
-		if(pSeleccion!=null) {
+		if (pSeleccion != null) {
 			this.remove(pSeleccion);
-			
+
 		}
-		pSeleccion=new PanelTableroSeleccion(cartasAElegir);
-		pSeleccion.setBounds(TAM_TABLEROS+20, ALTO_VENTANA-ALTO_FICHA*4, LARGO_FICHA*2, ALTO_FICHA*4);
+		pSeleccion = new PanelTableroSeleccion(cartasAElegir);
+		pSeleccion.setBounds(TAM_TABLEROS + 20, ALTO_VENTANA - ALTO_FICHA * 4, LARGO_FICHA * 2, ALTO_FICHA * 4);
 		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
 		this.getContentPane().add(pSeleccion);
+
 		this.repaint();
-		
+
 	}
 
-	public void actualizarTableros(List<Jugador> jugadores) {
-		System.out.println("Clase VentanaJueguito funcion actualizarTableros");
+	public void actualizarTableros() {
+//		System.out.println("Clase VentanaJueguito funcion actualizarTableros");
 		tableros.actualizarTableros();
 	}
 
 	public void mostrarMensaje(String string) {
 		informacion.setText(string);
 	}
-	
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		LARGO_VENTANA=(int) this.getSize().getWidth();
-		ALTO_VENTANA=(int) this.getSize().getHeight();
-		TAM_TABLEROS=(LARGO_VENTANA-LARGO_FICHA*2)-20;
-		g.fillRect(TAM_TABLEROS+5,0, 10, ALTO_VENTANA);
+		g.fillRect(TAM_TABLEROS + 5, 0, 10, ALTO_VENTANA);
 	}
+
+	public void pintarFicha(int fila, int columna, int indice, int acumPuntos, int cantCoronas) {
+		tableros.pintarFicha(fila, columna, indice,acumPuntos,cantCoronas);
+	}
+
+	public void setPSeleccionVisible(boolean b) {
+		pSeleccion.setVisible(b);
+	}
+	
 }

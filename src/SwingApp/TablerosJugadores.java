@@ -1,21 +1,16 @@
 package SwingApp;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import reyes.Jugador;
 
 public class TablerosJugadores extends JPanel{
+
+	private static final long serialVersionUID = -5711758328587102246L;
 	int tamTablero;
 	int tamTableros=VentanaJueguito.TAM_TABLEROS;
 	List<PanelJugador> tableros;
@@ -70,23 +65,46 @@ public class TablerosJugadores extends JPanel{
 		}
 		coordenadasElegidas[0] = VentanaJueguito.coordenadasElegidas[0];
 		coordenadasElegidas[1] = VentanaJueguito.coordenadasElegidas[1];
+		VentanaJueguito.setLatchCartaElegida(new CountDownLatch(1));
 		VentanaJueguito.coordenadasElegidas[0] = 0;
 		VentanaJueguito.coordenadasElegidas[1] = 0;
-		VentanaJueguito.setLatchCartaElegida(new CountDownLatch(1));
+		System.out.println("Se eligió: " + coordenadasElegidas[0] +";"+ coordenadasElegidas[1] );
+		Sonido.playPonerCarta();
 		return coordenadasElegidas;
-	}
-	
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2d=(Graphics2D) g;
-		tamTableros=VentanaJueguito.TAM_TABLEROS;
-		g2d.fillRect(0, 0, tamTableros, tamTableros);
 	}
 
 	public void actualizarTableros() {
+		Thread[] ths = new Thread[4];
+		int i = 0;
+		for(PanelJugador tableroIndividual:tableros) {
+			Thread th = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					tableroIndividual.actualizarTablero();
+				}
+			});
+			//Preparamos los hilos
+			ths[i++] = th;
+		}
+		//Lanzamos los hilos
+		for(i = 0; i < 4; ths[i++].start());
+		//Esperamos que terminen
+		try {
+			for(i = 0; i < 4; ths[i++].join());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	/*public void actualizarTableros() {
 		for(PanelJugador tableroIndividual:tableros) {
 			tableroIndividual.actualizarTablero();
 		}
+	}*/
+	public void actualizarTablero(int indice,int fila,int columna) {
+		tableros.get(indice).actualizarTablero(fila,columna);
+	}
+
+	public void pintarFicha(int fila, int columna,int indice, int acumPuntos, int cantCoronas) {
+		tableros.get(indice).pintarFicha(fila,columna,acumPuntos,cantCoronas,indice);
 	}
 }
