@@ -194,7 +194,7 @@ public class Partida {
 			boolean pudoInsertar=jugadores.get(turno).insertaEnTablero(cartaElegida, entrada);
 			int coordenadaX = cartaElegida.getFichas()[0].getColumna();
 			int coordenadaY = cartaElegida.getFichas()[0].getFila();
-			System.out.println("Coordenadas= fila:"+coordenadaY+" columna:"+coordenadaX);
+//			System.out.println("Coordenadas= fila:"+coordenadaY+" columna:"+coordenadaX);
 			if(pudoInsertar) {
 				ventana.actualizarTablero(turno , coordenadaY, coordenadaX);				
 			}

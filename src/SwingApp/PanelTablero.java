@@ -114,11 +114,11 @@ public class PanelTablero extends JPanel {
 		if (necesitaRedibujar) {
 			reCrearTablero(nombre);
 		} else {
-			System.out.println("Ficha 1 fila:" + fila + " columna:" + columna);
+//			System.out.println("Ficha 1 fila:" + fila + " columna:" + columna);
 			insertarPFichaEnTablero(fila, columna, fichas);
 
 			int rotacion = fichas[fila][columna].getRotacion();
-			System.out.println("Rotacion:" + rotacion);
+//			System.out.println("Rotacion:" + rotacion);
 			switch (rotacion) {
 
 			case 1:
@@ -135,7 +135,7 @@ public class PanelTablero extends JPanel {
 				break;
 			}
 
-			System.out.println("Ficha 2 fila:" + fila + " columna:" + columna);
+//			System.out.println("Ficha 2 fila:" + fila + " columna:" + columna);
 			insertarPFichaEnTablero(fila, columna, fichas);
 		}
 

@@ -3,6 +3,7 @@ package reyes;
 import java.util.ArrayList;
 import java.util.List;
 
+import SwingApp.PanelInformacion;
 import SwingApp.VentanaJueguito;
 
 public class Tablero {
@@ -26,21 +27,12 @@ public class Tablero {
 
 	public int puntajeTotal(boolean mostrarRegiones) {
 		int acumPuntos = 0;
-//		int contRegiones = 0;
 		for (int i = fMin; i <= fMax; i++) {
 			for (int j = cMin; j <= cMax; j++) {
 
 				int puntajeParcialPorRegion = contarPuntajeParcial(i, j, null, 0);
 				acumPuntos += puntajeParcialPorRegion;
-//				if (mostrarRegiones && puntajeParcialPorRegion > 0) {
-//					contRegiones++;
-//					String tipo = tablero[i][j].getTipo();
-////					System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcialPorRegion + " puntos.\n");
-//				}
 			}
-		}
-		if (mostrarRegiones) {
-//			System.out.println("PUNTAJE TOTAL:" + acumPuntos);
 		}
 		return acumPuntos;
 	}
@@ -73,7 +65,7 @@ public class Tablero {
 			return 0;
 		if (ficha.getTipo().equals("Castillo"))
 			return 0;
-		if(ficha.isPuntajeContado())
+		if (ficha.isPuntajeContado())
 			return 0;
 		List<Integer> puntosYCoronas = new ArrayList<Integer>(2);
 		// En la primer posicion del ArrayList se guardan los puntos por region
@@ -226,14 +218,14 @@ public class Tablero {
 		// devuelvo false
 		if (tablero[f1X][f1Y] != null || tablero[f2X][f2Y] != null) {
 			if (mostrarMensaje) {
-				ventana.mostrarMensaje("ERROR- YA HAY UNA CARTA EN ESA POSICION");
+				ventana.mostrarError("ERROR- YA HAY UNA CARTA EN ESA POSICION");
 			}
 			return false;
 		}
 		// Si no hay tipos adyacentes compatibles, no se puede poner la carta
 		if (!tipoAdyacenteCompatible(carta)) {
 			if (mostrarMensaje) {
-				ventana.mostrarMensaje("ERROR- NO HAY TIPOS ADYACENTES COMPATIBLES");
+				ventana.mostrarError("ERROR- NO HAY TIPOS ADYACENTES COMPATIBLES");
 			}
 			return false;
 		}
@@ -241,7 +233,7 @@ public class Tablero {
 		// comprobamos que no salga del limite
 		if (!comprobarLimiteSinModificar(f1X, f1Y, f2X, f2Y, tamTablero)) {
 			if (mostrarMensaje) {
-				ventana.mostrarMensaje("ERROR- SE EXCEDE EL LIMITE DE CONSTRUCCION");
+				ventana.mostrarError("ERROR- SE EXCEDE EL LIMITE DE CONSTRUCCION");
 			}
 			return false;
 		}
@@ -459,5 +451,25 @@ public class Tablero {
 
 	public int getCentro() {
 		return centro;
+	}
+
+	public String puntajeTotal(PanelInformacion panelInformacion) {
+		int acumPuntos = 0;
+		int contRegiones = 0;
+		String puntajeTotal = "";
+		for (int i = fMin; i <= fMax; i++) {
+			for (int j = cMin; j <= cMax; j++) {
+
+				int puntajeParcialPorRegion = contarPuntajeParcial(i, j, null, 0);
+				acumPuntos += puntajeParcialPorRegion;
+				if (puntajeParcialPorRegion > 0) {
+					contRegiones++;
+					String tipo = tablero[i][j].getTipo();
+					puntajeTotal += contRegiones + "-" + tipo + "=" + puntajeParcialPorRegion + " puntos.\n";
+				}
+			}
+		}
+		puntajeTotal += "PUNTAJE TOTAL:" + acumPuntos;
+		return puntajeTotal;
 	}
 }

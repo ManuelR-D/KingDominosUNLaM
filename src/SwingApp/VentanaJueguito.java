@@ -13,6 +13,7 @@ import java.util.concurrent.CountDownLatch;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 import reyes.Carta;
@@ -35,7 +36,7 @@ public class VentanaJueguito extends JFrame {
 	static int TAM_TABLEROS;
 	PanelTableroSeleccion pSeleccion;
 	TablerosJugadores tableros;
-	JTextArea informacion;
+	PanelInformacion informacion;
 
 	private static CountDownLatch latchCartaElegida = new CountDownLatch(1);
 	public static volatile int[] coordenadasElegidas = new int[2];
@@ -77,10 +78,7 @@ public class VentanaJueguito extends JFrame {
 			System.out.println("Error generando imagenes clase VentanaJueguito");
 		}
 		setUndecorated(true);
-		informacion = new JTextArea("");
-		informacion.setEditable(false);
-		informacion.setBackground(new Color(0xE3BB86));
-		informacion.setForeground(Color.WHITE);
+		informacion=new PanelInformacion(p.getJugadores());
 
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
@@ -98,7 +96,6 @@ public class VentanaJueguito extends JFrame {
 			s.setVolume(0.1f);
 			s.play();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		VentanaJueguito.mainFrame = this;
@@ -163,7 +160,7 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void mostrarMensaje(String string) {
-		informacion.setText(string);
+		informacion.mostrarInfo(string);
 	}
 
 	public void pintarFicha(int fila, int columna, int indice, int acumPuntos, int cantCoronas) {
@@ -186,6 +183,10 @@ public class VentanaJueguito extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void mostrarError(String mensaje) {
+		JOptionPane.showMessageDialog(this, mensaje, "Movimiento no permitido", JOptionPane.ERROR_MESSAGE);
 	}
 	
 }
