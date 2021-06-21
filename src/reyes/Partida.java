@@ -45,11 +45,11 @@ public class Partida {
 
 		if (cantidadCartas != 48) {
 			throw new KingDominoExcepcion(
-					"La cantidad de cartas tiene que ser 48! (limitaci髇 por parte del enunciado)");
-			// El c骴igo puede funcionar sin problemas con cualquier cantidad de cartas
-			// mientras el total sea m鷏tiplo de 4, pues siempre se roba de a 4 cartas.
-			// Sin embargo, el enunciado tiene la limitaci髇 de 48 para todos los modos.
-			// Se puede quitar esta validaci髇 en el futuro si quisieramos agregar otros
+					"La cantidad de cartas tiene que ser 48! (limitaci贸n por parte del enunciado)");
+			// El c贸digo puede funcionar sin problemas con cualquier cantidad de cartas
+			// mientras el total sea m煤ltiplo de 4, pues siempre se roba de a 4 cartas.
+			// Sin embargo, el enunciado tiene la limitaci贸n de 48 para todos los modos.
+			// Se puede quitar esta validaci贸n en el futuro si quisieramos agregar otros
 			// modos.
 		}
 		this.cantidadJugadores = jugadores.size();
@@ -160,15 +160,19 @@ public class Partida {
 
 		for (int i = 0; i < turnos.size(); i++) {
 			entrada.mostrarCartasAElegir(cartasAElegir);
-			
-			//long tiempoInicial = System.currentTimeMillis();
-			entrada.actualizarTableros();
-			//System.out.println("Render tableros: " + (System.currentTimeMillis() - tiempoInicial));
+
 			
 			int turno = turnos.get(i);
 			entrada.mostrarMensaje("Turno del jugador:"+jugadores.get(turno).getNombre());
 			numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
-			jugadores.get(turno).insertaEnTablero(cartasAElegir.get(numeroElegido), entrada);
+			Carta cartaElegida = cartasAElegir.get(numeroElegido);
+			boolean pudoInsertar=jugadores.get(turno).insertaEnTablero(cartaElegida, entrada);
+			int coordenadaX = cartaElegida.getFichas()[0].getColumna();
+			int coordenadaY = cartaElegida.getFichas()[0].getFila();
+			System.out.println("Coordenadas= fila:"+coordenadaY+" columna:"+coordenadaX);
+			if(pudoInsertar) {
+				ventana.actualizarTablero(turno , coordenadaY, coordenadaX);				
+			}
 			cartasAElegir.set(numeroElegido, null);
 			nuevoOrdenDeTurnos.put(numeroElegido, turno);
 		}
@@ -176,8 +180,8 @@ public class Partida {
 		for (Map.Entry<Integer, Integer> entry : nuevoOrdenDeTurnos.entrySet())
 			turnos.add(entry.getValue());
 
-//		if(turnos.size() != nuevoOrdenDeTurnos.size())
-//			System.out.println("check");
+		if(turnos.size() != nuevoOrdenDeTurnos.size())
+			System.out.println("check");
 	}
 
 	private List<Integer> determinarTurnosIniciales() {

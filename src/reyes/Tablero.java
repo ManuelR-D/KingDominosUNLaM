@@ -134,10 +134,10 @@ public class Tablero {
 
 		if (esPosibleInsertar(carta, mostrarMensaje)) {
 
-			int f1X = fichas[0].getX();
-			int f1Y = fichas[0].getY();
-			int f2X = fichas[1].getX();
-			int f2Y = fichas[1].getY();
+			int f1X = fichas[0].getFila();
+			int f1Y = fichas[0].getColumna();
+			int f2X = fichas[1].getFila();
+			int f2Y = fichas[1].getColumna();
 			actualizarLimites(f1X, f1Y, f2X, f2Y, tamTablero);
 			tablero[f1X][f1Y] = fichas[0];
 			tablero[f2X][f2Y] = fichas[1];
@@ -155,10 +155,10 @@ public class Tablero {
 
 		if (esPosibleInsertar(carta, mostrarMensaje, ventana)) {
 
-			int f1X = fichas[0].getX();
-			int f1Y = fichas[0].getY();
-			int f2X = fichas[1].getX();
-			int f2Y = fichas[1].getY();
+			int f1X = fichas[0].getFila();
+			int f1Y = fichas[0].getColumna();
+			int f2X = fichas[1].getFila();
+			int f2Y = fichas[1].getColumna();
 			actualizarLimites(f1X, f1Y, f2X, f2Y, tamTablero);
 			tablero[f1X][f1Y] = fichas[0];
 			tablero[f2X][f2Y] = fichas[1];
@@ -172,10 +172,10 @@ public class Tablero {
 
 	protected boolean esPosibleInsertar(Carta carta, boolean mostrarMensaje) {
 		Ficha[] fichas = carta.getFichas();
-		int f1X = fichas[0].getX();
-		int f1Y = fichas[0].getY();
-		int f2X = fichas[1].getX();
-		int f2Y = fichas[1].getY();
+		int f1X = fichas[0].getFila();
+		int f1Y = fichas[0].getColumna();
+		int f2X = fichas[1].getFila();
+		int f2Y = fichas[1].getColumna();
 
 		if (f1X >= tablero.length || f1X < 0 || f1Y >= tablero.length || f1Y < 0 || f2X >= tablero.length || f2X < 0
 				|| f2Y >= tablero.length || f2Y < 0) {
@@ -213,10 +213,10 @@ public class Tablero {
 	 */
 	protected boolean esPosibleInsertar(Carta carta, boolean mostrarMensaje, VentanaJueguito ventana) {
 		Ficha[] fichas = carta.getFichas();
-		int f1X = fichas[0].getX();
-		int f1Y = fichas[0].getY();
-		int f2X = fichas[1].getX();
-		int f2Y = fichas[1].getY();
+		int f1X = fichas[0].getFila();
+		int f1Y = fichas[0].getColumna();
+		int f2X = fichas[1].getFila();
+		int f2Y = fichas[1].getColumna();
 
 		if (f1X >= tablero.length || f1X < 0 || f1Y >= tablero.length || f1Y < 0 || f2X >= tablero.length || f2X < 0
 				|| f2Y >= tablero.length || f2Y < 0) {
@@ -329,11 +329,11 @@ public class Tablero {
 
 	protected boolean tipoAdyacenteCompatible(Carta carta) {
 		Ficha[] fichas = carta.getFichas();
-		int f1X = fichas[0].getX();
-		int f1Y = fichas[0].getY();
+		int f1X = fichas[0].getFila();
+		int f1Y = fichas[0].getColumna();
 		String f1T = fichas[0].getTipo();
-		int f2X = fichas[1].getX();
-		int f2Y = fichas[1].getY();
+		int f2X = fichas[1].getFila();
+		int f2Y = fichas[1].getColumna();
 		String f2T = fichas[1].getTipo();
 
 		Ficha fComparacion = f1Y == tablero.length - 1 ? null : tablero[f1X][f1Y + 1];
@@ -431,8 +431,8 @@ public class Tablero {
 		Ficha f1 = cartaElegida.getFichas()[0];
 		Ficha f2 = cartaElegida.getFichas()[1];
 
-		tablero[f1.getX()][f1.getY()] = null;
-		tablero[f2.getX()][f2.getY()] = null;
+		tablero[f1.getFila()][f1.getColumna()] = null;
+		tablero[f2.getFila()][f2.getColumna()] = null;
 		cartaElegida.setDefault();
 
 	}

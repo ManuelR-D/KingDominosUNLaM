@@ -62,11 +62,12 @@ public class VentanaJueguito extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaJueguito(Partida p) {
-		setLayout(null);
+		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setBounds(100, 100, 800, 600);
-
+		getContentPane().setBackground(new Color(0x5E411B));
+		
 		try {
 			VentanaJueguito.bufferCastillo = ImageIO.read(texturaCastillo);
 			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
@@ -76,21 +77,20 @@ public class VentanaJueguito extends JFrame {
 			System.out.println("Error generando imagenes clase VentanaJueguito");
 		}
 		setUndecorated(true);
-		informacion = new JTextArea("Hola");
+		informacion = new JTextArea("");
 		informacion.setEditable(false);
-		informacion.setBackground(new Color(138, 3, 3));
+		informacion.setBackground(new Color(0xE3BB86));
 		informacion.setForeground(Color.WHITE);
 
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		LARGO_VENTANA = (int) this.getSize().getWidth();
 		ALTO_VENTANA = (int) this.getSize().getHeight();
-//		TAM_TABLEROS = (LARGO_VENTANA - LARGO_FICHA * 2) - 20;
 		TAM_TABLEROS = ALTO_VENTANA;
 		tableros = new TablerosJugadores(p.getJugadores());
 		tableros.setBounds(0, 0, TAM_TABLEROS, TAM_TABLEROS);
 		getContentPane().add(tableros);
-		informacion.setBounds(TAM_TABLEROS + 20, 0, LARGO_VENTANA - TAM_TABLEROS, ALTO_VENTANA - (ALTO_FICHA * 4));
+		informacion.setBounds(TAM_TABLEROS + 20, 20, LARGO_FICHA*2, ALTO_VENTANA - (ALTO_FICHA * 5));
 		informacion.setBorder(BorderFactory.createLineBorder(Color.black));
 		getContentPane().add(informacion);
 		try {
@@ -143,12 +143,13 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void mostrarCartasAElegir(List<Carta> cartasAElegir) {
-//		System.out.println("Clase VentanaJueguito funcion mostrarCartasAELegir");
 		if (pSeleccion != null) {
 			this.remove(pSeleccion);
 
 		}
 		pSeleccion = new PanelTableroSeleccion(cartasAElegir);
+
+
 		pSeleccion.setBounds(TAM_TABLEROS + 20, ALTO_VENTANA - ALTO_FICHA * 4, LARGO_FICHA * 2, ALTO_FICHA * 4);
 		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
 		this.getContentPane().add(pSeleccion);
@@ -158,18 +159,11 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void actualizarTableros() {
-//		System.out.println("Clase VentanaJueguito funcion actualizarTableros");
 		tableros.actualizarTableros();
 	}
 
 	public void mostrarMensaje(String string) {
 		informacion.setText(string);
-	}
-
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		g.fillRect(TAM_TABLEROS + 5, 0, 10, ALTO_VENTANA);
 	}
 
 	public void pintarFicha(int fila, int columna, int indice, int acumPuntos, int cantCoronas) {
@@ -178,6 +172,11 @@ public class VentanaJueguito extends JFrame {
 
 	public void setPSeleccionVisible(boolean b) {
 		pSeleccion.setVisible(b);
+	}
+
+	public void actualizarTablero(int indice, int fila, int columna) {
+//		System.out.println("indice:"+indice+" fila:"+fila+" columna:"+columna);
+		tableros.actualizarTablero(indice, fila, columna);
 	}
 	
 }

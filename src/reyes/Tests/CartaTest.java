@@ -14,18 +14,18 @@ public class CartaTest {
 		Carta c = new Carta(0, "Pradera", 0, "Oasis", 2);
 
 		//		Carta original
-		int f1xOriginal = c.getFichas()[0].getX();
-		int f1yOriginal = c.getFichas()[0].getY();
-		int f2xOriginal = c.getFichas()[1].getX();
-		int f2yOriginal = c.getFichas()[1].getY();
+		int f1xOriginal = c.getFichas()[0].getFila();
+		int f1yOriginal = c.getFichas()[0].getColumna();
+		int f2xOriginal = c.getFichas()[1].getFila();
+		int f2yOriginal = c.getFichas()[1].getColumna();
 
 		//		Carta rotada 1 vez
 		c.rotarCarta();
 
-		int f1xActual = c.getFichas()[0].getX();
-		int f1yActual = c.getFichas()[0].getY();
-		int f2xActual = c.getFichas()[1].getX();
-		int f2yActual = c.getFichas()[1].getY();
+		int f1xActual = c.getFichas()[0].getFila();
+		int f1yActual = c.getFichas()[0].getColumna();
+		int f2xActual = c.getFichas()[1].getFila();
+		int f2yActual = c.getFichas()[1].getColumna();
 
 		assertEquals(f1xOriginal, f1xActual);
 		assertEquals(f1yOriginal, f1yActual);
@@ -38,19 +38,19 @@ public class CartaTest {
 		Carta c = new Carta(0, "Pradera", 0, "Oasis", 2);
 
 		//		Carta original
-		int f1xOriginal = c.getFichas()[0].getX();
-		int f1yOriginal = c.getFichas()[0].getY();
-		int f2xOriginal = c.getFichas()[1].getX();
-		int f2yOriginal = c.getFichas()[1].getY();
+		int f1xOriginal = c.getFichas()[0].getFila();
+		int f1yOriginal = c.getFichas()[0].getColumna();
+		int f2xOriginal = c.getFichas()[1].getFila();
+		int f2yOriginal = c.getFichas()[1].getColumna();
 
 		//		Carta rotada 2 veces
 		c.rotarCarta();
 		c.rotarCarta();
 
-		int f1xActual = c.getFichas()[0].getX();
-		int f1yActual = c.getFichas()[0].getY();
-		int f2xActual = c.getFichas()[1].getX();
-		int f2yActual = c.getFichas()[1].getY();
+		int f1xActual = c.getFichas()[0].getFila();
+		int f1yActual = c.getFichas()[0].getColumna();
+		int f2xActual = c.getFichas()[1].getFila();
+		int f2yActual = c.getFichas()[1].getColumna();
 
 		assertEquals(f1xOriginal, f1xActual);
 		assertEquals(f1yOriginal, f1yActual);
@@ -63,20 +63,20 @@ public class CartaTest {
 		Carta c = new Carta(0, "Pradera", 0, "Oasis", 2);
 
 		// Carta original
-		int f1xOriginal = c.getFichas()[0].getX();
-		int f1yOriginal = c.getFichas()[0].getY();
-		int f2xOriginal = c.getFichas()[1].getX();
-		int f2yOriginal = c.getFichas()[1].getY();
+		int f1xOriginal = c.getFichas()[0].getFila();
+		int f1yOriginal = c.getFichas()[0].getColumna();
+		int f2xOriginal = c.getFichas()[1].getFila();
+		int f2yOriginal = c.getFichas()[1].getColumna();
 
 		// Carta rotada 3 veces
 		c.rotarCarta();
 		c.rotarCarta();
 		c.rotarCarta();
 
-		int f1xActual = c.getFichas()[0].getX();
-		int f1yActual = c.getFichas()[0].getY();
-		int f2xActual = c.getFichas()[1].getX();
-		int f2yActual = c.getFichas()[1].getY();
+		int f1xActual = c.getFichas()[0].getFila();
+		int f1yActual = c.getFichas()[0].getColumna();
+		int f2xActual = c.getFichas()[1].getFila();
+		int f2yActual = c.getFichas()[1].getColumna();
 
 		assertEquals(f1xOriginal, f1xActual);
 		assertEquals(f1yOriginal, f1yActual);
@@ -89,10 +89,10 @@ public class CartaTest {
 		Carta c = new Carta(0, "Pradera", 0, "Oasis", 2);
 
 		// Carta original
-		int f1xOriginal = c.getFichas()[0].getX();
-		int f1yOriginal = c.getFichas()[0].getY();
-		int f2xOriginal = c.getFichas()[1].getX();
-		int f2yOriginal = c.getFichas()[1].getY();
+		int f1xOriginal = c.getFichas()[0].getFila();
+		int f1yOriginal = c.getFichas()[0].getColumna();
+		int f2xOriginal = c.getFichas()[1].getFila();
+		int f2yOriginal = c.getFichas()[1].getColumna();
 
 		//		Carta rotada 1 vez
 		c.rotarCarta();
@@ -109,10 +109,10 @@ public class CartaTest {
 		//		Carta rotada 4 veces
 		c.rotarCarta();
 
-		int f1xActual = c.getFichas()[0].getX();
-		int f1yActual = c.getFichas()[0].getY();
-		int f2xActual = c.getFichas()[1].getX();
-		int f2yActual = c.getFichas()[1].getY();
+		int f1xActual = c.getFichas()[0].getFila();
+		int f1yActual = c.getFichas()[0].getColumna();
+		int f2xActual = c.getFichas()[1].getFila();
+		int f2yActual = c.getFichas()[1].getColumna();
 		assertEquals(f1xOriginal, f1xActual);
 		assertEquals(f1yOriginal, f1yActual);
 		assertEquals(f2xOriginal, f2xActual);
@@ -125,10 +125,10 @@ public class CartaTest {
 
 		c1.moverCarta(0, 0);
 		Ficha[] fichas = c1.getFichas();
-		assertEquals(0, fichas[0].getX());
-		assertEquals(0, fichas[0].getY());
-		assertEquals(0, fichas[1].getX());
-		assertEquals(1, fichas[1].getY());
+		assertEquals(0, fichas[0].getFila());
+		assertEquals(0, fichas[0].getColumna());
+		assertEquals(0, fichas[1].getFila());
+		assertEquals(1, fichas[1].getColumna());
 
 	}
 
@@ -138,10 +138,10 @@ public class CartaTest {
 
 		c1.moverCarta(5, 5);
 		Ficha[] fichas = c1.getFichas();
-		assertEquals(5, fichas[0].getX());
-		assertEquals(5, fichas[0].getY());
-		assertEquals(5, fichas[1].getX());
-		assertEquals(6, fichas[1].getY());
+		assertEquals(5, fichas[0].getFila());
+		assertEquals(5, fichas[0].getColumna());
+		assertEquals(5, fichas[1].getFila());
+		assertEquals(6, fichas[1].getColumna());
 	}
 
 
@@ -153,10 +153,10 @@ public class CartaTest {
 
 		c1.moverCarta(-2, -3);
 		Ficha[] fichas = c1.getFichas();
-		assertEquals(3, fichas[0].getX());
-		assertEquals(2, fichas[0].getY());
-		assertEquals(3, fichas[1].getX());
-		assertEquals(3, fichas[1].getY());
+		assertEquals(3, fichas[0].getFila());
+		assertEquals(2, fichas[0].getColumna());
+		assertEquals(3, fichas[1].getFila());
+		assertEquals(3, fichas[1].getColumna());
 	}
 
 }

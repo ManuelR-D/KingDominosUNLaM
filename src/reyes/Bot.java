@@ -45,7 +45,7 @@ public class Bot extends Jugador {
 	}
 
 	@Override
-	public void insertaEnTablero(Carta cartaElegida, VentanaJueguito ventana) {
+	public boolean insertaEnTablero(Carta cartaElegida, VentanaJueguito ventana) {
 		int x = -(tablero.getTamanio() - 1);
 		int y = -(tablero.getTamanio() - 1);
 		int rotaciones = 0;
@@ -64,6 +64,7 @@ public class Bot extends Jugador {
 				cartaElegida.rotarCarta();
 			}
 		}
+		return !(y==tablero.getTamanio());
 		// System.out.println(this.nombre + "\n" + cartaElegida + "\n" + tablero);
 	}
 

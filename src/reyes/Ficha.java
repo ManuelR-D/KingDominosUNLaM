@@ -2,7 +2,7 @@ package reyes;
 
 public class Ficha {
 	private String Tipo;
-	private int x, y, cantCoronas;
+	private int fila, columna, cantCoronas;
 	private Carta carta;
 	private int id;
 	private int rotacion = 1;
@@ -13,23 +13,23 @@ public class Ficha {
 	public Ficha(String tipo, int cantCoronas, int x, int y, int idFicha, Carta c) {
 		Tipo = tipo;
 		this.cantCoronas = cantCoronas;
-		this.x=x;
-		this.y=y;
+		this.fila=x;
+		this.columna=y;
 //		fichas++;
 		this.id = idFicha;
 		this.carta = c;
 	}
-	public int getX() {
-		return x;
+	public int getFila() {
+		return fila;
 	}
-	public void setX(int x) {
-		this.x = x;
+	public void setFila(int x) {
+		this.fila = x;
 	}
-	public int getY() {
-		return y;
+	public int getColumna() {
+		return columna;
 	}
-	public void setY(int y) {
-		this.y = y;
+	public void setColumna(int y) {
+		this.columna = y;
 	}
 	public Carta getCarta() {
 		return carta;

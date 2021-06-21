@@ -28,13 +28,14 @@ public class Jugador extends Usuario {
 		return nombre;
 	}
 
-	public void insertaEnTablero(Carta carta, VentanaJueguito ventana) {
+	public boolean insertaEnTablero(Carta carta, VentanaJueguito ventana) {
 		if (!tablero.esPosibleInsertarEnTodoElTablero(carta))
-			return;
+			return false;
 		int[] posicion = new int[2];
 		do {
 			posicion = ventana.obtenerInputCoordenadas(this);
 		} while (!tablero.ponerCarta(carta, posicion[0], posicion[1], true,ventana));
+		return true;
 	}
 
 	public int eligeCarta(List<Carta> cartasAElegir, VentanaJueguito entrada) throws IOException {

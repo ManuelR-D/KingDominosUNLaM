@@ -37,6 +37,7 @@ public class PanelTableroSeleccion extends JPanel {
 			for (int j = 0, y = 0; j < 2; j++, y++) {
 				PanelFicha ficha = new PanelFicha(fichasActuales[j], y, x);
 				ficha.setBounds(y * largo, x * alto, largo, alto);
+				ficha.setBackground(new Color(0x614828));
 				ficha.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -117,6 +118,7 @@ public class PanelTableroSeleccion extends JPanel {
 		JButton boton = new JButton("Rotar");
 		boton.setBounds(0, 3 * largo, largo * 2, alto);
 		this.add(boton);
+		this.setBackground(new Color(0x614828));
 
 		boton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -129,9 +131,10 @@ public class PanelTableroSeleccion extends JPanel {
 	}
 	
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.fillRect(0, 0, VentanaJueguito.LARGO_FICHA * 2, VentanaJueguito.ALTO_FICHA * 5);
-	}
+//	@Override
+//	protected void paintComponent(Graphics g) {
+//		super.paintComponent(g);
+//		g.setColor(new Color(0x614828));
+//		g.fillRect(0, 0, VentanaJueguito.LARGO_FICHA * 2, VentanaJueguito.ALTO_FICHA * 5);
+//	}
 }
