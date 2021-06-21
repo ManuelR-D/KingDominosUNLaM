@@ -74,7 +74,7 @@ public class TablerosJugadores extends JPanel{
 	}
 
 	public void actualizarTableros() {
-		Thread[] ths = new Thread[4];
+		Thread[] ths = new Thread[tableros.size()];
 		int i = 0;
 		for(PanelJugador tableroIndividual:tableros) {
 			Thread th = new Thread(new Runnable() {
@@ -87,10 +87,10 @@ public class TablerosJugadores extends JPanel{
 			ths[i++] = th;
 		}
 		//Lanzamos los hilos
-		for(i = 0; i < 4; ths[i++].start());
+		for(i = 0; i < tableros.size(); ths[i++].start());
 		//Esperamos que terminen
 		try {
-			for(i = 0; i < 4; ths[i++].join());
+			for(i = 0; i < tableros.size(); ths[i++].join());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -20,6 +20,7 @@ public class Partida {
 	private int tamanioTablero;
 	private int cantidadCartas;
 	private int cantidadJugadores;
+	private String textura=null;
 	VentanaJueguito ventana;
 
 	public Partida() {
@@ -61,6 +62,27 @@ public class Partida {
 		this.jugadores = jugadores;
 	}
 	
+	public Partida(List<Jugador> jugadores, int tamanioTablero, int cantidadCartas, String textura) throws KingDominoExcepcion {
+		// TODO Auto-generated constructor stub
+		if (cantidadCartas != 48) {
+			throw new KingDominoExcepcion(
+					"La cantidad de cartas tiene que ser 48! (limitación por parte del enunciado)");
+			// El código puede funcionar sin problemas con cualquier cantidad de cartas
+			// mientras el total sea múltiplo de 4, pues siempre se roba de a 4 cartas.
+			// Sin embargo, el enunciado tiene la limitación de 48 para todos los modos.
+			// Se puede quitar esta validación en el futuro si quisieramos agregar otros
+			// modos.
+		}
+		this.cantidadJugadores = jugadores.size();
+		if (cantidadJugadores > 4 || cantidadJugadores < 2) {
+			throw new KingDominoExcepcion("La cantidad de jugadores es invalida!!");
+		}
+		this.cantidadCartas = cantidadCartas;
+		this.tamanioTablero = tamanioTablero;
+		this.jugadores = jugadores;
+		this.textura=textura;
+	}
+
 	public boolean iniciarPartida() throws IOException {
 
 		List<Integer> turnos = determinarTurnosIniciales();
@@ -75,6 +97,9 @@ public class Partida {
 
 //		int rondas = 0;
 		ventana= new VentanaJueguito(this);
+		if(textura!=null) {			
+			ventana.cargarTextura(textura);
+		}
 		ventana.actualizarTableros();
 		while (mazo.getTam() > 1) {
 //			System.out.println("--------Ronda: " + ++rondas + "--------");

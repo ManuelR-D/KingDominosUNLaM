@@ -178,5 +178,14 @@ public class VentanaJueguito extends JFrame {
 //		System.out.println("indice:"+indice+" fila:"+fila+" columna:"+columna);
 		tableros.actualizarTablero(indice, fila, columna);
 	}
+
+	public void cargarTextura(String textura) {
+		texturaCarta = new File("./assets/"+textura+".png");
+		try {
+			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 }
