@@ -69,14 +69,37 @@ public class TablerosJugadores extends JPanel{
 		VentanaJueguito.coordenadasElegidas[0] = 0;
 		VentanaJueguito.coordenadasElegidas[1] = 0;
 		System.out.println("Se eligió: " + coordenadasElegidas[0] +";"+ coordenadasElegidas[1] );
+		Sonido.playPonerCarta();
 		return coordenadasElegidas;
 	}
 
 	public void actualizarTableros() {
+		Thread[] ths = new Thread[4];
+		int i = 0;
+		for(PanelJugador tableroIndividual:tableros) {
+			Thread th = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					tableroIndividual.actualizarTablero();
+				}
+			});
+			//Preparamos los hilos
+			ths[i++] = th;
+		}
+		//Lanzamos los hilos
+		for(i = 0; i < 4; ths[i++].start());
+		//Esperamos que terminen
+		try {
+			for(i = 0; i < 4; ths[i++].join());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	/*public void actualizarTableros() {
 		for(PanelJugador tableroIndividual:tableros) {
 			tableroIndividual.actualizarTablero();
 		}
-	}
+	}*/
 	public void actualizarTablero(int indice,int fila,int columna) {
 		tableros.get(indice).actualizarTablero(fila,columna);
 	}

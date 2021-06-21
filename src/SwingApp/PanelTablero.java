@@ -71,116 +71,6 @@ public class PanelTablero extends JPanel {
 		g.setColor(cAnterior);
 	}
 
-//	public void reCrearTablero(String nombreJugador) {
-//		int xMax = tablero.getFMax();
-//		int xMin = tablero.getFMin();
-//		int yMax = tablero.getCMax();
-//		int yMin = tablero.getCMin();
-//
-////		xMaxAux=xMax;
-////		xMinAux=xMin;
-////		yMaxAux=yMax;
-////		yMinAux=yMin;
-//		
-//		Ficha[][] fichas = tablero.getTablero();
-//		boolean necesitaRedibujar = this.fMax != xMax || this.fMin != xMin || this.cMax != yMax || this.cMin != yMin;
-//		if(necesitaRedibujar) {
-//			this.removeAll();
-//			panelConDimension = new JLayeredPane();
-//			panelConDimension.setLayout(null);
-//			panelConDimension.setBounds(0, 0, tamTableroVisual, tamTableroVisual);
-//			this.add(panelConDimension);
-//			fichasEnTablero.clear();
-//		}
-//		// Calculos para realizar la escala
-//		/*
-//		 * Por ejemplo si puedo colocar como maximo 5 fichas y coloque 2 a la derecha
-//		 * del castillo entonces tengo que poder colocar dos a mi derecha y dos a la
-//		 * izquierda del castillo por lo tanto debo mostrar 7 espacios de ficha en
-//		 * pantalla
-//		 */
-//		int fichasMaximas = tablero.getTamanio() + 2;
-//		double tamFicha = tamTableroVisual / fichasMaximas;
-//		double escala = tamFicha / VentanaJueguito.LARGO_FICHA;
-//
-//		int desplVertical = 0;
-//		int desplHorizontal = 0;
-//		
-//		desplVertical=Math.min(tablero.getTamanio()-( xMax-xMin+1), 2);
-//		desplHorizontal=Math.min(tablero.getTamanio()-(yMax-yMin+1), 2);
-//
-//		int inicioFilasAMostrar = Math.max(xMin - desplVertical,0);
-//		int finFilasAMostrar = Math.min(xMax + desplVertical, fichas.length - 1);
-//		int inicioColumnasAMostrar = Math.max(yMin - desplHorizontal, 0);
-//		int finColumnasAMostrar = Math.min(yMax + desplHorizontal, fichas.length - 1);
-//		int largo = (int) (PanelFicha.LARGO_FICHA * escala);
-//		int alto = (int) (PanelFicha.ALTO_FICHA * escala);
-//
-//		final int centradoLargo = (xMax - xMin == tablero.getTamanio() - 1) ? largo : 0;
-//
-//		final int centradoAlto = (yMax - yMin == tablero.getTamanio() - 1) ? alto : 0;
-//		/*
-//		 * Estas variables son para acomodar el tablero cuando se haya llegado al limite
-//		 * de construccion(por ej 5x5)
-//		 * 
-//		 * Edit: las paso a final y con ternario para que sean admisibles por Thread
-//		 */
-//		/*if (xMax - xMin == tablero.getTamanio() - 1) {
-//			centradoLargo = largo;
-//		}
-//		if (yMax - yMin == tablero.getTamanio() - 1) {
-//			centradoAlto = alto;
-//		}*/
-//
-//		for (int i = inicioFilasAMostrar, y = 0; i <= finFilasAMostrar; i++, y++) {
-//			for (int j = inicioColumnasAMostrar, x = 0; j <= finColumnasAMostrar; j++, x++) {
-//				if(necesitaRedibujar || (!necesitaRedibujar && !fichasEnTablero.contains(fichas[i][j]))) {
-//					new Thread(new Runnable() {
-//						//dado que i,j,x,y son recursos criticos, mandamos copias.
-//						int ith,jth,xth,yth;
-//						public Runnable init(int i, int j, int x, int y) {
-//							this.ith = i;
-//							this.jth = j;
-//							this.xth = x;
-//							this.yth = y;
-//							return this;
-//						}
-//						@Override
-//						public void run() {
-//							PanelFicha panelFicha = new PanelFicha(fichas[ith][jth], ith, jth, escala);
-//							matrizPaneles[ith][jth] = panelFicha;
-//							panelFicha.setBounds((xth * alto) + centradoAlto, (yth * largo) + centradoLargo, largo, alto);
-//							panelFicha.setBorder(BorderFactory.createLineBorder(Color.black));
-//							panelFicha.addMouseListener(new MouseAdapter() {
-//								@Override
-//								public void mouseClicked(MouseEvent e) {
-//									panelFicha.fichaClickeada();
-//								}
-//							});
-//							panelConDimension.add(panelFicha, 0);
-//							fichasEnTablero.add(fichas[ith][jth]);
-//						}
-//					}.init(i, j, x, y)).start();
-//				}
-//			}
-//		}
-//		
-//		//El nombre tiene que redibujarse al final, siempre, en caso contrario queda "debajo"
-//		//de las fichas vacias.Estaria bueno cambiar esto
-//		if(necesitaRedibujar) {
-//			JLabel nombre = new JLabel(nombreJugador);
-//			nombre.setBounds(0, 0, tamTableroVisual, alto);
-//			nombre.setBackground(Color.red);
-//			nombre.setForeground(Color.red);
-//			panelConDimension.add(nombre, 1);
-//		}
-//		this.fMax = xMax;
-//		this.fMin = xMin;
-//		this.cMax = yMax;
-//		this.cMin = yMin;
-//		this.repaint();	
-//	}
-
 	public void pintarFicha(int fila, int columna, int acumPuntos, int cantCoronas, int indice) {
 		PanelFicha pFicha = matrizPaneles[fila][columna];
 		/*
@@ -189,27 +79,27 @@ public class PanelTablero extends JPanel {
 		 */
 		if (pFicha != null && pFicha.getFicha() != null) {
 
-		JLabel puntaje = new JLabel(+acumPuntos + "*" + cantCoronas);
-		int largo = (int) (PanelFicha.LARGO_FICHA * escala);
-		int alto = (int) (PanelFicha.ALTO_FICHA * escala);
-		puntaje.setForeground(Color.white);
-		puntaje.setBackground(Color.black);
-		puntaje.setBounds(0, 0, largo, alto);
+			JLabel puntaje = new JLabel(+acumPuntos + "*" + cantCoronas);
+			int largo = (int) (PanelFicha.LARGO_FICHA * escala);
+			int alto = (int) (PanelFicha.ALTO_FICHA * escala);
+			puntaje.setForeground(Color.white);
+			puntaje.setBackground(Color.black);
+			puntaje.setBounds(0, 0, largo, alto);
 
-		Color colorComplementario = mapaColoresComplementarios.get(pFicha.getFicha().getTipo());
-		puntaje.setForeground(Color.black);
-		puntaje.setForeground(colorComplementario);
-		puntaje.setBorder(BorderFactory.createLineBorder(Color.black));
-		pFicha.add(puntaje);
-		repaint();
+			Color colorComplementario = mapaColoresComplementarios.get(pFicha.getFicha().getTipo());
+			puntaje.setForeground(Color.black);
+			puntaje.setForeground(colorComplementario);
+			puntaje.setBorder(BorderFactory.createLineBorder(Color.black));
+			pFicha.add(puntaje);
+			repaint();
 
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		}else {
-			System.out.println("ERROR tablero:"+indice+" fila:"+fila+" columna:"+columna);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("ERROR tablero:" + indice + " fila:" + fila + " columna:" + columna);
 		}
 	}
 
@@ -277,11 +167,8 @@ public class PanelTablero extends JPanel {
 		double tamFicha = tamTableroVisual / fichasMaximas;
 		escala = tamFicha / VentanaJueguito.LARGO_FICHA;
 
-		int desplVertical = 0;
-		int desplHorizontal = 0;
-
-		desplVertical = Math.min(tablero.getTamanio() - (fMax - fMin + 1), 2);
-		desplHorizontal = Math.min(tablero.getTamanio() - (cMax - cMin + 1), 2);
+		int desplVertical = Math.min(tablero.getTamanio() - (fMax - fMin + 1), 2);
+		int desplHorizontal = Math.min(tablero.getTamanio() - (cMax - cMin + 1), 2);
 
 		inicioFilasAMostrar = Math.max(fMin - desplVertical, 0);
 		int finFilasAMostrar = Math.min(fMax + desplVertical, fichas.length - 1);
@@ -301,17 +188,20 @@ public class PanelTablero extends JPanel {
 
 		for (int i = inicioFilasAMostrar, y = 0; i <= finFilasAMostrar; i++, y++) {
 			for (int j = inicioColumnasAMostrar, x = 0; j <= finColumnasAMostrar; j++, x++) {
+
 				PanelFicha panelFicha = new PanelFicha(fichas[i][j], i, j, escala);
 				matrizPaneles[i][j] = panelFicha;
 				panelFicha.setBounds((x * largo) + centradoLargo, (y * alto) + centradoAlto, largo, alto);
 				panelFicha.setBorder(BorderFactory.createLineBorder(Color.black));
 				panelFicha.addMouseListener(new MouseAdapter() {
+
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						panelFicha.fichaClickeada();
 					}
 				});
 				panelConDimension.add(panelFicha, 0);
+
 			}
 		}
 
