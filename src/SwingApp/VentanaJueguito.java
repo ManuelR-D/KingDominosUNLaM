@@ -169,5 +169,10 @@ public class VentanaJueguito extends JFrame {
 	public void setPSeleccionVisible(boolean b) {
 		pSeleccion.setVisible(b);
 	}
+
+	public void actualizarTablero(int indice, int fila, int columna) {
+//		System.out.println("indice:"+indice+" fila:"+fila+" columna:"+columna);
+		tableros.actualizarTablero(indice, fila, columna);
+	}
 	
 }

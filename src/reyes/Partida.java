@@ -161,14 +161,21 @@ public class Partida {
 		for (int i = 0; i < turnos.size(); i++) {
 			entrada.mostrarCartasAElegir(cartasAElegir);
 			
-			long tiempoInicial = System.currentTimeMillis();
-			entrada.actualizarTableros();
-			System.out.println("Render tableros: " + (System.currentTimeMillis() - tiempoInicial));
+//			long tiempoInicial = System.currentTimeMillis();
+			
+//			System.out.println("Render tableros: " + (System.currentTimeMillis() - tiempoInicial));
 			
 			int turno = turnos.get(i);
 			entrada.mostrarMensaje("Turno del jugador:"+jugadores.get(turno).getNombre());
 			numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
-			jugadores.get(turno).insertaEnTablero(cartasAElegir.get(numeroElegido), entrada);
+			Carta cartaElegida = cartasAElegir.get(numeroElegido);
+			boolean pudoInsertar=jugadores.get(turno).insertaEnTablero(cartaElegida, entrada);
+			int coordenadaX = cartaElegida.getFichas()[0].getColumna();
+			int coordenadaY = cartaElegida.getFichas()[0].getFila();
+			System.out.println("Coordenadas= fila:"+coordenadaY+" columna:"+coordenadaX);
+			if(pudoInsertar) {
+				ventana.actualizarTablero(turno , coordenadaY, coordenadaX);				
+			}
 			cartasAElegir.set(numeroElegido, null);
 			nuevoOrdenDeTurnos.put(numeroElegido, turno);
 		}
@@ -176,8 +183,8 @@ public class Partida {
 		for (Map.Entry<Integer, Integer> entry : nuevoOrdenDeTurnos.entrySet())
 			turnos.add(entry.getValue());
 
-//		if(turnos.size() != nuevoOrdenDeTurnos.size())
-//			System.out.println("check");
+		if(turnos.size() != nuevoOrdenDeTurnos.size())
+			System.out.println("check");
 	}
 
 	private List<Integer> determinarTurnosIniciales() {

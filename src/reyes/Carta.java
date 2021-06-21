@@ -13,10 +13,10 @@ public class Carta implements Comparable<Carta> {
 
 	public void setDefault() {
 		this.rotacion = 1;
-		this.fichas[0].setX(0);
-		this.fichas[0].setY(0);
-		this.fichas[1].setX(0);
-		this.fichas[1].setY(1);
+		this.fichas[0].setFila(0);
+		this.fichas[0].setColumna(0);
+		this.fichas[1].setFila(0);
+		this.fichas[1].setColumna(1);
 		this.fichas[0].setRotacion(rotacion);
 		this.fichas[1].setRotacion(rotacion);
 	}
@@ -28,26 +28,26 @@ public class Carta implements Comparable<Carta> {
 	}
 
 	public void rotarCarta() {
-		int x1 = fichas[0].getX();
-		int y1 = fichas[0].getY();
+		int x1 = fichas[0].getFila();
+		int y1 = fichas[0].getColumna();
 
 		switch (rotacion) {
 		case 1:
-			fichas[1].setX(x1 + 1);
-			fichas[1].setY(y1);
+			fichas[1].setFila(x1 + 1);
+			fichas[1].setColumna(y1);
 			break;
 		case 2:
-			fichas[1].setX(x1);
-			fichas[1].setY(y1 - 1);
+			fichas[1].setFila(x1);
+			fichas[1].setColumna(y1 - 1);
 			break;
 		case 3:
-			fichas[1].setX(x1 - 1);
-			fichas[1].setY(y1);
+			fichas[1].setFila(x1 - 1);
+			fichas[1].setColumna(y1);
 			break;
 		case 4:
 			rotacion = 0;
-			fichas[1].setX(x1);
-			fichas[1].setY(y1 + 1);
+			fichas[1].setFila(x1);
+			fichas[1].setColumna(y1 + 1);
 			break;
 		}
 		rotacion++;
@@ -92,10 +92,10 @@ public class Carta implements Comparable<Carta> {
 	}
 
 	public void moverCarta(int fila, int columna) {
-		this.fichas[0].setX(this.fichas[0].getX()+fila);
-		this.fichas[0].setY(this.fichas[0].getY()+columna);
-		this.fichas[1].setX(this.fichas[1].getX()+fila);
-		this.fichas[1].setY(this.fichas[1].getY()+columna);
+		this.fichas[0].setFila(this.fichas[0].getFila()+fila);
+		this.fichas[0].setColumna(this.fichas[0].getColumna()+columna);
+		this.fichas[1].setFila(this.fichas[1].getFila()+fila);
+		this.fichas[1].setColumna(this.fichas[1].getColumna()+columna);
 	}
 
 }

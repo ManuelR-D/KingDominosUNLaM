@@ -32,10 +32,10 @@ public class TableroSeleccion {
 	public void ponerCarta(Carta carta, int indice) {
 		Ficha[] fichas = carta.getFichas();
 
-		int f1X = fichas[0].getX() + indice;
-		int f1Y = fichas[0].getY();
-		int f2X = fichas[1].getX() + indice;
-		int f2Y = fichas[1].getY();
+		int f1X = fichas[0].getFila() + indice;
+		int f1Y = fichas[0].getColumna();
+		int f2X = fichas[1].getFila() + indice;
+		int f2Y = fichas[1].getColumna();
 
 		tablero[f1X][f1Y] = fichas[0];
 		tablero[f2X][f2Y] = fichas[1];
