@@ -93,7 +93,14 @@ public class VentanaJueguito extends JFrame {
 		informacion.setBounds(TAM_TABLEROS + 20, 0, LARGO_VENTANA - TAM_TABLEROS, ALTO_VENTANA - (ALTO_FICHA * 4));
 		informacion.setBorder(BorderFactory.createLineBorder(Color.black));
 		getContentPane().add(informacion);
-		
+		try {
+			Sonido s = new Sonido("./assets/Sound/main.wav");
+			s.setVolume(0.1f);
+			s.play();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		VentanaJueguito.mainFrame = this;
 	}
 
@@ -121,17 +128,14 @@ public class VentanaJueguito extends JFrame {
 		System.out.println("Saliendo de leerCartaElegida");
 		int idCartaElegida = PanelTableroSeleccion.idCartaElegida;
 		pSeleccion.setStartLatch(new CountDownLatch(1));
+		Sonido.playCartaSeleccionada();
 		return idCartaElegida;
 	}
 
 	public void terminarPartida(Map<Jugador, Integer> map) {
 		System.out.println("Clase VentanaJueguito funcion terminarPartida");
 		pSeleccion.setVisible(false);
-		String mensaje = "";
-		if (map.size() == 1)
-			mensaje = "Ha ganado el jugador\n";
-		else
-			mensaje = "Han ganado los jugadores\n";
+		String mensaje = map.size() == 1 ? "Ha ganado el jugador\n" : "Han ganado los jugadores\n" ;
 		for (Map.Entry<Jugador, Integer> entry : map.entrySet()) {
 			mensaje += entry.getKey().getNombre() + " con: " + entry.getValue() + " puntos" + "\n";
 		}

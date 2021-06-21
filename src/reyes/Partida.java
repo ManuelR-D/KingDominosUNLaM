@@ -161,9 +161,9 @@ public class Partida {
 		for (int i = 0; i < turnos.size(); i++) {
 			entrada.mostrarCartasAElegir(cartasAElegir);
 			
-			long tiempoInicial = System.currentTimeMillis();
+			//long tiempoInicial = System.currentTimeMillis();
 			entrada.actualizarTableros();
-			System.out.println("Render tableros: " + (System.currentTimeMillis() - tiempoInicial));
+			//System.out.println("Render tableros: " + (System.currentTimeMillis() - tiempoInicial));
 			
 			int turno = turnos.get(i);
 			entrada.mostrarMensaje("Turno del jugador:"+jugadores.get(turno).getNombre());
