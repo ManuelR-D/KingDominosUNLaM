@@ -86,6 +86,7 @@ public class TablerosJugadores extends JPanel{
 			//Preparamos los hilos
 			ths[i++] = th;
 		}
+		long tiempoInicial = System.currentTimeMillis();
 		//Lanzamos los hilos
 		for(i = 0; i < tableros.size(); ths[i++].start());
 		//Esperamos que terminen
@@ -94,6 +95,7 @@ public class TablerosJugadores extends JPanel{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Render tableros: " + (System.currentTimeMillis() - tiempoInicial));
 	}
 	/*public void actualizarTableros() {
 		for(PanelJugador tableroIndividual:tableros) {

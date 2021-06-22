@@ -101,7 +101,13 @@ public class VentanaJueguito extends JFrame {
 		VentanaJueguito.mainFrame = this;
 	}
 
-	public synchronized int[] obtenerInputCoordenadas(Jugador jugador) {
+	public synchronized int[] obtenerInputCoordenadas(Jugador jugador, Carta carta) {
+		//Si "carta" fue rotada, y luego se intentó insertar en un lugar inválido, Jugador se encarga
+		//de dejar a Carta en su posición "default", este cambio requiere que pSeleccion redibuje a
+		//carta, puesto que en caso contrario se sigue viendo a la carta "rotada" cuando en realidad
+		//no está, lo que genera que al insertar realmente la carta, se inserte en una rotación inesperada.
+		//onCartaElegida se encarga ya de redibujar la carta en su rotación.
+		pSeleccion.onCartaElegida(carta);
 		return tableros.obtenerInputCoordenadas(jugador);
 	}
 

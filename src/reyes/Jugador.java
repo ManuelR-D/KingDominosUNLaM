@@ -33,7 +33,7 @@ public class Jugador extends Usuario {
 			return false;
 		int[] posicion = new int[2];
 		do {
-			posicion = ventana.obtenerInputCoordenadas(this);
+			posicion = ventana.obtenerInputCoordenadas(this,carta);
 		} while (!tablero.ponerCarta(carta, posicion[0], posicion[1], true,ventana));
 		return true;
 	}

@@ -295,7 +295,7 @@ public class Menu extends JDialog {
 			}
 		});
 		thread.start();
-
+		this.dispose();
 	}
 
 }

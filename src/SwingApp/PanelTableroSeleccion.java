@@ -1,7 +1,6 @@
 package SwingApp;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.concurrent.CountDownLatch;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 
 import reyes.Carta;
 import reyes.Ficha;
@@ -41,7 +41,8 @@ public class PanelTableroSeleccion extends JPanel {
 				ficha.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						onCartaElegida(ficha.getFicha().getCarta());
+						if(ficha.getFicha() != null)
+							onCartaElegida(ficha.getFicha().getCarta());
 					}
 				});
 				this.add(ficha);
@@ -114,8 +115,9 @@ public class PanelTableroSeleccion extends JPanel {
 		PanelFicha ficha2 = new PanelFicha(fichas[1], 0, 0);
 		ficha2.setBounds(x2,y2, largo, alto);
 		this.add(ficha2);
-
-		JButton boton = new JButton("Rotar");
+		ImageIcon rotarIcon = new ImageIcon("./assets/rotar.png");
+		JButton boton = new JButton(rotarIcon);
+		
 		boton.setBounds(0, 3 * largo, largo * 2, alto);
 		this.add(boton);
 		this.setBackground(new Color(0x614828));

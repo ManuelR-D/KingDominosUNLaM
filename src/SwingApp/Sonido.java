@@ -24,10 +24,10 @@ public class Sonido {
 		clip.stop();
 		clip.flush();
 		clip.setMicrosecondPosition(0);
-		clip.start();
+		clip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
-
-	private static void playSonido(String path) {
+	
+	private static void playSonido(String path, boolean enLoop) {
 		try {
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File(path));
 			Clip clip = AudioSystem.getClip();
@@ -35,7 +35,10 @@ public class Sonido {
 			clip.stop();
 			clip.flush();
 			clip.setMicrosecondPosition(0);
-			clip.start();
+			if(enLoop)
+				clip.loop(Clip.LOOP_CONTINUOUSLY);
+			else
+				clip.start();
 		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 			System.out.println("Error en la reproducción de: " + path);
 			e.printStackTrace();
@@ -43,14 +46,15 @@ public class Sonido {
 	}
 
 	public static void playPonerCarta() {
-		playSonido(pathAssets + "ponerCarta" + getRandomNumber(0, 3) + extension);
+		playSonido(pathAssets + "ponerCarta" + getRandomNumber(0, 3) + extension, false);
 	}
 
 	public static void playCartaSeleccionada() {
-		playSonido(pathAssets + "cartaSeleccion" + getRandomNumber(0, 2) + extension);
+		playSonido(pathAssets + "cartaSeleccion" + getRandomNumber(0, 2) + extension, false);
 	}
+	
 	public static void playMainTheme() {
-		playSonido("./assets/Sound/main.wav");
+		playSonido("./assets/Sound/main.wav", true);
 	}
 	public void setVolume(float volume) {
 		if (volume < 0f || volume > 1f)
