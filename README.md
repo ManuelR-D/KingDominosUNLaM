@@ -12,7 +12,11 @@ Actualmente el juego permite:
 * <b>Agregar bots.</b> <i>punto extra!</i>
 * Agregar hasta 4 jugadores.
 * <b>Cambiar texturas de los mazos.</b>
-* <b>Variante "El Gran Duelo", con tablero 7x7.</b>
+* <b>Variantes!</b> <i>punto extra!</i>
+  * "El Gran Duelo", con tablero 7x7.
+  * "Dinastia", mejor de 3.
+  * "El reino medio", +10 puntos si el castillo queda en el centro
+  * "Armonia", +5 puntos si no hubo descartes 
 * Ver jugadores en sala previo a la partida.
 * Sonido!
 
@@ -24,7 +28,6 @@ TODO:
 
 
 Wishlist:
-* El resto de variantes (punto extra "Variantes" en enunciado)
 * Posibilidad de crear mazos además de elegir texturas (punto extra "Configuración" en enunciado)
 * Poder expulsar jugadores de salas
 * Chat ingame?
