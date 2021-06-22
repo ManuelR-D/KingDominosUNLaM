@@ -114,11 +114,9 @@ public class PanelTablero extends JPanel {
 		if (necesitaRedibujar) {
 			reCrearTablero(nombre);
 		} else {
-//			System.out.println("Ficha 1 fila:" + fila + " columna:" + columna);
 			insertarPFichaEnTablero(fila, columna, fichas);
 
 			int rotacion = fichas[fila][columna].getRotacion();
-//			System.out.println("Rotacion:" + rotacion);
 			switch (rotacion) {
 
 			case 1:
@@ -135,11 +133,9 @@ public class PanelTablero extends JPanel {
 				break;
 			}
 
-//			System.out.println("Ficha 2 fila:" + fila + " columna:" + columna);
 			insertarPFichaEnTablero(fila, columna, fichas);
 		}
 
-//		this.repaint();
 	}
 
 	public void reCrearTablero(String nombreJugador) {
@@ -177,9 +173,9 @@ public class PanelTablero extends JPanel {
 		largo = (int) (PanelFicha.LARGO_FICHA * escala);
 		alto = (int) (PanelFicha.ALTO_FICHA * escala);
 
-		int centradoAlto = (fMax - fMin == tablero.getTamanio() - 1) ? alto : 0;
+		int centradoAlto = (finFilasAMostrar - inicioFilasAMostrar == tablero.getTamanio() - 1) ? alto : 0;
 
-		int centradoLargo = (cMax - cMin == tablero.getTamanio() - 1) ? largo : 0;
+		int centradoLargo = (finColumnasAMostrar - inicioColumnasAMostrar== tablero.getTamanio() - 1) ? largo : 0;
 		/*
 		 * Estas variables son para acomodar el tablero cuando se haya llegado al limite
 		 * de construccion(por ej 5x5)
