@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -25,6 +26,7 @@ public class VentanaJueguito extends JFrame {
 	private static final long serialVersionUID = 4460429712849713216L;
 	private File texturaCarta = new File("./assets/highTest.png");
 	private File texturaCastillo = new File("./assets/castillo.png");
+	private Sonido sonido;
 	static File texturaVacia = new File("./assets/vacio.png");
 	static BufferedImage bufferCastillo;
 	static BufferedImage bufferCarta;
@@ -95,7 +97,8 @@ public class VentanaJueguito extends JFrame {
 		try {
 			Sonido s = new Sonido("./assets/Sound/main.wav");
 			s.setVolume(0.1f);
-			s.play();
+			s.play(Clip.LOOP_CONTINUOUSLY);
+			sonido = s;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -103,15 +106,17 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public synchronized int[] obtenerInputCoordenadas(Jugador jugador, Carta carta) {
-		// Si "carta" fue rotada, y luego se intentÛ insertar en un lugar inv·lido,
+
+		// Si "carta" fue rotada, y luego se intent√≥ insertar en un lugar inv√°lido,
 		// Jugador se encarga
-		// de dejar a Carta en su posiciÛn "default", este cambio requiere que
+		// de dejar a Carta en su posici√≥n "default", este cambio requiere que
 		// pSeleccion redibuje a
 		// carta, puesto que en caso contrario se sigue viendo a la carta "rotada"
 		// cuando en realidad
-		// no est·, lo que genera que al insertar realmente la carta, se inserte en una
-		// rotaciÛn inesperada.
-		// onCartaElegida se encarga ya de redibujar la carta en su rotaciÛn.
+		// no est√°, lo que genera que al insertar realmente la carta, se inserte en una
+		// rotaci√≥n inesperada.
+		// onCartaElegida se encarga ya de redibujar la carta en su rotaci√≥n.
+
 		pSeleccion.onCartaElegida(carta);
 		return tableros.obtenerInputCoordenadas(jugador);
 	}
@@ -197,6 +202,18 @@ public class VentanaJueguito extends JFrame {
 
 	public void mostrarError(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje, "Movimiento no permitido", JOptionPane.ERROR_MESSAGE);
+	}
+  
+	public void mostrarVentanaMensaje(String mensaje) {
+		JOptionPane.showMessageDialog(this, mensaje);
+	}
+	
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		if(sonido != null)
+			sonido.stop();
+		super.dispose();
 	}
 
 	public void deshabilitarBotonesPuntaje() {

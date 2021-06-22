@@ -43,6 +43,9 @@ public class Menu extends JDialog {
 	private JRadioButton rdbtnBot4;
 	private JLabel lblNewLabel;
 	private JComboBox<String> texturas;
+	private JRadioButton rdbtnDinastia;
+	private JRadioButton rdbtnElReinoMedio;
+	private JRadioButton rdbtnArmonia;
 
 	/**
 	 * Launch the application.
@@ -152,6 +155,13 @@ public class Menu extends JDialog {
 		gbc_rdbtnBot1.gridx = 2;
 		gbc_rdbtnBot1.gridy = 3;
 		panel.add(rdbtnBot1, gbc_rdbtnBot1);
+		
+		rdbtnDinastia = new JRadioButton("Dinastia");
+		GridBagConstraints gbc_rdbtnNewRadioButton = new GridBagConstraints();
+		gbc_rdbtnNewRadioButton.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnNewRadioButton.gridx = 4;
+		gbc_rdbtnNewRadioButton.gridy = 3;
+		panel.add(rdbtnDinastia, gbc_rdbtnNewRadioButton);
 
 		txtJugador2 = new JTextField();
 		txtJugador2.setText("Jugador 2");
@@ -169,6 +179,13 @@ public class Menu extends JDialog {
 		gbc_rdbtnBot2.gridx = 2;
 		gbc_rdbtnBot2.gridy = 4;
 		panel.add(rdbtnBot2, gbc_rdbtnBot2);
+		
+		rdbtnElReinoMedio = new JRadioButton("El reino medio");
+		GridBagConstraints gbc_rdbtnNewRadioButton_1 = new GridBagConstraints();
+		gbc_rdbtnNewRadioButton_1.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnNewRadioButton_1.gridx = 4;
+		gbc_rdbtnNewRadioButton_1.gridy = 4;
+		panel.add(rdbtnElReinoMedio, gbc_rdbtnNewRadioButton_1);
 
 		txtJugador3 = new JTextField();
 		txtJugador3.setEnabled(false);
@@ -189,6 +206,13 @@ public class Menu extends JDialog {
 		gbc_rdbtnBot3.gridx = 2;
 		gbc_rdbtnBot3.gridy = 5;
 		panel.add(rdbtnBot3, gbc_rdbtnBot3);
+		
+		rdbtnArmonia = new JRadioButton("Armonia");
+		GridBagConstraints gbc_rdbtnNewRadioButton_2 = new GridBagConstraints();
+		gbc_rdbtnNewRadioButton_2.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnNewRadioButton_2.gridx = 4;
+		gbc_rdbtnNewRadioButton_2.gridy = 5;
+		panel.add(rdbtnArmonia, gbc_rdbtnNewRadioButton_2);
 
 		txtJugador4 = new JTextField();
 		txtJugador4.setEnabled(false);
@@ -224,6 +248,7 @@ public class Menu extends JDialog {
 			txtJugador4.setEnabled(false);
 			break;
 		case 3:
+			rdbtnElGranDuelo.setSelected(false);
 			rdbtnElGranDuelo.setEnabled(false);
 			rdbtnBot3.setEnabled(true);
 			rdbtnBot4.setEnabled(false);
@@ -234,6 +259,7 @@ public class Menu extends JDialog {
 
 			break;
 		case 4:
+			rdbtnElGranDuelo.setSelected(false);
 			rdbtnElGranDuelo.setEnabled(false);
 			rdbtnBot3.setEnabled(true);
 			rdbtnBot4.setEnabled(true);
@@ -284,8 +310,15 @@ public class Menu extends JDialog {
 			@Override
 			public void run() {
 				try {
+					String modo = "";
 					Partida p = new Partida(jugadores, tamTablero, cantidadCartas,textura);
-					p.iniciarPartida();
+					if(rdbtnDinastia.isSelected())
+						modo = modo + "Dinastia|";
+					if(rdbtnElReinoMedio.isSelected())
+						modo = modo + "ReinoMedio|";
+					if(rdbtnArmonia.isSelected())
+						modo = modo + "Armonia|";
+					p.iniciarPartida(modo);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (KingDominoExcepcion e) {

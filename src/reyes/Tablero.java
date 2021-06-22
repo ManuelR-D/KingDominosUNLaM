@@ -2,7 +2,6 @@ package reyes;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import SwingApp.PanelInformacion;
 import SwingApp.VentanaJueguito;
 
@@ -475,5 +474,42 @@ public class Tablero {
 		puntajeTotal += "PUNTAJE TOTAL:" + acumPuntos;
 		resetearContadoFichas();
 		return puntajeTotal;
+	}
+
+	public boolean estaCastilloEnMedio() {
+		/* |u| | | |w|
+		 * | |F|F|F| |
+		 * | |F|C|F| |
+		 * | |F|F|F| |	
+		 * |v| | | |z|
+		 * 
+		 * Fmin = 0
+		 * Fmax = 4
+		 * Cmin = 0
+		 * Cmax = 4
+		 * 
+		 * Si C está centrado, dist(x,C) = cte para todo x que pertenece a {u,v,w,z}
+		 * C siempre está en centro
+		 */
+		int[] verticeSupIzq = {fMin,cMin}; //u
+		int[] verticeInfIzq = {fMax,cMin}; //v
+		int[] verticeSupDer = {fMin,cMax}; //w
+		int[] verticeInfDer = {fMax,cMax}; //z
+		
+		int[] vectorACastillo1 = {centro-verticeSupIzq[0],centro-verticeSupIzq[1]};
+		int magnitud1 = (int)Math.sqrt(Math.pow(vectorACastillo1[0], 2) + Math.pow(vectorACastillo1[1],2) );
+		int[] vectorACastillo2 = {centro-verticeInfIzq[0],centro-verticeInfIzq[1]};
+		int magnitud2 = (int)Math.sqrt(Math.pow(vectorACastillo2[0], 2) + Math.pow(vectorACastillo2[1],2) );
+		int[] vectorACastillo3 = {centro-verticeSupDer[0],centro-verticeSupDer[1]};
+		int magnitud3 = (int)Math.sqrt(Math.pow(vectorACastillo3[0], 2) + Math.pow(vectorACastillo3[1],2) );
+		int[] vectorACastillo4 = {centro-verticeInfDer[0],centro-verticeInfDer[1]};
+		int magnitud4 = (int)Math.sqrt(Math.pow(vectorACastillo4[0], 2) + Math.pow(vectorACastillo4[1],2) );
+		System.out.println("----------DEBUG-------");
+		System.out.println("Fmin: " + fMin);
+		System.out.println("Fmax: " + fMax);
+		System.out.println("Cmin: " + cMin);
+		System.out.println("Cmax: " + cMax);
+		System.out.println("Magnitudes: " + magnitud1 + "|" + magnitud2 + "|" + magnitud3 + "|" + magnitud4);
+		return magnitud1 == magnitud2 && magnitud2 == magnitud3 && magnitud3 == magnitud4;
 	}
 }
