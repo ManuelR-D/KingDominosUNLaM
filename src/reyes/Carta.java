@@ -62,7 +62,6 @@ public class Carta implements Comparable<Carta> {
 		Ficha ficha1 = fichas[0];
 		Ficha ficha2 = fichas[1];
 		mat[1][1] = ficha1.toString();
-		// mat[ficha2.getX() + 1][ficha2.getY() + 1] = ficha2.toString();
 		switch (rotacion) {
 		case 1:
 			mat[1][2] = ficha2.toString();

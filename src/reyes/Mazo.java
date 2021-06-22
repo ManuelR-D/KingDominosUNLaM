@@ -9,11 +9,11 @@ import java.util.Scanner;
 
 public class Mazo {
 	private List<Carta> cartas;
-	
+
 	public Mazo(int cantidadCartas) {
 		armarMazo(cantidadCartas);
 	}
-	
+
 	public void armarMazo(int cantidadCartas) {
 		List<Carta> cartas = new ArrayList<Carta>(cantidadCartas);
 		File file = new File("./assets/cartas.txt");
@@ -42,23 +42,24 @@ public class Mazo {
 		} catch (FileNotFoundException e) {
 			System.out.println("No se encontro el archivo de cartas");
 		}
-		this.cartas=cartas;
+		this.cartas = cartas;
 	}
-	
+
 	public void mezclarMazo() {
 		Collections.shuffle(cartas);
 	}
-	
+
 	public void quitarPrimerasNCartas(int n, List<Carta> cartasDevueltas) {
 		for (int i = 0; i < n; i++) {
 			cartasDevueltas.add(this.cartas.remove(0));
 		}
 
 	}
-	
+
 	public List<Carta> getCartas() {
 		return cartas;
 	}
+
 	public int getTam() {
 		return cartas.size();
 	}

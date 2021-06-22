@@ -25,7 +25,7 @@ public class PanelFicha extends JPanel {
 		this.x = x;
 		this.y = y;
 		this.ficha = f;
-		this.escala=1;
+		this.escala = 1;
 
 		bufferFicha = getTexturaFicha(f);
 
@@ -35,7 +35,7 @@ public class PanelFicha extends JPanel {
 		this.x = x;
 		this.y = y;
 		this.ficha = f;
-		this.escala=escala;
+		this.escala = escala;
 
 		bufferFicha = getTexturaFicha(f);
 
@@ -63,8 +63,9 @@ public class PanelFicha extends JPanel {
 		return izq ? myPicture.getSubimage(0, 0, LARGO_FICHA, ALTO_FICHA)
 				: myPicture.getSubimage(LARGO_FICHA, 0, LARGO_FICHA, ALTO_FICHA);
 	}
+
 	public void fichaClickeada() {
-		if(PanelTableroSeleccion.idCartaElegida == Integer.MIN_VALUE)
+		if (PanelTableroSeleccion.idCartaElegida == Integer.MIN_VALUE)
 			return;
 		VentanaJueguito.coordenadasElegidas[0] = x;
 		VentanaJueguito.coordenadasElegidas[1] = y;
@@ -80,11 +81,9 @@ public class PanelFicha extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		AffineTransform affineTransform = new AffineTransform();
-//		g2d.scale(escala, escala);
 		affineTransform.scale(escala, escala);
 		if (ficha != null) {
 			int rotacion = ficha.getRotacion() - 1;
-//        System.out.println(rotacion);
 			if (rotacion != 0) {
 				affineTransform.rotate((rotacion) * Math.PI / 2);
 				switch (rotacion) {

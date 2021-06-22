@@ -23,7 +23,7 @@ public class TableroSeleccion {
 	}
 
 	public TableroSeleccion(Carta carta) {
-		
+
 		this();
 		carta.moverCarta(1, 1);
 		ponerCarta(carta, 0);

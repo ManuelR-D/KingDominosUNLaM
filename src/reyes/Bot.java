@@ -13,25 +13,24 @@ public class Bot extends Jugador {
 
 	public Bot(String nombre, String contrasenia) {
 		super(nombre, contrasenia);
-		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
 	public void setTablero(int tamanioTablero) {
-		this.tablero= new TableroBot(tamanioTablero);
+		this.tablero = new TableroBot(tamanioTablero);
 	}
 
 	@Override
 	public int eligeCarta(List<Carta> cartasAElegir, VentanaJueguito ventana) {
 		int puntajeMax = -1;
 		int numeroElegido = -1;
-		boolean noMostrarRegiones=false;
-		
+		boolean noMostrarRegiones = false;
+
 		for (int i = 0; i < cartasAElegir.size(); i++) {
 			Carta carta = cartasAElegir.get(i);
 			if (carta != null) {
 				// si no la eligieron ya...
-				insertaEnTablero(carta,null);
+				insertaEnTablero(carta, null);
 				int puntajeActual = tablero.puntajeTotal(noMostrarRegiones);
 				if (puntajeMax < puntajeActual) {
 					puntajeMax = puntajeActual;
@@ -49,7 +48,7 @@ public class Bot extends Jugador {
 		int x = -(tablero.getTamanio() - 1);
 		int y = -(tablero.getTamanio() - 1);
 		int rotaciones = 0;
-		while (tablero.ponerCarta(cartaElegida, x, y,false) == false && y < tablero.getTamanio()) {
+		while (tablero.ponerCarta(cartaElegida, x, y, false) == false && y < tablero.getTamanio()) {
 			// probamos todas las rotaciones posibles
 			cartaElegida.rotarCarta();
 			rotaciones++;
@@ -64,8 +63,7 @@ public class Bot extends Jugador {
 				cartaElegida.rotarCarta();
 			}
 		}
-		return !(y==tablero.getTamanio());
-		// System.out.println(this.nombre + "\n" + cartaElegida + "\n" + tablero);
+		return !(y == tablero.getTamanio());
 	}
 
 }

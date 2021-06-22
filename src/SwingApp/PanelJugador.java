@@ -10,19 +10,22 @@ public class PanelJugador extends JPanel {
 	private PanelTablero pTablero;
 	Jugador jugador;
 
-	public PanelJugador(Jugador jugador,int tamTablero){
+	public PanelJugador(Jugador jugador, int tamTablero) {
 		setLayout(null);
-		this.jugador=jugador;
-		pTablero=new PanelTablero(jugador.getTablero(),tamTablero);
-		pTablero.setBounds(0,0,tamTablero,tamTablero);
+		this.jugador = jugador;
+		pTablero = new PanelTablero(jugador.getTablero(), tamTablero);
+		pTablero.setBounds(0, 0, tamTablero, tamTablero);
 		this.add(pTablero);
 	}
+
 	public void actualizarTablero(int fila, int columna) {
-		pTablero.actualizarTablero(jugador.getNombre(),fila,columna);
+		pTablero.actualizarTablero(jugador.getNombre(), fila, columna);
 	}
-	public void pintarFicha(int fila,int columna, int acumPuntos, int cantCoronas, int indice) {
-		pTablero.pintarFicha(fila,columna,acumPuntos,cantCoronas,indice);
+
+	public void pintarFicha(int fila, int columna, int acumPuntos, int cantCoronas, int indice) {
+		pTablero.pintarFicha(fila, columna, acumPuntos, cantCoronas, indice);
 	}
+
 	public void actualizarTablero() {
 		pTablero.reCrearTablero(jugador.getNombre());
 	}

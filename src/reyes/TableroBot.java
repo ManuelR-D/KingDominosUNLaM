@@ -1,6 +1,6 @@
 package reyes;
 
-public class TableroBot extends Tablero{
+public class TableroBot extends Tablero {
 
 	public TableroBot(int tamTablero) {
 		super(tamTablero);
@@ -11,14 +11,12 @@ public class TableroBot extends Tablero{
 		int ret = super.puntajeTotal(mostrarRegiones);
 		for (Ficha[] fichas : this.tablero) {
 			for (Ficha ficha : fichas) {
-				if(ficha != null) {
+				if (ficha != null) {
 					ficha.setPuntajeContado(false);
 				}
 			}
 		}
 		return ret;
 	}
-	
-	
 
 }

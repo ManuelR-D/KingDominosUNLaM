@@ -24,7 +24,7 @@ public class PanelInformacion extends JPanel {
 	private List<Jugador> jugadores;
 
 	PanelInformacion(List<Jugador> jugadores) {
-		this.jugadores=jugadores;
+		this.jugadores = jugadores;
 		setLayout(new BorderLayout());
 		info = new JTextArea();
 		info.setEditable(false);
@@ -48,20 +48,20 @@ public class PanelInformacion extends JPanel {
 	}
 
 	protected void mostrarPuntaje(Object object) {
-		String texto=((JButton)object).getText();
-		int indice=Character.getNumericValue(texto.charAt(texto.length()-1));
-		
-		Tablero tablero = jugadores.get(indice-1).getTablero();
-		String puntaje=tablero.puntajeTotal(this);
-		Ficha[][] matriz=tablero.getTablero();
+		String texto = ((JButton) object).getText();
+		int indice = Character.getNumericValue(texto.charAt(texto.length() - 1));
+
+		Tablero tablero = jugadores.get(indice - 1).getTablero();
+		String puntaje = tablero.puntajeTotal(this);
+		Ficha[][] matriz = tablero.getTablero();
 		for (Ficha[] fichas : matriz) {
 			for (Ficha ficha : fichas) {
-				if(ficha != null) {
+				if (ficha != null) {
 					ficha.setPuntajeContado(false);
 				}
 			}
 		}
-		JOptionPane.showMessageDialog(this, puntaje, "Puntaje",JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this, puntaje, "Puntaje", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public void mostrarInfo(String string) {

@@ -28,8 +28,6 @@ public class PanelTablero extends JPanel {
 	int numJugador;
 	PanelFicha[][] matrizPaneles;
 
-//	private Map<String, Color> mapaColores;
-//	private int xMaxAux,xMinAux,yMaxAux,yMinAux;
 	JLayeredPane panelConDimension;
 	private double escala;
 	private int inicioFilasAMostrar;
@@ -42,16 +40,6 @@ public class PanelTablero extends JPanel {
 		setLayout(null);
 		this.tablero = tablero;
 		this.tamTableroVisual = tamTableroVisual;
-
-//		xMaxAux=xMinAux=yMaxAux=yMinAux=tablero.getCentro();
-
-//		mapaColores = new HashMap<String, Color>();
-//		mapaColores.put("Campo", new Color(251, 196, 48, 150));
-//		mapaColores.put("Bosque", new Color(37, 81, 32, 150));
-//		mapaColores.put("Agua", new Color(0, 153, 215, 150));
-//		mapaColores.put("Pradera", new Color(235, 229, 74, 150));
-//		mapaColores.put("Oasis", new Color(165, 138, 94, 150));
-//		mapaColores.put("Mina", new Color(103, 97, 87, 150));
 
 		mapaColoresComplementarios = new HashMap<String, Color>();
 		mapaColoresComplementarios.put("Campo", Color.white);
@@ -207,7 +195,6 @@ public class PanelTablero extends JPanel {
 
 		JLabel nombre = new JLabel(nombreJugador);
 		nombre.setBounds(0, 0, tamTableroVisual, alto);
-//		nombre.setBackground(Color.red);
 		nombre.setForeground(new Color(0x40FFDE));
 		panelConDimension.add(nombre, 1);
 
@@ -223,8 +210,6 @@ public class PanelTablero extends JPanel {
 		int y = (fila - inicioFilasAMostrar);
 		int centradoAlto = (fMax - fMin == tablero.getTamanio() - 1) ? alto : 0;
 		int centradoLargo = (cMax - cMin == tablero.getTamanio() - 1) ? largo : 0;
-//		System.out.println("fila:"+fila+" columna:"+columna+" x:"+x+" y:"+y);
-//		System.out.println("CentradoLargo:"+centradoLargo+" CentradoAlto:"+centradoAlto);
 		PanelFicha panelFicha = new PanelFicha(fichas[fila][columna], fila, columna, escala);
 		matrizPaneles[fila][columna] = panelFicha;
 		panelFicha.setBounds((x * largo) + centradoLargo, (y * alto) + centradoAlto, largo, alto);

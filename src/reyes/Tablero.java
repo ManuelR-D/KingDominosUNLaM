@@ -39,22 +39,13 @@ public class Tablero {
 
 	public int puntajeTotal(boolean mostrarRegiones, VentanaJueguito ventana, int indice) {
 		int acumPuntos = 0;
-//		int contRegiones = 0;
 		for (int i = fMin; i <= fMax; i++) {
 			for (int j = cMin; j <= cMax; j++) {
 
 				int puntajeParcialPorRegion = contarPuntajeParcial(i, j, ventana, indice);
 				acumPuntos += puntajeParcialPorRegion;
-//				if (mostrarRegiones && puntajeParcialPorRegion > 0) {
-//					contRegiones++;
-//					String tipo = tablero[i][j].getTipo();
-//					System.out.println(contRegiones + "-" + tipo + "=" + puntajeParcialPorRegion + " puntos.\n");
-//				}
 			}
 		}
-//		if (mostrarRegiones) {
-//			System.out.println("PUNTAJE TOTAL:" + acumPuntos);
-//		}
 		return acumPuntos;
 	}
 
