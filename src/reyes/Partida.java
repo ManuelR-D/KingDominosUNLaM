@@ -3,10 +3,14 @@ package reyes;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
+
 
 import SwingApp.VentanaJueguito;
 
@@ -21,6 +25,9 @@ public class Partida {
 	private int cantidadJugadores;
 	private String textura = null;
 	VentanaJueguito ventana;
+	private Map<Jugador, Integer> puntajes = new HashMap<Jugador, Integer>();
+	private boolean reinoMedio = false;
+	private boolean armonia = false;
 
 	public Partida() {
 		this.tamanioTablero = DEFAULT_TAM_TABLERO;
@@ -83,6 +90,39 @@ public class Partida {
 		this.textura = textura;
 	}
 
+	public boolean iniciarPartida(String variante) throws IOException {
+		System.out.println(variante);
+		armonia = variante.contains("Armonia");
+		reinoMedio = variante.contains("ReinoMedio");
+		
+		if (variante.contains("Dinastia")) {
+			Map<String, Integer> sumatoriaPuntajes = new HashMap<String, Integer>();
+			SortedSet<Map.Entry<String, Integer>> sortedset = new TreeSet<Map.Entry<String, Integer>>(
+					new Comparator<Map.Entry<String, Integer>>() {
+						@Override
+						public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
+							return e1.getValue().compareTo(e2.getValue());
+						}
+					});
+			for (Jugador jugador : jugadores) {
+				sumatoriaPuntajes.put(jugador.getNombreUsuario(), 0);
+			}
+			for (int i = 0; i < 3; i++, VentanaJueguito.mainFrame.dispose()) {
+				iniciarPartida();
+				for (Map.Entry<Jugador, Integer> entry : puntajes.entrySet()) {
+					sumatoriaPuntajes.put(entry.getKey().getNombreUsuario(),
+							entry.getValue() + sumatoriaPuntajes.get(entry.getKey().getNombreUsuario()));
+				}
+			}
+			sortedset.addAll(sumatoriaPuntajes.entrySet());
+			System.out.println(sortedset);
+			VentanaJueguito.mainFrame.mostrarVentanaMensaje("El ganador es: " + sortedset.last());
+			VentanaJueguito.mainFrame.dispose();
+		} else
+			iniciarPartida();
+		return true;
+	}
+
 	public boolean iniciarPartida() throws IOException {
 
 		List<Integer> turnos = determinarTurnosIniciales();
@@ -119,7 +159,17 @@ public class Partida {
 		List<Integer> puntajesFinales = new ArrayList<Integer>();
 		for (int i = 0; i < jugadores.size(); i++) {
 			Jugador jugador = jugadores.get(i);
-			puntajesFinales.add(jugador.getTablero().puntajeTotal(true, ventana, i));
+			int puntaje = jugador.getTablero().puntajeTotal(true, ventana, i);
+			if (reinoMedio && jugador.getTablero().estaCastilloEnMedio()) {
+				System.out.println("El jugador: " + jugador.getNombre() + " gana el bono de reinoMedio");
+				puntaje += 10;
+			}
+			if (armonia && jugador.tieneReinoCompletamenteOcupado()) {
+				System.out.println("El jugador: " + jugador.getNombre() + " gana el bono de armonia");
+				puntaje += 5;
+			}
+			puntajesFinales.add(puntaje);
+			this.puntajes.put(jugador, puntaje);
 		}
 
 		return puntajesFinales;
@@ -206,6 +256,10 @@ public class Partida {
 
 	public List<Jugador> getJugadores() {
 		return jugadores;
+	}
+
+	public void setReinoMedio(boolean b) {
+		reinoMedio = b;
 	}
 
 }

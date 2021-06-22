@@ -33,28 +33,15 @@ public class TablerosJugadores extends JPanel{
 			switch (i) {
 			case 0:
 				x = 0;
-				if(cantJugadores!=2) {
-					y = 0;					
-				}else {
-					y=tamTablero/2;
-				}
+				y = cantJugadores!=2 ? 0 : tamTablero/2;
 				break;
 			case 1:
 				x = tamTablero;
-				if(cantJugadores!=2) {
-					y = 0;					
-				}
-				else {
-					y=tamTablero/2;
-				}
+				y = cantJugadores!=2 ? 0 : tamTablero/2;
 				break;
 			case 2:
 				y = tamTablero;					
-				if(cantJugadores!=3) {
-					x = 0;
-				}else {
-					x=tamTablero/2;
-				}
+				x = cantJugadores!=3? 0 : tamTablero/2;
 				break;
 			case 3:
 				x = tamTablero;

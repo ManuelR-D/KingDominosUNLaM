@@ -20,11 +20,11 @@ public class Sonido {
 		clip.open(audioIn);
 	}
 
-	public void play() {
+	public void play(int loops) {
 		clip.stop();
 		clip.flush();
 		clip.setMicrosecondPosition(0);
-		clip.loop(Clip.LOOP_CONTINUOUSLY);
+		clip.loop(loops);
 	}
 	
 	private static void playSonido(String path, boolean enLoop) {
@@ -65,5 +65,9 @@ public class Sonido {
 
 	public static int getRandomNumber(int min, int max) {
 		return (int) ((Math.random() * (max - min)) + min);
+	}
+
+	public void stop() {
+		clip.stop();
 	}
 }
