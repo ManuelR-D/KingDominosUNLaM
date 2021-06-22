@@ -33,7 +33,18 @@ public class Tablero {
 				acumPuntos += puntajeParcialPorRegion;
 			}
 		}
+		resetearContadoFichas();
 		return acumPuntos;
+	}
+
+	private void resetearContadoFichas() {
+		for (Ficha[] fichas : tablero) {
+			for (Ficha ficha : fichas) {
+				if (ficha != null) {
+					ficha.setPuntajeContado(false);
+				}
+			}
+		}
 	}
 
 	public int puntajeTotal(boolean mostrarRegiones, VentanaJueguito ventana, int indice) {
@@ -45,6 +56,7 @@ public class Tablero {
 				acumPuntos += puntajeParcialPorRegion;
 			}
 		}
+		resetearContadoFichas();
 		return acumPuntos;
 	}
 
@@ -460,6 +472,7 @@ public class Tablero {
 			}
 		}
 		puntajeTotal += "PUNTAJE TOTAL:" + acumPuntos;
+		resetearContadoFichas();
 		return puntajeTotal;
 	}
 

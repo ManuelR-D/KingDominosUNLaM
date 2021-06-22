@@ -18,8 +18,8 @@ Actualmente el juego permite:
 
 TODO:
 * Soporte para jugar online.
-* Crear nuevas salas para que ingresen otros jugadores
-* Seleccionar una sala de las existentes, para poder ingresar y jugar con los participantes
+* Crear nuevas salas para que ingresen otros jugadores (lógica ya existe, falta implementar a nivel GUI)
+* Seleccionar una sala de las existentes, para poder ingresar y jugar con los participantes (lógica ya existe, falta implementar a nivel GUI)
 * Poder salir de una sala, incluso si en la misma el juego se encuentra en ejecución (rendirse) (si solo un jugador queda en la sala, este gana la partida).
 
 

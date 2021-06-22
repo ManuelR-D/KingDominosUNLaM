@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -12,7 +13,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import reyes.Ficha;
 import reyes.Jugador;
 import reyes.Tablero;
 
@@ -21,6 +21,7 @@ public class PanelInformacion extends JPanel {
 
 	private static final long serialVersionUID = -6580547458892714155L;
 	JTextArea info;
+	List<JButton> botones;
 	private List<Jugador> jugadores;
 
 	PanelInformacion(List<Jugador> jugadores) {
@@ -31,10 +32,13 @@ public class PanelInformacion extends JPanel {
 		info.setBackground(new Color(0xE3BB86));
 		info.setForeground(Color.WHITE);
 		this.add(info, BorderLayout.CENTER);
+		
 		JPanel panelBotones = new JPanel();
+		botones=new ArrayList<JButton>();
 		panelBotones.setLayout(new GridLayout(jugadores.size(), 1));
 		while (i < jugadores.size()) {
 			JButton boton = new JButton("Ver puntaje tablero " + (i + 1));
+			botones.add(boton);
 			boton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					mostrarPuntaje(e.getSource());
@@ -53,19 +57,23 @@ public class PanelInformacion extends JPanel {
 
 		Tablero tablero = jugadores.get(indice - 1).getTablero();
 		String puntaje = tablero.puntajeTotal(this);
-		Ficha[][] matriz = tablero.getTablero();
-		for (Ficha[] fichas : matriz) {
-			for (Ficha ficha : fichas) {
-				if (ficha != null) {
-					ficha.setPuntajeContado(false);
-				}
-			}
-		}
 		JOptionPane.showMessageDialog(this, puntaje, "Puntaje", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public void mostrarInfo(String string) {
 		info.setText(string);
+	}
+
+	public void deshabilitarBotones() {
+		for(JButton boton:botones) {
+			boton.setEnabled(false);
+		}
+	}
+
+	public void habilitarBotones() {
+		for(JButton boton:botones) {
+			boton.setEnabled(true);
+		}		
 	}
 
 }
