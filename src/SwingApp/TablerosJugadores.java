@@ -1,5 +1,7 @@
 package SwingApp;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -19,22 +21,40 @@ public class TablerosJugadores extends JPanel{
 		setLayout(null);
 		tableros=new ArrayList<PanelJugador>(jugadores.size());
 		tamTablero=tamTableros/2;
+		posicionarTableros(jugadores);
+	}
+
+	private void posicionarTableros(List<Jugador> jugadores) {
+		int cantJugadores=jugadores.size();
+		int x = 0, y = 0;
 		for(int i=0;i<jugadores.size();i++) {
 			PanelJugador panelJugador=new PanelJugador(jugadores.get(i),tamTablero);
 			tableros.add(panelJugador);
-			int x = 0, y = 0;
 			switch (i) {
 			case 0:
 				x = 0;
-				y = 0;
+				if(cantJugadores!=2) {
+					y = 0;					
+				}else {
+					y=tamTablero/2;
+				}
 				break;
 			case 1:
 				x = tamTablero;
-				y = 0;
+				if(cantJugadores!=2) {
+					y = 0;					
+				}
+				else {
+					y=tamTablero/2;
+				}
 				break;
 			case 2:
-				x = 0;
-				y = tamTablero;
+				y = tamTablero;					
+				if(cantJugadores!=3) {
+					x = 0;
+				}else {
+					x=tamTablero/2;
+				}
 				break;
 			case 3:
 				x = tamTablero;
@@ -108,5 +128,13 @@ public class TablerosJugadores extends JPanel{
 
 	public void pintarFicha(int fila, int columna,int indice, int acumPuntos, int cantCoronas) {
 		tableros.get(indice).pintarFicha(fila,columna,acumPuntos,cantCoronas,indice);
+	}
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Color cAnterior=g.getColor();
+		g.setColor(new Color(0xAB7632));
+		g.fillRect(0, 0, tamTableros, tamTableros);
+		g.setColor(cAnterior);
 	}
 }
