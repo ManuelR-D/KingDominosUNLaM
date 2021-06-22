@@ -2,7 +2,6 @@ package SwingApp;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +14,6 @@ import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 
 import reyes.Carta;
 import reyes.Jugador;

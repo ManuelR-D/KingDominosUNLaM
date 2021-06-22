@@ -224,7 +224,7 @@ public class Partida {
 			entrada.mostrarCartasAElegir(cartasAElegir);
 
 			int turno = turnos.get(i);
-			entrada.mostrarMensaje("Turno del jugador:" + jugadores.get(turno).getNombre());
+			entrada.mostrarMensaje("Turno del jugador\n" + jugadores.get(turno).getNombre());
 			numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
 			Carta cartaElegida = cartasAElegir.get(numeroElegido);
 			boolean pudoInsertar = jugadores.get(turno).insertaEnTablero(cartaElegida, entrada);

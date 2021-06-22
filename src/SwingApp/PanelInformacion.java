@@ -2,6 +2,7 @@ package SwingApp;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +13,10 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import reyes.Jugador;
 import reyes.Tablero;
@@ -20,17 +25,25 @@ public class PanelInformacion extends JPanel {
 	int i = 0;
 
 	private static final long serialVersionUID = -6580547458892714155L;
-	JTextArea info;
+	//JTextArea info;
+	JTextPane info;
 	List<JButton> botones;
 	private List<Jugador> jugadores;
 
 	PanelInformacion(List<Jugador> jugadores) {
 		this.jugadores = jugadores;
 		setLayout(new BorderLayout());
-		info = new JTextArea();
+		//info = new JTextArea();
+		info = new JTextPane();
 		info.setEditable(false);
 		info.setBackground(new Color(0xE3BB86));
-		info.setForeground(Color.WHITE);
+		info.setForeground(Color.BLACK);
+		info.setFont(new Font("Arial",Font.CENTER_BASELINE,15));
+		StyledDocument doc = info.getStyledDocument();
+		SimpleAttributeSet center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+		doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		
 		this.add(info, BorderLayout.CENTER);
 		
 		JPanel panelBotones = new JPanel();
