@@ -42,6 +42,7 @@ public class VentanaJueguito extends JFrame {
 	public static volatile int[] coordenadasElegidas = new int[2];
 	public static VentanaJueguito mainFrame;
 	public static PanelFicha fichaElegida;
+
 	/**
 	 * Launch the application.
 	 */
@@ -68,7 +69,7 @@ public class VentanaJueguito extends JFrame {
 //		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setBounds(100, 100, 800, 600);
 		getContentPane().setBackground(new Color(0x5E411B));
-		
+
 		try {
 			VentanaJueguito.bufferCastillo = ImageIO.read(texturaCastillo);
 			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
@@ -78,7 +79,7 @@ public class VentanaJueguito extends JFrame {
 			System.out.println("Error generando imagenes clase VentanaJueguito");
 		}
 		setUndecorated(true);
-		informacion=new PanelInformacion(p.getJugadores());
+		informacion = new PanelInformacion(p.getJugadores());
 
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
@@ -88,7 +89,7 @@ public class VentanaJueguito extends JFrame {
 		tableros = new TablerosJugadores(p.getJugadores());
 		tableros.setBounds(0, 0, TAM_TABLEROS, TAM_TABLEROS);
 		getContentPane().add(tableros);
-		informacion.setBounds(TAM_TABLEROS + 20, 20, LARGO_FICHA*2, ALTO_VENTANA - (ALTO_FICHA * 5));
+		informacion.setBounds(TAM_TABLEROS + 20, 20, LARGO_FICHA * 2, ALTO_VENTANA - (ALTO_FICHA * 5));
 		informacion.setBorder(BorderFactory.createLineBorder(Color.black));
 		getContentPane().add(informacion);
 		try {
@@ -102,11 +103,15 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public synchronized int[] obtenerInputCoordenadas(Jugador jugador, Carta carta) {
-		//Si "carta" fue rotada, y luego se intentó insertar en un lugar inválido, Jugador se encarga
-		//de dejar a Carta en su posición "default", este cambio requiere que pSeleccion redibuje a
-		//carta, puesto que en caso contrario se sigue viendo a la carta "rotada" cuando en realidad
-		//no está, lo que genera que al insertar realmente la carta, se inserte en una rotación inesperada.
-		//onCartaElegida se encarga ya de redibujar la carta en su rotación.
+		// Si "carta" fue rotada, y luego se intentó insertar en un lugar inválido,
+		// Jugador se encarga
+		// de dejar a Carta en su posición "default", este cambio requiere que
+		// pSeleccion redibuje a
+		// carta, puesto que en caso contrario se sigue viendo a la carta "rotada"
+		// cuando en realidad
+		// no está, lo que genera que al insertar realmente la carta, se inserte en una
+		// rotación inesperada.
+		// onCartaElegida se encarga ya de redibujar la carta en su rotación.
 		pSeleccion.onCartaElegida(carta);
 		return tableros.obtenerInputCoordenadas(jugador);
 	}
@@ -138,7 +143,7 @@ public class VentanaJueguito extends JFrame {
 	public void terminarPartida(Map<Jugador, Integer> map) {
 		System.out.println("Clase VentanaJueguito funcion terminarPartida");
 		pSeleccion.setVisible(false);
-		String mensaje = map.size() == 1 ? "Ha ganado el jugador\n" : "Han ganado los jugadores\n" ;
+		String mensaje = map.size() == 1 ? "Ha ganado el jugador\n" : "Han ganado los jugadores\n";
 		for (Map.Entry<Jugador, Integer> entry : map.entrySet()) {
 			mensaje += entry.getKey().getNombre() + " con: " + entry.getValue() + " puntos" + "\n";
 		}
@@ -151,7 +156,6 @@ public class VentanaJueguito extends JFrame {
 
 		}
 		pSeleccion = new PanelTableroSeleccion(cartasAElegir);
-
 
 		pSeleccion.setBounds(TAM_TABLEROS + 20, ALTO_VENTANA - ALTO_FICHA * 4, LARGO_FICHA * 2, ALTO_FICHA * 4);
 		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
@@ -170,7 +174,7 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void pintarFicha(int fila, int columna, int indice, int acumPuntos, int cantCoronas) {
-		tableros.pintarFicha(fila, columna, indice,acumPuntos,cantCoronas);
+		tableros.pintarFicha(fila, columna, indice, acumPuntos, cantCoronas);
 	}
 
 	public void setPSeleccionVisible(boolean b) {
@@ -183,7 +187,7 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void cargarTextura(String textura) {
-		texturaCarta = new File("./assets/"+textura+".png");
+		texturaCarta = new File("./assets/" + textura + ".png");
 		try {
 			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
 		} catch (IOException e) {
@@ -194,5 +198,13 @@ public class VentanaJueguito extends JFrame {
 	public void mostrarError(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje, "Movimiento no permitido", JOptionPane.ERROR_MESSAGE);
 	}
-	
+
+	public void deshabilitarBotonesPuntaje() {
+		informacion.deshabilitarBotones();
+	}
+
+	public void habilitarBotonesPuntaje() {
+		informacion.habilitarBotones();
+	}
+
 }

@@ -109,19 +109,20 @@ public class Partida {
 		}
 
 		ventana.setPSeleccionVisible(false);
-		List<Integer> puntajesFinales = calcularPuntajesFinales();
+		List<Integer> puntajesFinales = calcularPuntajesFinales(ventana);
 
 		ventana.terminarPartida(determinarGanadores(puntajesFinales));
 		return true;
 	}
 
-	private List<Integer> calcularPuntajesFinales() {
+	private List<Integer> calcularPuntajesFinales(VentanaJueguito ventana) {
+		ventana.deshabilitarBotonesPuntaje();
 		List<Integer> puntajesFinales = new ArrayList<Integer>();
 		for (int i = 0; i < jugadores.size(); i++) {
 			Jugador jugador = jugadores.get(i);
 			puntajesFinales.add(jugador.getTablero().puntajeTotal(true, ventana, i));
 		}
-
+		ventana.habilitarBotonesPuntaje();
 		return puntajesFinales;
 	}
 
