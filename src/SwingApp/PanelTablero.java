@@ -36,10 +36,11 @@ public class PanelTablero extends JPanel {
 	private int alto;
 	private HashMap<String, Color> mapaColoresComplementarios;
 
-	public PanelTablero(Tablero tablero, int tamTableroVisual) {
+	public PanelTablero(Tablero tablero, int tamTableroVisual,int numJugador) {
 		setLayout(null);
 		this.tablero = tablero;
 		this.tamTableroVisual = tamTableroVisual;
+		this.numJugador=numJugador;
 
 		mapaColoresComplementarios = new HashMap<String, Color>();
 		mapaColoresComplementarios.put("Campo", Color.white);
@@ -54,7 +55,13 @@ public class PanelTablero extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Color cAnterior=g.getColor();
-		g.setColor(new Color(0xAB7632));
+		Color color;
+		if(numJugador==VentanaJueguito.getTurnoJugador()) {
+			color=new Color(0x5C3B04);
+		}else {
+			color=new Color(0xAB7632);
+		}
+		g.setColor(color);
 		g.fillRect(0, 0, tamTableroVisual, tamTableroVisual);
 		g.setColor(cAnterior);
 	}
@@ -181,7 +188,7 @@ public class PanelTablero extends JPanel {
 
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						panelFicha.fichaClickeada();
+						panelFicha.fichaClickeada(e.getXOnScreen(),e.getYOnScreen());
 					}
 				});
 				panelConDimension.add(panelFicha, 0);
@@ -217,7 +224,7 @@ public class PanelTablero extends JPanel {
 		panelFicha.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				panelFicha.fichaClickeada();
+				panelFicha.fichaClickeada(e.getXOnScreen(),e.getYOnScreen());
 			}
 		});
 		panelConDimension.add(panelFicha, 0);

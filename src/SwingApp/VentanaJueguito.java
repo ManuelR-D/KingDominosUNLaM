@@ -37,9 +37,10 @@ public class VentanaJueguito extends JFrame {
 	PanelTableroSeleccion pSeleccion;
 	TablerosJugadores tableros;
 	PanelInformacion informacion;
+	private static int turnoJugador;
 
 	private static CountDownLatch latchCartaElegida = new CountDownLatch(1);
-	public static volatile int[] coordenadasElegidas = new int[2];
+	public static volatile int[] coordenadasElegidas = new int[4];
 	public static VentanaJueguito mainFrame;
 	public static PanelFicha fichaElegida;
 
@@ -103,7 +104,7 @@ public class VentanaJueguito extends JFrame {
 		VentanaJueguito.mainFrame = this;
 	}
 
-	public synchronized int[] obtenerInputCoordenadas(Jugador jugador, Carta carta) {
+	public synchronized int[] obtenerInputCoordenadas(Carta carta) {
 
 		// Si "carta" fue rotada, y luego se intentó insertar en un lugar inválido,
 		// Jugador se encarga
@@ -116,7 +117,7 @@ public class VentanaJueguito extends JFrame {
 		// onCartaElegida se encarga ya de redibujar la carta en su rotación.
 
 		pSeleccion.onCartaElegida(carta);
-		return tableros.obtenerInputCoordenadas(jugador);
+		return tableros.obtenerInputCoordenadas();
 	}
 
 	public static CountDownLatch getLatchCartaElegida() {
@@ -185,7 +186,6 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void actualizarTablero(int indice, int fila, int columna) {
-//		System.out.println("indice:"+indice+" fila:"+fila+" columna:"+columna);
 		tableros.actualizarTablero(indice, fila, columna);
 	}
 
@@ -208,7 +208,6 @@ public class VentanaJueguito extends JFrame {
 	
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 		if(sonido != null)
 			sonido.stop();
 		super.dispose();
@@ -220,6 +219,14 @@ public class VentanaJueguito extends JFrame {
 
 	public void habilitarBotonesPuntaje() {
 		informacion.habilitarBotones();
+	}
+
+	public static int getTurnoJugador() {
+		return turnoJugador;
+	}
+
+	public static void setTurnoJugador(int turnoJugador) {
+		VentanaJueguito.turnoJugador = turnoJugador;
 	}
 
 }

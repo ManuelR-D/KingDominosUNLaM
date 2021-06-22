@@ -147,7 +147,7 @@ public class Partida {
 			jugarRonda(cartasAElegirSig, turnos, ventana);
 
 		}
-
+		VentanaJueguito.setTurnoJugador(-1);
 		ventana.setPSeleccionVisible(false);
 		List<Integer> puntajesFinales = calcularPuntajesFinales(ventana);
 
@@ -224,6 +224,7 @@ public class Partida {
 			entrada.mostrarCartasAElegir(cartasAElegir);
 
 			int turno = turnos.get(i);
+			VentanaJueguito.setTurnoJugador(turno);
 			entrada.mostrarMensaje("Turno del jugador\n" + jugadores.get(turno).getNombre());
 			numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
 			Carta cartaElegida = cartasAElegir.get(numeroElegido);

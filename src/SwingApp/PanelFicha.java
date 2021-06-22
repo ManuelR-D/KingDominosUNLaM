@@ -64,11 +64,13 @@ public class PanelFicha extends JPanel {
 				: myPicture.getSubimage(LARGO_FICHA, 0, LARGO_FICHA, ALTO_FICHA);
 	}
 
-	public void fichaClickeada() {
+	public void fichaClickeada(int xMouse, int yMouse) {
 		if (PanelTableroSeleccion.idCartaElegida == Integer.MIN_VALUE)
 			return;
 		VentanaJueguito.coordenadasElegidas[0] = x;
 		VentanaJueguito.coordenadasElegidas[1] = y;
+		VentanaJueguito.coordenadasElegidas[2] = xMouse;
+		VentanaJueguito.coordenadasElegidas[3] = yMouse;
 		VentanaJueguito.getLatchCartaElegida().countDown();
 	}
 

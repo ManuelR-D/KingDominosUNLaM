@@ -1,5 +1,7 @@
 package SwingApp;
 
+import java.awt.Graphics;
+
 import javax.swing.JPanel;
 
 import reyes.Jugador;
@@ -10,10 +12,10 @@ public class PanelJugador extends JPanel {
 	private PanelTablero pTablero;
 	Jugador jugador;
 
-	public PanelJugador(Jugador jugador, int tamTablero) {
+	public PanelJugador(Jugador jugador, int tamTablero,int indice) {
 		setLayout(null);
 		this.jugador = jugador;
-		pTablero = new PanelTablero(jugador.getTablero(), tamTablero);
+		pTablero = new PanelTablero(jugador.getTablero(), tamTablero,indice);
 		pTablero.setBounds(0, 0, tamTablero, tamTablero);
 		this.add(pTablero);
 	}
@@ -29,5 +31,4 @@ public class PanelJugador extends JPanel {
 	public void actualizarTablero() {
 		pTablero.reCrearTablero(jugador.getNombre());
 	}
-
 }
