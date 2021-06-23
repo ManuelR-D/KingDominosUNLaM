@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +11,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 
 import reyes.Ficha;
 import reyes.Tablero;
@@ -34,21 +39,12 @@ public class PanelTablero extends JPanel {
 	private int inicioColumnasAMostrar;
 	private int largo;
 	private int alto;
-	private HashMap<String, Color> mapaColoresComplementarios;
 
 	public PanelTablero(Tablero tablero, int tamTableroVisual,int numJugador) {
 		setLayout(null);
 		this.tablero = tablero;
 		this.tamTableroVisual = tamTableroVisual;
 		this.numJugador=numJugador;
-
-		mapaColoresComplementarios = new HashMap<String, Color>();
-		mapaColoresComplementarios.put("Campo", Color.white);
-		mapaColoresComplementarios.put("Bosque", Color.orange);
-		mapaColoresComplementarios.put("Agua", Color.white);
-		mapaColoresComplementarios.put("Pradera", Color.white);
-		mapaColoresComplementarios.put("Oasis", Color.magenta);
-		mapaColoresComplementarios.put("Mina", Color.green);
 	}
 
 	@Override
@@ -73,17 +69,22 @@ public class PanelTablero extends JPanel {
 		 * panelFicha no nulo pero con pFicha.getFicha igual a null
 		 */
 		if (pFicha != null && pFicha.getFicha() != null) {
-
-			JLabel puntaje = new JLabel(+acumPuntos + "*" + cantCoronas);
+			JTextPane puntaje=new JTextPane();
+			puntaje.setText(acumPuntos+"");
+			SimpleAttributeSet att=new SimpleAttributeSet();
+			StyleConstants.setForeground(att, Color.yellow);
+			StyleConstants.setBold(att, true);
+			Document doc=puntaje.getStyledDocument();
+			try {
+				doc.insertString(doc.getLength(),"*"+cantCoronas,att);
+			} catch (BadLocationException e1) {
+				e1.printStackTrace();
+			}
 			int largo = (int) (PanelFicha.LARGO_FICHA * escala);
 			int alto = (int) (PanelFicha.ALTO_FICHA * escala);
-			puntaje.setForeground(Color.white);
-			puntaje.setBackground(Color.black);
 			puntaje.setBounds(0, 0, largo, alto);
-
-			Color colorComplementario = mapaColoresComplementarios.get(pFicha.getFicha().getTipo());
-			puntaje.setForeground(Color.black);
-			puntaje.setForeground(colorComplementario);
+			puntaje.setBackground(Color.black);
+			puntaje.setForeground(Color.white);
 			puntaje.setBorder(BorderFactory.createLineBorder(Color.black));
 			pFicha.add(puntaje);
 			repaint();
@@ -200,7 +201,7 @@ public class PanelTablero extends JPanel {
 		// "debajo"
 		// de las fichas vacias.Estaria bueno cambiar esto
 
-		JLabel nombre = new JLabel(nombreJugador);
+		JLabel nombre = new JLabel(nombreJugador,SwingConstants.CENTER);
 		nombre.setBounds(0, 0, tamTableroVisual, alto);
 		nombre.setForeground(new Color(0x40FFDE));
 		panelConDimension.add(nombre, 1);

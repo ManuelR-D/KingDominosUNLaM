@@ -106,15 +106,15 @@ public class VentanaJueguito extends JFrame {
 
 	public synchronized int[] obtenerInputCoordenadas(Carta carta) {
 
-		// Si "carta" fue rotada, y luego se intentó insertar en un lugar inválido,
+		// Si "carta" fue rotada, y luego se intentÃ³ insertar en un lugar invÃ¡lido,
 		// Jugador se encarga
-		// de dejar a Carta en su posición "default", este cambio requiere que
+		// de dejar a Carta en su posiciÃ³n "default", este cambio requiere que
 		// pSeleccion redibuje a
 		// carta, puesto que en caso contrario se sigue viendo a la carta "rotada"
 		// cuando en realidad
-		// no está, lo que genera que al insertar realmente la carta, se inserte en una
-		// rotación inesperada.
-		// onCartaElegida se encarga ya de redibujar la carta en su rotación.
+		// no estÃ¡, lo que genera que al insertar realmente la carta, se inserte en una
+		// rotaciÃ³n inesperada.
+		// onCartaElegida se encarga ya de redibujar la carta en su rotaciÃ³n.
 
 		pSeleccion.onCartaElegida(carta);
 		return tableros.obtenerInputCoordenadas();
@@ -147,11 +147,12 @@ public class VentanaJueguito extends JFrame {
 	public void terminarPartida(Map<Jugador, Integer> map) {
 		System.out.println("Clase VentanaJueguito funcion terminarPartida");
 		pSeleccion.setVisible(false);
-		String mensaje = map.size() == 1 ? "Ha ganado el jugador\n" : "Han ganado los jugadores\n";
+		String mensaje = map.size() == 1 ? "Ganador:\n" : "Ganadores:\n";
 		for (Map.Entry<Jugador, Integer> entry : map.entrySet()) {
-			mensaje += entry.getKey().getNombre() + " con: " + entry.getValue() + " puntos" + "\n";
+			mensaje += entry.getKey().getNombre() + " con: " + entry.getValue() + " puntos";
 		}
 		mostrarMensaje(mensaje);
+		JOptionPane.showMessageDialog(this, mensaje+"☜(ﾟヮﾟ☜)", "Fin de partida", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public void mostrarCartasAElegir(List<Carta> cartasAElegir) {
