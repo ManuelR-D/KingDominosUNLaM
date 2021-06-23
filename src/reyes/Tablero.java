@@ -20,6 +20,9 @@ public class Tablero {
 		fMin = fMax = cMin = cMax = centro;
 	}
 
+	public void setIdCastilloCentro(int numCastillo) {
+		this.tablero[centro][centro] = new Ficha("Castillo", 0, centro, centro, -numCastillo, null);
+	}
 	public Ficha[][] getTablero() {
 		return tablero;
 	}

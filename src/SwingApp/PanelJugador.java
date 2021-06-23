@@ -1,7 +1,5 @@
 package SwingApp;
 
-import java.awt.Graphics;
-
 import javax.swing.JPanel;
 
 import reyes.Jugador;

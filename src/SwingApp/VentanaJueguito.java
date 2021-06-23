@@ -23,10 +23,16 @@ public class VentanaJueguito extends JFrame {
 
 	private static final long serialVersionUID = 4460429712849713216L;
 	private File texturaCarta = new File("./assets/highTest.png");
-	private File texturaCastillo = new File("./assets/castillo.png");
+	private File texturaCastilloAmarillo = new File("./assets/castilloAmarillo.png");
+	private File texturaCastilloAzul = new File("./assets/castilloAzul.png");
+	private File texturaCastilloRojo = new File("./assets/castilloRojo.png");
+	private File texturaCastilloVerde = new File("./assets/castilloVerde.png");
 	private Sonido sonido;
 	static File texturaVacia = new File("./assets/vacio.png");
-	static BufferedImage bufferCastillo;
+	static BufferedImage bufferCastilloAmarillo;
+	static BufferedImage bufferCastilloAzul;
+	static BufferedImage bufferCastilloRojo;
+	static BufferedImage bufferCastilloVerde;
 	static BufferedImage bufferCarta;
 	static BufferedImage bufferVacio;
 	static final int LARGO_FICHA = 80;
@@ -72,7 +78,10 @@ public class VentanaJueguito extends JFrame {
 		getContentPane().setBackground(new Color(0x5E411B));
 
 		try {
-			VentanaJueguito.bufferCastillo = ImageIO.read(texturaCastillo);
+			VentanaJueguito.bufferCastilloAmarillo = ImageIO.read(texturaCastilloAmarillo);
+			VentanaJueguito.bufferCastilloAzul = ImageIO.read(texturaCastilloAzul);
+			VentanaJueguito.bufferCastilloRojo = ImageIO.read(texturaCastilloRojo);
+			VentanaJueguito.bufferCastilloVerde = ImageIO.read(texturaCastilloVerde);
 			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
 			VentanaJueguito.bufferVacio = ImageIO.read(texturaVacia);
 		} catch (IOException e) {
@@ -152,7 +161,7 @@ public class VentanaJueguito extends JFrame {
 			mensaje += entry.getKey().getNombre() + " con: " + entry.getValue() + " puntos";
 		}
 		mostrarMensaje(mensaje);
-		JOptionPane.showMessageDialog(this, mensaje+"☜(ﾟヮﾟ☜)", "Fin de partida", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(this, mensaje + "☜(ﾟヮﾟ☜)", "Fin de partida", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public void mostrarCartasAElegir(List<Carta> cartasAElegir) {
@@ -202,14 +211,14 @@ public class VentanaJueguito extends JFrame {
 	public void mostrarError(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje, "Movimiento no permitido", JOptionPane.ERROR_MESSAGE);
 	}
-  
+
 	public void mostrarVentanaMensaje(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje);
 	}
-	
+
 	@Override
 	public void dispose() {
-		if(sonido != null)
+		if (sonido != null)
 			sonido.stop();
 		super.dispose();
 	}

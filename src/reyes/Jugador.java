@@ -79,4 +79,8 @@ public class Jugador extends Usuario {
 	public boolean tieneReinoCompletamenteOcupado() {
 		return reinoCompletamenteOcupado;
 	}
+
+	public void setIdCastilloCentro(int i) {
+		tablero.setIdCastilloCentro(i);
+	}
 }

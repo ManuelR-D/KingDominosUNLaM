@@ -44,10 +44,26 @@ public class PanelFicha extends JPanel {
 	private BufferedImage getTexturaFicha(Ficha f) {
 		BufferedImage imagen = null;
 		if (f == null)
-			return imagen = null;
-		else if (f.getId() == -1)
-			return VentanaJueguito.bufferCastillo.getSubimage(0, 0, LARGO_FICHA, ALTO_FICHA);
-		else {
+			return VentanaJueguito.bufferVacio;
+		else if (f.getId() <0) {
+			int indice=f.getId();
+			BufferedImage castillo = null;
+			switch(indice) {
+			case -1:
+				castillo=VentanaJueguito.bufferCastilloAmarillo;
+				break;
+			case -2:
+				castillo=VentanaJueguito.bufferCastilloAzul;
+				break;
+			case -3:
+				castillo=VentanaJueguito.bufferCastilloRojo;
+				break;
+			case -4:
+				castillo=VentanaJueguito.bufferCastilloVerde;
+				break;
+			}
+			return castillo;
+		} else {
 			imagen = getTexturaCarta(f.getId() / 2, f.getId() % 2 == 0);
 		}
 		return imagen;

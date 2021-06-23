@@ -134,6 +134,11 @@ public class Partida {
 		for (Jugador jugador : jugadores) {
 			jugador.setTablero(this.tamanioTablero);
 		}
+		for(int i=0;i<jugadores.size();i++) {
+			Jugador jugador = jugadores.get(i);
+			jugador.setTablero(this.tamanioTablero);
+			jugador.setIdCastilloCentro(i+1);
+		}
 
 		ventana = new VentanaJueguito(this);
 		if (textura != null) {
