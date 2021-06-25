@@ -97,7 +97,11 @@ public class Bot extends Jugador {
 		for (int i = 0; i < rotacionPuntajeMax; i++) {
 			cartaElegida.rotarCarta();
 		}
-		return tablero.ponerCarta(cartaElegida, xPuntajeMax, yPuntajeMax, false,null);
+		boolean pudoInsertar=tablero.ponerCarta(cartaElegida, xPuntajeMax, yPuntajeMax, false,null);
+		if(!pudoInsertar) {
+			reinoCompletamenteOcupado=false;
+		}
+		return pudoInsertar;
 	}
 
 }

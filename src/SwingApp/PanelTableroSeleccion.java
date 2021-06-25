@@ -108,7 +108,7 @@ public class PanelTableroSeleccion extends JPanel {
 		}
 
 		PanelFicha ficha1 = new PanelFicha(fichas[0], 0, 0);
-		ficha1.setBorder(BorderFactory.createLineBorder(Color.magenta,5));
+		ficha1.setBorder(BorderFactory.createLineBorder(Color.orange,5));
 		ficha1.setBounds(x1,y1, largo, alto);
 		this.add(ficha1);
 		
@@ -131,12 +131,5 @@ public class PanelTableroSeleccion extends JPanel {
 		this.repaint();
 		startLatch.countDown();
 	}
-	
 
-//	@Override
-//	protected void paintComponent(Graphics g) {
-//		super.paintComponent(g);
-//		g.setColor(new Color(0x614828));
-//		g.fillRect(0, 0, VentanaJueguito.LARGO_FICHA * 2, VentanaJueguito.ALTO_FICHA * 5);
-//	}
 }

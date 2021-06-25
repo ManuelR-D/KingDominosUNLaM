@@ -8,7 +8,7 @@ import SwingApp.VentanaJueguito;
 public class Jugador extends Usuario {
 	private String nombre;
 	public Tablero tablero;
-	private boolean reinoCompletamenteOcupado = true;
+	protected boolean reinoCompletamenteOcupado = true;
 
 	public Jugador(String nombre, int tamTablero) {
 		super(nombre, "");
@@ -32,6 +32,7 @@ public class Jugador extends Usuario {
 	public boolean insertaEnTablero(Carta carta, VentanaJueguito ventana) {
 		if (!tablero.esPosibleInsertarEnTodoElTablero(carta)) {
 			reinoCompletamenteOcupado = false;
+			ventana.mostrarError("La carta no se puede colocar en ninguna posicion, se descarta.");
 			return false;
 		}
 		int[] posicion = new int[2];

@@ -205,11 +205,13 @@ public class Partida {
 	}
 
 	private Map<Jugador, Integer> obtenerGanadoresPorTerreno(Map<Jugador, Integer> ganadoresPorPunto) {
+		ventana.mostrarVentanaMensaje("Empate por puntos, se define por cantidad de terreno colocado");
 		// Si hay mas de un ganador por puntos, se define por cantidad de terreno
 		int maxTerreno = 0;
 		Map<Jugador, Integer> ganadoresPorTerreno = new HashMap<Jugador, Integer>();
 		for (int i = 0; i < ganadoresPorPunto.size(); i++) {
 			int cantTerreno = jugadores.get(i).getCantTerrenoColocado();
+			cantTerreno*=2;//se puede multiplicar o no por 2, ya que cada ficha tiene 2 "terrenos", me parece mas claro asi, es indistinto.
 			if (cantTerreno > maxTerreno) {
 				maxTerreno = cantTerreno;
 				ganadoresPorTerreno.clear();

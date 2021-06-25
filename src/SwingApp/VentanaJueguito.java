@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -29,7 +31,7 @@ public class VentanaJueguito extends JFrame {
 	private static String texturaCastilloVerde = "./assets/castilloVerde.png";
 	private static String texturaCorona = "./assets/corona.png";
 	static String texturaVacia = "./assets/vacio.png";
-	
+
 	private Sonido sonido;
 	static BufferedImage bufferCastilloAmarillo;
 	static BufferedImage bufferCastilloAzul;
@@ -147,14 +149,21 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void terminarPartida(Map<Jugador, Integer> map) {
-		System.out.println("Clase VentanaJueguito funcion terminarPartida");
 		pSeleccion.setVisible(false);
+		List<String> emojis = new ArrayList<String>(4);
+		emojis.add("☜(ﾟヮﾟ☜)");
+		emojis.add("╰(*°▽°*)╯");
+		emojis.add("＼(ﾟｰﾟ＼)");
+		emojis.add("(⌐■_■)");
+		Collections.shuffle(emojis);
 		String mensaje = map.size() == 1 ? "Ganador:\n" : "Ganadores:\n";
+		int i = 0;
 		for (Map.Entry<Jugador, Integer> entry : map.entrySet()) {
-			mensaje += entry.getKey().getNombre() + " con: " + entry.getValue() + " puntos";
+			mensaje += entry.getKey().getNombre() + " con: " + entry.getValue() + " puntos" + emojis.get(i) + "\n";
+			i++;
 		}
 		mostrarMensaje(mensaje);
-		JOptionPane.showMessageDialog(this, mensaje + "☜(ﾟヮﾟ☜)", "Fin de partida", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(this, mensaje, "Fin de partida", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public void mostrarCartasAElegir(List<Carta> cartasAElegir) {
@@ -231,7 +240,7 @@ public class VentanaJueguito extends JFrame {
 	public static void setTurnoJugador(int turnoJugador) {
 		VentanaJueguito.turnoJugador = turnoJugador;
 	}
-	
+
 	public static void cargarTexturas() {
 		try {
 			VentanaJueguito.bufferCastilloAmarillo = ImageIO.read(new File(texturaCastilloAmarillo));
