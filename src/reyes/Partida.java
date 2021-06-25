@@ -89,12 +89,15 @@ public class Partida {
 		this.jugadores = jugadores;
 		this.textura = textura;
 	}
-
+	/*
+	 * El formato de variante es:
+	 * {mazo}|{variante1}|{variante2}|{varianteN}
+	 */
 	public boolean iniciarPartida(String variante) throws IOException {
 		System.out.println(variante);
 		armonia = variante.contains("Armonia");
 		reinoMedio = variante.contains("ReinoMedio");
-		
+		mazo = new Mazo(cantidadCartas,variante.substring(0, variante.indexOf("|")));
 		if (variante.contains("Dinastia")) {
 			Map<String, Integer> sumatoriaPuntajes = new HashMap<String, Integer>();
 			SortedSet<Map.Entry<String, Integer>> sortedset = new TreeSet<Map.Entry<String, Integer>>(
@@ -128,7 +131,6 @@ public class Partida {
 		List<Integer> turnos = determinarTurnosIniciales();
 		List<Carta> cartasAElegirSig = new ArrayList<Carta>();
 		// armamos y mezclamos el mazo
-		mazo = new Mazo(cantidadCartas);
 		mazo.mezclarMazo();
 		// seteamos el tablero para cada jugador
 		for (Jugador jugador : jugadores) {

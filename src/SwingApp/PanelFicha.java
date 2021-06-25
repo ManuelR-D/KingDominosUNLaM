@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -44,7 +46,17 @@ public class PanelFicha extends JPanel {
 	}
 
 	private BufferedImage getTexturaFicha(Ficha f) {
-		BufferedImage imagen = null;
+		/*
+		 * Nos traemos una copia de bufferCarta, puesto que vamos a dibujar las coronas.
+		 * Si trabajaramos sobre la referencia directa de VentanaJueguito.bufferCarta,
+		 * perderíamos la textura original. Esto genera un bug para los mazos
+		 * personalizados que pueden reutilizar la misma textura con coronas distintas
+		 */
+		ColorModel cm = VentanaJueguito.bufferCarta.getColorModel();
+		boolean isAlphaPremultiplied = VentanaJueguito.bufferCarta.isAlphaPremultiplied();
+		WritableRaster raster = VentanaJueguito.bufferCarta.copyData(null);
+		BufferedImage imagen = new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+		
 		
 		if (f == null)
 			return VentanaJueguito.bufferVacio;
@@ -68,18 +80,20 @@ public class PanelFicha extends JPanel {
 			return castillo;
 		} else {
 			int idFicha = f.getId()-2;
+			//System.out.println(idFicha);
 			if(idFicha == 96)
-				imagen = VentanaJueguito.bufferCarta.getSubimage((idFicha%16) * LARGO_FICHA, (idFicha/16-1) * (ALTO_FICHA), LARGO_FICHA, ALTO_FICHA);
-			imagen = VentanaJueguito.bufferCarta.getSubimage((idFicha%16) * LARGO_FICHA, (idFicha/16) * (ALTO_FICHA), LARGO_FICHA, ALTO_FICHA);
-		
+				imagen = imagen.getSubimage((idFicha%16) * LARGO_FICHA, (idFicha/16-1) * (ALTO_FICHA), LARGO_FICHA, ALTO_FICHA);
+			imagen = imagen.getSubimage((idFicha%16) * LARGO_FICHA, (idFicha/16) * (ALTO_FICHA), LARGO_FICHA, ALTO_FICHA);
+			
 			//imagen = getTexturaCarta(f.getId() / 2, f.getId() % 2 == 0);
 		}
+		
 		Graphics2D g2d = (Graphics2D) imagen.getGraphics();
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-		if(ficha != null) {
+		if(ficha != null && ficha.getCantCoronas() > 0) {
 			int cantidadCoronas = ficha.getCantCoronas();
 			if(ficha.getId()%2 != 0)
 				g2d.translate((LARGO_FICHA-LARGO_CORONA*(cantidadCoronas))*escala-7, 5);
@@ -88,7 +102,7 @@ public class PanelFicha extends JPanel {
 			AffineTransform scale = new AffineTransform();
 			scale.scale(escala, escala);
 			for(int i = 0; i < cantidadCoronas; i++) {
-				System.out.println(i);
+				//System.out.println(i);
 				g2d.drawImage(VentanaJueguito.bufferCorona, scale, null);
 				g2d.translate(LARGO_CORONA*escala, 0);
 			}
