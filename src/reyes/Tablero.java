@@ -124,10 +124,10 @@ public class Tablero {
 	/*
 	 * Las coordenadas x,y ya vienen con centro relativo al castillo del jugador.
 	 */
-	public boolean ponerCarta(Carta carta, int columnaRelativa, int filaRelativa, boolean mostrarMensaje) {
+	public boolean ponerCarta(Carta carta, int columna, int fila, boolean mostrarMensaje) {
 		Ficha[] fichas = carta.getFichas();
-		carta.moverCarta(centro, centro);
-		carta.moverCarta(-filaRelativa, columnaRelativa);
+//		carta.moverCarta(centro, centro);
+		carta.moverCarta(fila, columna);
 
 		if (esPosibleInsertar(carta, mostrarMensaje)) {
 

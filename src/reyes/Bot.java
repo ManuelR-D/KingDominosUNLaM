@@ -5,6 +5,10 @@ import java.util.List;
 import SwingApp.VentanaJueguito;
 
 public class Bot extends Jugador {
+	int puntajeMax = 0;
+	int xPuntajeMax;
+	int yPuntajeMax;
+	int rotacionPuntajeMax;
 
 	public Bot(String nombre, int tamTablero) {
 		super(nombre, tamTablero);
@@ -22,48 +26,101 @@ public class Bot extends Jugador {
 
 	@Override
 	public int eligeCarta(List<Carta> cartasAElegir, VentanaJueguito ventana) {
-		int puntajeMax = -1;
 		int numeroElegido = -1;
-		boolean noMostrarRegiones = false;
+		int[] puntajeMaxYCoordenadas = new int[4];
+
+		puntajeMaxYCoordenadas[0] = -2;// puntaje max
+		puntajeMaxYCoordenadas[1] = 0;// x del puntaje max
+		puntajeMaxYCoordenadas[2] = 0;// y del puntaje max
+		puntajeMaxYCoordenadas[3] = 0;// rotacion del puntaje max
 
 		for (int i = 0; i < cartasAElegir.size(); i++) {
 			Carta carta = cartasAElegir.get(i);
 			if (carta != null) {
 				// si no la eligieron ya...
-				insertaEnTablero(carta, null);
-				int puntajeActual = tablero.puntajeTotal(noMostrarRegiones);
-				if (puntajeMax < puntajeActual) {
-					puntajeMax = puntajeActual;
+				int[] puntajeMaxYCoordenadasActual = maximoPuntajePosible(carta);
+				int puntajeActual = puntajeMaxYCoordenadasActual[0];
+				if (puntajeActual > puntajeMaxYCoordenadas[0]) {
+					puntajeMaxYCoordenadas = puntajeMaxYCoordenadasActual;
 					numeroElegido = i;
 				}
-				tablero.quitarCarta(carta);
 				carta.setDefault();
 			}
 		}
+		xPuntajeMax = puntajeMaxYCoordenadas[1];
+		yPuntajeMax = puntajeMaxYCoordenadas[2];
+		rotacionPuntajeMax = puntajeMaxYCoordenadas[3];
 		return numeroElegido;
 	}
 
-	@Override
-	public boolean insertaEnTablero(Carta cartaElegida, VentanaJueguito ventana) {
-		int x = -(tablero.getTamanio() - 1);
-		int y = -(tablero.getTamanio() - 1);
-		int rotaciones = 0;
-		while (tablero.ponerCarta(cartaElegida, x, y, false) == false && y < tablero.getTamanio()) {
-			// probamos todas las rotaciones posibles
-			cartaElegida.rotarCarta();
-			rotaciones++;
-			if (rotaciones == 3) {
-				rotaciones = 0;
-				// si fallamos en todas las rotaciones, cambiamos de posicion
-				x++;
-				if (x == tablero.getTamanio() - 1) {
-					x = -4;
-					y++;
+	private int[] maximoPuntajePosible(Carta carta) {
+		int fMin = tablero.getFMin();
+		int fMax = tablero.getFMax();
+		int cMin = tablero.getCMin();
+		int cMax = tablero.getCMax();
+		int puntajeMax = -1;
+		int xPuntajeMax = 0;
+		int yPuntajeMax = 0;
+		int rotacion = 0;
+		int[] puntajeYCoordenadas = new int[4];
+
+		for (int y = fMin - 2; y <= fMax + 2; y++) {
+			for (int x = cMin - 2; x <= cMax + 2; x++) {
+				for (int i = 0; i < 4; i++) {
+					if (tablero.ponerCarta(carta, x, y, false) == true) {
+						int puntaje = tablero.puntajeTotal(false);
+						if (puntaje > puntajeMax) {
+							puntajeMax = puntaje;
+							xPuntajeMax = x;
+							yPuntajeMax = y;
+							rotacion = i;
+						}
+						tablero.quitarCarta(carta);
+						carta.setDefault();
+					}
+					for(int j=0;j<i+1;j++) {
+						carta.rotarCarta();						
+					}
 				}
-				cartaElegida.rotarCarta();
 			}
 		}
-		return !(y == tablero.getTamanio());
+
+		puntajeYCoordenadas[0] = puntajeMax;
+		puntajeYCoordenadas[1] = xPuntajeMax;
+		puntajeYCoordenadas[2] = yPuntajeMax;
+		puntajeYCoordenadas[3]=rotacion;
+		return puntajeYCoordenadas;
+	}
+
+//	@Override
+//	public boolean insertaEnTablero(Carta cartaElegida, VentanaJueguito ventana) {
+//		int x = -(tablero.getTamanio() - 1);
+//		int y = -(tablero.getTamanio() - 1);
+//		int rotaciones = 0;
+//		while (tablero.ponerCarta(cartaElegida, x, y, false) == false && y < tablero.getTamanio()) {
+//			// probamos todas las rotaciones posibles
+//			cartaElegida.rotarCarta();
+//			rotaciones++;
+//			if (rotaciones == 3) {
+//				rotaciones = 0;
+//				// si fallamos en todas las rotaciones, cambiamos de posicion
+//				x++;
+//				if (x == tablero.getTamanio() - 1) {
+//					x = -4;
+//					y++;
+//				}
+//				cartaElegida.rotarCarta();
+//			}
+//		}
+//		return !(y == tablero.getTamanio());
+//	}
+
+	@Override
+	public boolean insertaEnTablero(Carta cartaElegida, VentanaJueguito ventana) {
+		for(int i=0;i<rotacionPuntajeMax;i++) {
+			cartaElegida.rotarCarta();
+		}
+		return tablero.ponerCarta(cartaElegida, xPuntajeMax, yPuntajeMax, false);
 	}
 
 }
