@@ -10,13 +10,17 @@ import java.util.Scanner;
 public class Mazo {
 	private List<Carta> cartas;
 
-	public Mazo(int cantidadCartas) {
-		armarMazo(cantidadCartas);
+	public Mazo(int cantidadCartas, String nombreMazo) {
+		armarMazo(cantidadCartas, nombreMazo);
 	}
 
-	public void armarMazo(int cantidadCartas) {
+	public Mazo(int cantidadCartas) {
+		cartas = new ArrayList<Carta>(cantidadCartas);
+	}
+
+	public void armarMazo(int cantidadCartas, String nombreMazo) {
 		List<Carta> cartas = new ArrayList<Carta>(cantidadCartas);
-		File file = new File("./assets/cartas2.txt");
+		File file = new File("./assets/"+nombreMazo+".txt");
 		Scanner scanner;
 
 		try {
@@ -62,5 +66,20 @@ public class Mazo {
 
 	public int getTam() {
 		return cartas.size();
+	}
+	
+	@Override
+	public String toString() {
+		String ret = "";
+		for (Carta carta : cartas) {
+			Ficha[] fichas = carta.getFichas();
+			ret = ret + fichas[0].getTipo() + "\n" + fichas[0].getCantCoronas() + "\n" 
+					  + fichas[1].getTipo() + "\n" + fichas[1].getCantCoronas() + "\n";
+		}
+		return ret;
+	}
+
+	public void agregarCarta(Carta cartaActual) {
+		cartas.add(new Carta(cartaActual.getId(),cartaActual.getFichas()[0],cartaActual.getFichas()[1]));
 	}
 }

@@ -22,14 +22,15 @@ import reyes.Partida;
 public class VentanaJueguito extends JFrame {
 
 	private static final long serialVersionUID = 4460429712849713216L;
-	private File texturaCarta = new File("./assets/highTest.png");
-	private File texturaCastilloAmarillo = new File("./assets/castilloAmarillo.png");
-	private File texturaCastilloAzul = new File("./assets/castilloAzul.png");
-	private File texturaCastilloRojo = new File("./assets/castilloRojo.png");
-	private File texturaCastilloVerde = new File("./assets/castilloVerde.png");
-	private File texturaCorona = new File("./assets/corona.png");
+	private static String texturaCarta = "./assets/highTest.png";
+	private static String texturaCastilloAmarillo = "./assets/castilloAmarillo.png";
+	private static String texturaCastilloAzul = "./assets/castilloAzul.png";
+	private static String texturaCastilloRojo = "./assets/castilloRojo.png";
+	private static String texturaCastilloVerde = "./assets/castilloVerde.png";
+	private static String texturaCorona = "./assets/corona.png";
+	static String texturaVacia = "./assets/vacio.png";
+	
 	private Sonido sonido;
-	static File texturaVacia = new File("./assets/vacio.png");
 	static BufferedImage bufferCastilloAmarillo;
 	static BufferedImage bufferCastilloAzul;
 	static BufferedImage bufferCastilloRojo;
@@ -79,18 +80,7 @@ public class VentanaJueguito extends JFrame {
 		setBounds(100, 100, 800, 600);
 		getContentPane().setBackground(new Color(0x5E411B));
 
-		try {
-			VentanaJueguito.bufferCastilloAmarillo = ImageIO.read(texturaCastilloAmarillo);
-			VentanaJueguito.bufferCastilloAzul = ImageIO.read(texturaCastilloAzul);
-			VentanaJueguito.bufferCastilloRojo = ImageIO.read(texturaCastilloRojo);
-			VentanaJueguito.bufferCastilloVerde = ImageIO.read(texturaCastilloVerde);
-			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
-			VentanaJueguito.bufferVacio = ImageIO.read(texturaVacia);
-			VentanaJueguito.bufferCorona = ImageIO.read(texturaCorona);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Error generando imagenes clase VentanaJueguito");
-		}
+		cargarTexturas();
 		setUndecorated(true);
 		informacion = new PanelInformacion(p.getJugadores());
 
@@ -203,7 +193,7 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void cargarTextura(String textura) {
-		texturaCarta = new File("./assets/" + textura + ".png");
+		File texturaCarta = new File("./assets/" + textura + ".png");
 		try {
 			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
 		} catch (IOException e) {
@@ -240,6 +230,21 @@ public class VentanaJueguito extends JFrame {
 
 	public static void setTurnoJugador(int turnoJugador) {
 		VentanaJueguito.turnoJugador = turnoJugador;
+	}
+	
+	public static void cargarTexturas() {
+		try {
+			VentanaJueguito.bufferCastilloAmarillo = ImageIO.read(new File(texturaCastilloAmarillo));
+			VentanaJueguito.bufferCastilloAzul = ImageIO.read(new File(texturaCastilloAzul));
+			VentanaJueguito.bufferCastilloRojo = ImageIO.read(new File(texturaCastilloRojo));
+			VentanaJueguito.bufferCastilloVerde = ImageIO.read(new File(texturaCastilloVerde));
+			VentanaJueguito.bufferCarta = ImageIO.read(new File(texturaCarta));
+			VentanaJueguito.bufferVacio = ImageIO.read(new File(texturaVacia));
+			VentanaJueguito.bufferCorona = ImageIO.read(new File(texturaCorona));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Error generando imagenes clase VentanaJueguito");
+		}
 	}
 
 }

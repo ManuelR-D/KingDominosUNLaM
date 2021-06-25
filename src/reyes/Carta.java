@@ -10,7 +10,14 @@ public class Carta implements Comparable<Carta> {
 		fichas[0] = new Ficha(tipoIzq, cantCoronasI, 0, 0,this.id*2, this);
 		fichas[1] = new Ficha(tipoDer, cantCoronasD, 0, 1,this.id*2+1, this);
 	}
-
+	/*
+	 * Este constructor es para cartas con fichas personalizadas
+	 */
+	public Carta(int idCarta, Ficha fichaIzq, Ficha fichaDer) {
+		this.id = idCarta;
+		fichas[0] = fichaIzq;
+		fichas[1] = fichaDer;
+	}
 	public void setDefault() {
 		this.rotacion = 1;
 		this.fichas[0].setFila(0);
