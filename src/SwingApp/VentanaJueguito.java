@@ -27,6 +27,7 @@ public class VentanaJueguito extends JFrame {
 	private File texturaCastilloAzul = new File("./assets/castilloAzul.png");
 	private File texturaCastilloRojo = new File("./assets/castilloRojo.png");
 	private File texturaCastilloVerde = new File("./assets/castilloVerde.png");
+	private File texturaCorona = new File("./assets/corona.png");
 	private Sonido sonido;
 	static File texturaVacia = new File("./assets/vacio.png");
 	static BufferedImage bufferCastilloAmarillo;
@@ -35,6 +36,7 @@ public class VentanaJueguito extends JFrame {
 	static BufferedImage bufferCastilloVerde;
 	static BufferedImage bufferCarta;
 	static BufferedImage bufferVacio;
+	static BufferedImage bufferCorona;
 	static final int LARGO_FICHA = 80;
 	static final int ALTO_FICHA = 80;
 	static int LARGO_VENTANA;
@@ -84,6 +86,7 @@ public class VentanaJueguito extends JFrame {
 			VentanaJueguito.bufferCastilloVerde = ImageIO.read(texturaCastilloVerde);
 			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
 			VentanaJueguito.bufferVacio = ImageIO.read(texturaVacia);
+			VentanaJueguito.bufferCorona = ImageIO.read(texturaCorona);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Error generando imagenes clase VentanaJueguito");

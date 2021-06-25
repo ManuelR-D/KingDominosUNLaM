@@ -67,6 +67,9 @@ public class PanelTablero extends JPanel {
 		/*
 		 * Por alguna razon llegan panelFicha nulo, y lo mas raro es que a veces llegan
 		 * panelFicha no nulo pero con pFicha.getFicha igual a null
+		 * 
+		 * EDIT: Sucede cuando hay un hilo que todavía esta renderizando PanelFicha. Se arrelgo
+		 * en commit c16ff1f
 		 */
 		if (pFicha != null && pFicha.getFicha() != null) {
 			JTextPane puntaje=new JTextPane();

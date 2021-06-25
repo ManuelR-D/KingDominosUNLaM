@@ -16,7 +16,7 @@ public class Mazo {
 
 	public void armarMazo(int cantidadCartas) {
 		List<Carta> cartas = new ArrayList<Carta>(cantidadCartas);
-		File file = new File("./assets/cartas.txt");
+		File file = new File("./assets/cartas2.txt");
 		Scanner scanner;
 
 		try {
