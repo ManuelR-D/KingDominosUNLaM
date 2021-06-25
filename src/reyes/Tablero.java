@@ -63,8 +63,8 @@ public class Tablero {
 		return acumPuntos;
 	}
 
-	private int contarPuntajeParcial(int x, int y, VentanaJueguito ventana, int indice) {
-		Ficha ficha = tablero[x][y];
+	private int contarPuntajeParcial(int fila, int columna, VentanaJueguito ventana, int indice) {
+		Ficha ficha = tablero[fila][columna];
 
 		if (ficha == null)
 			return 0;
@@ -79,12 +79,12 @@ public class Tablero {
 		puntosYCoronas.add(0);
 		puntosYCoronas.add(0);
 
-		puntajeRecursivo(ficha.getTipo(), x, y, puntosYCoronas, ventana, indice);
+		puntajeRecursivo(ficha.getTipo(), fila, columna, puntosYCoronas, ventana, indice);
 
 		Integer acumPuntos = puntosYCoronas.get(0);
 		Integer acumCoronas = puntosYCoronas.get(1);
 		if (ventana != null) {
-			ventana.pintarFicha(x, y, indice, acumPuntos, acumCoronas);
+			ventana.pintarFicha(fila, columna, indice, acumPuntos, acumCoronas);
 		}
 		return acumPuntos * acumCoronas;
 
@@ -121,88 +121,25 @@ public class Tablero {
 
 	}
 
-	/*
-	 * Las coordenadas x,y ya vienen con centro relativo al castillo del jugador.
-	 */
-	public boolean ponerCarta(Carta carta, int columna, int fila, boolean mostrarMensaje) {
-		Ficha[] fichas = carta.getFichas();
-//		carta.moverCarta(centro, centro);
-		carta.moverCarta(fila, columna);
-
-		if (esPosibleInsertar(carta, mostrarMensaje)) {
-
-			int f1X = fichas[0].getFila();
-			int f1Y = fichas[0].getColumna();
-			int f2X = fichas[1].getFila();
-			int f2Y = fichas[1].getColumna();
-			actualizarLimites(f1X, f1Y, f2X, f2Y, tamTablero);
-			tablero[f1X][f1Y] = fichas[0];
-			tablero[f2X][f2Y] = fichas[1];
-			cantTerrenoColocado++;
-			return true;
-		} else {
-			carta.setDefault();
-			return false;
-		}
-	}
-
 	public boolean ponerCarta(Carta carta, int columna, int fila, boolean mostrarMensaje, VentanaJueguito ventana) {
 		Ficha[] fichas = carta.getFichas();
 		carta.moverCarta(fila, columna);
 
 		if (esPosibleInsertar(carta, mostrarMensaje, ventana)) {
 
-			int f1X = fichas[0].getFila();
-			int f1Y = fichas[0].getColumna();
-			int f2X = fichas[1].getFila();
-			int f2Y = fichas[1].getColumna();
-			actualizarLimites(f1X, f1Y, f2X, f2Y, tamTablero);
-			tablero[f1X][f1Y] = fichas[0];
-			tablero[f2X][f2Y] = fichas[1];
+			int f1f = fichas[0].getFila();
+			int f1c = fichas[0].getColumna();
+			int f2f = fichas[1].getFila();
+			int f2c = fichas[1].getColumna();
+			comprobarLimite(f1f, f1c, f2f, f2c, tamTablero,true);
+			tablero[f1f][f1c] = fichas[0];
+			tablero[f2f][f2c] = fichas[1];
 			cantTerrenoColocado++;
 			return true;
 		} else {
 			carta.setDefault();
 			return false;
 		}
-	}
-
-	protected boolean esPosibleInsertar(Carta carta, boolean mostrarMensaje) {
-		Ficha[] fichas = carta.getFichas();
-		int f1X = fichas[0].getFila();
-		int f1Y = fichas[0].getColumna();
-		int f2X = fichas[1].getFila();
-		int f2Y = fichas[1].getColumna();
-
-		if (f1X >= tablero.length || f1X < 0 || f1Y >= tablero.length || f1Y < 0 || f2X >= tablero.length || f2X < 0
-				|| f2Y >= tablero.length || f2Y < 0) {
-			return false;
-		}
-		// Si ya hay alguna "ficha" colocada en la posicion de la carta entonces
-		// devuelvo false
-		if (tablero[f1X][f1Y] != null || tablero[f2X][f2Y] != null) {
-			if (mostrarMensaje) {
-				System.out.println("ERROR- YA HAY UNA CARTA EN ESA POSICION");
-			}
-			return false;
-		}
-		// Si no hay tipos adyacentes compatibles, no se puede poner la carta
-		if (!tipoAdyacenteCompatible(carta)) {
-			if (mostrarMensaje) {
-				System.out.println("ERROR- NO HAY TIPOS ADYACENTES COMPATIBLES");
-			}
-			return false;
-		}
-
-		// comprobamos que no salga del limite
-		if (!comprobarLimiteSinModificar(f1X, f1Y, f2X, f2Y, tamTablero)) {
-			if (mostrarMensaje) {
-				System.out.println("ERROR- SE EXCEDE EL LIMITE DE CONSTRUCCION");
-			}
-			return false;
-		}
-
-		return true;
 	}
 
 	/*
@@ -210,18 +147,21 @@ public class Tablero {
 	 */
 	protected boolean esPosibleInsertar(Carta carta, boolean mostrarMensaje, VentanaJueguito ventana) {
 		Ficha[] fichas = carta.getFichas();
-		int f1X = fichas[0].getFila();
-		int f1Y = fichas[0].getColumna();
-		int f2X = fichas[1].getFila();
-		int f2Y = fichas[1].getColumna();
+		int f1f = fichas[0].getFila();
+		int f1c = fichas[0].getColumna();
+		int f2f = fichas[1].getFila();
+		int f2c = fichas[1].getColumna();
 
-		if (f1X >= tablero.length || f1X < 0 || f1Y >= tablero.length || f1Y < 0 || f2X >= tablero.length || f2X < 0
-				|| f2Y >= tablero.length || f2Y < 0) {
+		if (f1f >= tablero.length || f1f < 0 || f1c >= tablero.length || f1c < 0 || f2f >= tablero.length || f2f < 0
+				|| f2c >= tablero.length || f2c < 0) {
+			if (mostrarMensaje) {
+				ventana.mostrarError("ERROR- COORDENADA FUERA DE RANGO");
+			}
 			return false;
 		}
 		// Si ya hay alguna "ficha" colocada en la posicion de la carta entonces
 		// devuelvo false
-		if (tablero[f1X][f1Y] != null || tablero[f2X][f2Y] != null) {
+		if (tablero[f1f][f1c] != null || tablero[f2f][f2c] != null) {
 			if (mostrarMensaje) {
 				ventana.mostrarError("ERROR- YA HAY UNA CARTA EN ESA POSICION");
 			}
@@ -236,7 +176,7 @@ public class Tablero {
 		}
 
 		// comprobamos que no salga del limite
-		if (!comprobarLimiteSinModificar(f1X, f1Y, f2X, f2Y, tamTablero)) {
+		if (!comprobarLimite(f1f, f1c, f2f, f2c, tamTablero,false)) {
 			if (mostrarMensaje) {
 				ventana.mostrarError("ERROR- SE EXCEDE EL LIMITE DE CONSTRUCCION");
 			}
@@ -246,122 +186,87 @@ public class Tablero {
 		return true;
 	}
 
-	private boolean comprobarLimiteSinModificar(int f1X, int f1Y, int f2X, int f2Y, int limite) {
-		int xMinAux = fMin;
-		int xMaxAux = fMax;
-		int yMinAux = cMin;
-		int yMaxAux = cMax;
+	private boolean comprobarLimite(int f1f, int f1c, int f2f, int f2c, int limite,boolean modificarLimite) {
+		int fMinAux = fMin;
+		int fMaxAux = fMax;
+		int cMinAux = cMin;
+		int cMaxAux = cMax;
 
-		if (f1X < xMinAux)
-			xMinAux = f1X;
+		if (f1f < fMinAux)
+			fMinAux = f1f;
 
-		if (f1X > xMaxAux)
-			xMaxAux = f1X;
+		if (f1f > fMaxAux)
+			fMaxAux = f1f;
 
-		if (f1Y < yMinAux)
-			yMinAux = f1Y;
+		if (f1c < cMinAux)
+			cMinAux = f1c;
 
-		if (f1Y > yMaxAux)
-			yMaxAux = f1Y;
+		if (f1c > cMaxAux)
+			cMaxAux = f1c;
 
-		if (f2X < xMinAux)
-			xMinAux = f2X;
+		if (f2f < fMinAux)
+			fMinAux = f2f;
 
-		if (f2X > xMaxAux)
-			xMaxAux = f2X;
+		if (f2f > fMaxAux)
+			fMaxAux = f2f;
 
-		if (f2Y < yMinAux)
-			yMinAux = f2Y;
+		if (f2c < cMinAux)
+			cMinAux = f2c;
 
-		if (f2Y > yMaxAux)
-			yMaxAux = f2Y;
+		if (f2c > cMaxAux)
+			cMaxAux = f2c;
 
-		if (xMaxAux - xMinAux >= limite || yMaxAux - yMinAux >= limite) {
+		if (fMaxAux - fMinAux >= limite || cMaxAux - cMinAux >= limite) {
 			return false;
 		} else {
-			return true;
-		}
-	}
-
-	protected boolean actualizarLimites(int f1X, int f1Y, int f2X, int f2Y, int limite) {
-		int xMinAux = fMin;
-		int xMaxAux = fMax;
-		int yMinAux = cMin;
-		int yMaxAux = cMax;
-
-		if (f1X < xMinAux)
-			xMinAux = f1X;
-
-		if (f1X > xMaxAux)
-			xMaxAux = f1X;
-
-		if (f1Y < yMinAux)
-			yMinAux = f1Y;
-
-		if (f1Y > yMaxAux)
-			yMaxAux = f1Y;
-
-		if (f2X < xMinAux)
-			xMinAux = f2X;
-
-		if (f2X > xMaxAux)
-			xMaxAux = f2X;
-
-		if (f2Y < yMinAux)
-			yMinAux = f2Y;
-
-		if (f2Y > yMaxAux)
-			yMaxAux = f2Y;
-
-		if (xMaxAux - xMinAux >= limite || yMaxAux - yMinAux >= limite) {
-			return false;
-		} else {
-			fMin = xMinAux;
-			fMax = xMaxAux;
-			cMin = yMinAux;
-			cMax = yMaxAux;
+			if(modificarLimite) {
+				fMin = fMinAux;
+				fMax = fMaxAux;
+				cMin = cMinAux;
+				cMax = cMaxAux;
+			}
 			return true;
 		}
 	}
 
 	protected boolean tipoAdyacenteCompatible(Carta carta) {
 		Ficha[] fichas = carta.getFichas();
-		int f1X = fichas[0].getFila();
-		int f1Y = fichas[0].getColumna();
+		int f1f = fichas[0].getFila();
+		int f1c = fichas[0].getColumna();
 		String f1T = fichas[0].getTipo();
-		int f2X = fichas[1].getFila();
-		int f2Y = fichas[1].getColumna();
+		int f2f = fichas[1].getFila();
+		int f2c = fichas[1].getColumna();
 		String f2T = fichas[1].getTipo();
 
-		Ficha fComparacion = f1Y == tablero.length - 1 ? null : tablero[f1X][f1Y + 1];
+		Ficha fComparacion = f1c == tablero.length - 1 ? null : tablero[f1f][f1c + 1];
 		if (compararFichas(f1T, fComparacion))
 			return true;
 
-		fComparacion = f1X == tablero.length - 1 ? null : tablero[f1X + 1][f1Y];
+		fComparacion = f1f == tablero.length - 1 ? null : tablero[f1f + 1][f1c];
 		if (compararFichas(f1T, fComparacion))
 			return true;
 
-		fComparacion = f1Y == 0 ? null : tablero[f1X][f1Y - 1];
+		fComparacion = f1c == 0 ? null : tablero[f1f][f1c - 1];
 		if (compararFichas(f1T, fComparacion))
 			return true;
 
-		fComparacion = f1X == 0 ? null : tablero[f1X - 1][f1Y];
+		fComparacion = f1f == 0 ? null : tablero[f1f - 1][f1c];
 		if (compararFichas(f1T, fComparacion))
 			return true;
 
-		fComparacion = f2Y == tablero.length - 1 ? null : tablero[f2X][f2Y + 1];
+		fComparacion = f2c == tablero.length - 1 ? null : tablero[f2f][f2c + 1];
 		if (compararFichas(f2T, fComparacion))
 			return true;
 
-		fComparacion = f2X == tablero.length - 1 ? null : tablero[f2X + 1][f2Y];
+		fComparacion = f2f == tablero.length - 1 ? null : tablero[f2f + 1][f2c];
 		if (compararFichas(f2T, fComparacion))
 			return true;
 
-		fComparacion = f2Y == 0 ? null : tablero[f2X][f2Y - 1];
+		fComparacion = f2c == 0 ? null : tablero[f2f][f2c - 1];
 		if (compararFichas(f2T, fComparacion))
 			return true;
 
-		fComparacion = f2X == 0 ? null : tablero[f2X - 1][f2Y];
+		fComparacion = f2f == 0 ? null : tablero[f2f - 1][f2c];
 		if (compararFichas(f2T, fComparacion))
 			return true;
 
@@ -396,8 +301,8 @@ public class Tablero {
 	}
 
 	public boolean esPosibleInsertarEnTodoElTablero(Carta carta) {
-		int yMinAux = cMin - 1;
-		int xMinAux = fMin - 1;
+		int cMinAux = cMin - 1;
+		int fMinAux = fMin - 1;
 		boolean noMostrarMensaje = false;
 
 		carta.moverCarta(fMin - 1, cMin - 1);
@@ -405,7 +310,7 @@ public class Tablero {
 		for (int i = fMin - 1; i <= fMax + 1; i++) {
 			for (int j = cMin - 1; j <= cMax + 1; j++) {
 				for (int r = 0; r < 4; r++) {
-					if (esPosibleInsertar(carta, noMostrarMensaje)) {
+					if (esPosibleInsertar(carta, noMostrarMensaje,null)) {
 						carta.setDefault();
 						return true;
 					} else {
@@ -416,7 +321,7 @@ public class Tablero {
 				carta.moverCarta(0, 1);
 			}
 			carta.setDefault();
-			carta.moverCarta(++xMinAux, yMinAux);
+			carta.moverCarta(++fMinAux, cMinAux);
 
 		}
 		carta.setDefault();

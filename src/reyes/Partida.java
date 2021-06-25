@@ -11,7 +11,6 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-
 import SwingApp.VentanaJueguito;
 
 public class Partida {
@@ -94,7 +93,7 @@ public class Partida {
 		System.out.println(variante);
 		armonia = variante.contains("Armonia");
 		reinoMedio = variante.contains("ReinoMedio");
-		
+
 		if (variante.contains("Dinastia")) {
 			Map<String, Integer> sumatoriaPuntajes = new HashMap<String, Integer>();
 			SortedSet<Map.Entry<String, Integer>> sortedset = new TreeSet<Map.Entry<String, Integer>>(
@@ -134,10 +133,10 @@ public class Partida {
 		for (Jugador jugador : jugadores) {
 			jugador.setTablero(this.tamanioTablero);
 		}
-		for(int i=0;i<jugadores.size();i++) {
+		for (int i = 0; i < jugadores.size(); i++) {
 			Jugador jugador = jugadores.get(i);
 			jugador.setTablero(this.tamanioTablero);
-			jugador.setIdCastilloCentro(i+1);
+			jugador.setIdCastilloCentro(i + 1);
 		}
 
 		ventana = new VentanaJueguito(this);
@@ -167,11 +166,11 @@ public class Partida {
 			Jugador jugador = jugadores.get(i);
 			int puntaje = jugador.getTablero().puntajeTotal(true, ventana, i);
 			if (reinoMedio && jugador.getTablero().estaCastilloEnMedio()) {
-				System.out.println("El jugador: " + jugador.getNombre() + " gana el bono de reinoMedio");
+				ventana.mostrarVentanaMensaje("El jugador: " + jugador.getNombre() + " gana el bono de reinoMedio");
 				puntaje += 10;
 			}
 			if (armonia && jugador.tieneReinoCompletamenteOcupado()) {
-				System.out.println("El jugador: " + jugador.getNombre() + " gana el bono de armonia");
+				ventana.mostrarVentanaMensaje("El jugador: " + jugador.getNombre() + " gana el bono de armonia");
 				puntaje += 5;
 			}
 			puntajesFinales.add(puntaje);
@@ -245,9 +244,6 @@ public class Partida {
 		turnos.clear();
 		for (Map.Entry<Integer, Integer> entry : nuevoOrdenDeTurnos.entrySet())
 			turnos.add(entry.getValue());
-
-		if (turnos.size() != nuevoOrdenDeTurnos.size())
-			System.out.println("check");
 	}
 
 	private List<Integer> determinarTurnosIniciales() {
