@@ -11,7 +11,7 @@ Actualmente el juego permite:
 * Jugar! (que no es poco).
 * <b>Agregar bots.</b> <i>punto extra!</i>
 * Agregar hasta 4 jugadores.
-* <b>Cambiar texturas de los mazos.</b>
+* <b>Cambiar texturas de los mazos y crear mazos personalizados.</b> <i>punto extra!</i>
 * <b>Variantes!</b> <i>punto extra!</i>
   * "El Gran Duelo", con tablero 7x7.
   * "Dinastia", mejor de 3.
@@ -28,6 +28,6 @@ TODO:
 
 
 Wishlist:
-* Posibilidad de crear mazos además de elegir texturas (punto extra "Configuración" en enunciado)
+* Base de datos? <i>punto extra!</i>
 * Poder expulsar jugadores de salas
 * Chat ingame?
