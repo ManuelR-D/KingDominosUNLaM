@@ -9,25 +9,25 @@ public class Ficha {
 	private boolean puntajeContado=false;
 	
 	
-	public Ficha(String tipo, int cantCoronas, int x, int y, int idFicha, Carta c) {
+	public Ficha(String tipo, int cantCoronas, int fila, int columna, int idFicha, Carta c) {
 		Tipo = tipo;
 		this.cantCoronas = cantCoronas;
-		this.fila=x;
-		this.columna=y;
+		this.fila=fila;
+		this.columna=columna;
 		this.id = idFicha;
 		this.carta = c;
 	}
 	public int getFila() {
 		return fila;
 	}
-	public void setFila(int x) {
-		this.fila = x;
+	public void setFila(int fila) {
+		this.fila = fila;
 	}
 	public int getColumna() {
 		return columna;
 	}
-	public void setColumna(int y) {
-		this.columna = y;
+	public void setColumna(int columna) {
+		this.columna = columna;
 	}
 	public Carta getCarta() {
 		return carta;

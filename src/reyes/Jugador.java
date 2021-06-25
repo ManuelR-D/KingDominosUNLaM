@@ -31,35 +31,29 @@ public class Jugador extends Usuario {
 
 	public boolean insertaEnTablero(Carta carta, VentanaJueguito ventana) {
 		if (!tablero.esPosibleInsertarEnTodoElTablero(carta)) {
-			reinoCompletamenteOcupado  = false;
+			reinoCompletamenteOcupado = false;
 			return false;
 		}
 		int[] posicion = new int[2];
 		do {
 			posicion = ventana.obtenerInputCoordenadas(carta);
-		} while (!tablero.ponerCarta(carta, posicion[0], posicion[1], true,ventana));
+		} while (!tablero.ponerCarta(carta, posicion[0], posicion[1], true, ventana));
 		return true;
 	}
 
 	public int eligeCarta(List<Carta> cartasAElegir, VentanaJueguito entrada) throws IOException {
 		int cartaElegida = 0;
-		
-		System.out.println("Tablero(" + nombre + ")");
-		System.out.println(tablero);
 		do {
-//			String cad = "Elija una carta(" + nombre + "):";
 			cartaElegida = entrada.leerCartaElegida();
 			for (int i = 0; i < cartasAElegir.size(); i++) {
 				Carta c = cartasAElegir.get(i);
 				if (c != null) {
-					System.out.println((i + 1) + ":");
-					System.out.println(c);
 					if (c.getId() == cartaElegida)
 						cartaElegida = i;
 				}
-				
+
 			}
-			
+
 		} while (cartasAElegir.get(cartaElegida) == null);
 
 		return cartaElegida;
@@ -76,6 +70,7 @@ public class Jugador extends Usuario {
 	public Tablero getTablero() {
 		return tablero;
 	}
+
 	public boolean tieneReinoCompletamenteOcupado() {
 		return reinoCompletamenteOcupado;
 	}

@@ -67,7 +67,7 @@ public class Bot extends Jugador {
 		for (int y = fMin - 2; y <= fMax + 2; y++) {
 			for (int x = cMin - 2; x <= cMax + 2; x++) {
 				for (int i = 0; i < 4; i++) {
-					if (tablero.ponerCarta(carta, x, y, false) == true) {
+					if (tablero.ponerCarta(carta, x, y, false,null) == true) {
 						int puntaje = tablero.puntajeTotal(false);
 						if (puntaje > puntajeMax) {
 							puntajeMax = puntaje;
@@ -78,8 +78,8 @@ public class Bot extends Jugador {
 						tablero.quitarCarta(carta);
 						carta.setDefault();
 					}
-					for(int j=0;j<i+1;j++) {
-						carta.rotarCarta();						
+					for (int j = 0; j < i + 1; j++) {
+						carta.rotarCarta();
 					}
 				}
 			}
@@ -88,39 +88,16 @@ public class Bot extends Jugador {
 		puntajeYCoordenadas[0] = puntajeMax;
 		puntajeYCoordenadas[1] = xPuntajeMax;
 		puntajeYCoordenadas[2] = yPuntajeMax;
-		puntajeYCoordenadas[3]=rotacion;
+		puntajeYCoordenadas[3] = rotacion;
 		return puntajeYCoordenadas;
 	}
 
-//	@Override
-//	public boolean insertaEnTablero(Carta cartaElegida, VentanaJueguito ventana) {
-//		int x = -(tablero.getTamanio() - 1);
-//		int y = -(tablero.getTamanio() - 1);
-//		int rotaciones = 0;
-//		while (tablero.ponerCarta(cartaElegida, x, y, false) == false && y < tablero.getTamanio()) {
-//			// probamos todas las rotaciones posibles
-//			cartaElegida.rotarCarta();
-//			rotaciones++;
-//			if (rotaciones == 3) {
-//				rotaciones = 0;
-//				// si fallamos en todas las rotaciones, cambiamos de posicion
-//				x++;
-//				if (x == tablero.getTamanio() - 1) {
-//					x = -4;
-//					y++;
-//				}
-//				cartaElegida.rotarCarta();
-//			}
-//		}
-//		return !(y == tablero.getTamanio());
-//	}
-
 	@Override
 	public boolean insertaEnTablero(Carta cartaElegida, VentanaJueguito ventana) {
-		for(int i=0;i<rotacionPuntajeMax;i++) {
+		for (int i = 0; i < rotacionPuntajeMax; i++) {
 			cartaElegida.rotarCarta();
 		}
-		return tablero.ponerCarta(cartaElegida, xPuntajeMax, yPuntajeMax, false);
+		return tablero.ponerCarta(cartaElegida, xPuntajeMax, yPuntajeMax, false,null);
 	}
 
 }
