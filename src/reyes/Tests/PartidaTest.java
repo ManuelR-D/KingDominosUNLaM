@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import reyes.Bot;
@@ -75,7 +76,7 @@ public class PartidaTest {
 		// el código ya está preparado para eso.
 	}
 */
-	@Test
+	@Test @Ignore
 	public void elGranDuelo() throws KingDominoExcepcion, IOException {
 		int cantidadCartas = 48;
 		int tamTablero = 7;
@@ -84,7 +85,7 @@ public class PartidaTest {
 		jugadores.add(new Bot("Jugador 1",tamTablero));
 		
 		Partida p = new Partida(jugadores, tamTablero, cantidadCartas);
-		assertEquals(true, p.iniciarPartida());
+		assertEquals(true, p.iniciarPartida("original|"));
 	}
 /*
 	@Test

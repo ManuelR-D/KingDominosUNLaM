@@ -61,6 +61,7 @@ public class PanelTableroSeleccion extends JPanel {
 	protected void onRotarCartaClick() {
 		cartaElegida.rotarCarta();
 		onCartaElegida(cartaElegida);
+		Sonido.playCartaSeleccionada();
 	}
 
 	public synchronized void onCartaElegida(Carta carta) {

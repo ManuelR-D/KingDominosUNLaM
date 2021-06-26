@@ -78,6 +78,7 @@ public class CreadorDeMazo extends JFrame {
 				textureMap.get(tipo).add(i);
 			}
 			sc.nextLine();
+			sc.nextLine();
 			i++;
 		}
 		VentanaJueguito.cargarTexturas();

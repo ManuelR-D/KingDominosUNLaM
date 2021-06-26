@@ -100,8 +100,8 @@ public class VentanaJueguito extends JFrame {
 		getContentPane().add(informacion);
 		try {
 			Sonido s = new Sonido("./assets/Sound/main.wav");
-			s.setVolume(0.1f);
-			//s.play(Clip.LOOP_CONTINUOUSLY);
+			s.setVolume(0.01f);
+			s.play(Clip.LOOP_CONTINUOUSLY);
 			sonido = s;
 		} catch (Exception e) {
 			e.printStackTrace();

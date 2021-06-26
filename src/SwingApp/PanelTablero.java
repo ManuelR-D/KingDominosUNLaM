@@ -40,22 +40,22 @@ public class PanelTablero extends JPanel {
 	private int largo;
 	private int alto;
 
-	public PanelTablero(Tablero tablero, int tamTableroVisual, int numJugador) {
+	public PanelTablero(Tablero tablero, int tamTableroVisual,int numJugador) {
 		setLayout(null);
 		this.tablero = tablero;
 		this.tamTableroVisual = tamTableroVisual;
-		this.numJugador = numJugador;
+		this.numJugador=numJugador;
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		Color cAnterior = g.getColor();
+		Color cAnterior=g.getColor();
 		Color color;
-		if (numJugador == VentanaJueguito.getTurnoJugador()) {
-			color = new Color(0x5C3B04);
-		} else {
-			color = new Color(0xAB7632);
+		if(numJugador==VentanaJueguito.getTurnoJugador()) {
+			color=new Color(0x5C3B04);
+		}else {
+			color=new Color(0xAB7632);
 		}
 		g.setColor(color);
 		g.fillRect(0, 0, tamTableroVisual, tamTableroVisual);
@@ -68,18 +68,18 @@ public class PanelTablero extends JPanel {
 		 * Por alguna razon llegan panelFicha nulo, y lo mas raro es que a veces llegan
 		 * panelFicha no nulo pero con pFicha.getFicha igual a null
 		 * 
-		 * EDIT: Sucede cuando hay un hilo que todavía esta renderizando PanelFicha. Se
-		 * arrelgo en commit c16ff1f
+		 * EDIT: Sucede cuando hay un hilo que todavía esta renderizando PanelFicha. Se arrelgo
+		 * en commit c16ff1f
 		 */
 		if (pFicha != null && pFicha.getFicha() != null) {
-			JTextPane puntaje = new JTextPane();
-			puntaje.setText(acumPuntos + "");
-			SimpleAttributeSet att = new SimpleAttributeSet();
+			JTextPane puntaje=new JTextPane();
+			puntaje.setText(acumPuntos+"");
+			SimpleAttributeSet att=new SimpleAttributeSet();
 			StyleConstants.setForeground(att, Color.yellow);
 			StyleConstants.setBold(att, true);
-			Document doc = puntaje.getStyledDocument();
+			Document doc=puntaje.getStyledDocument();
 			try {
-				doc.insertString(doc.getLength(), "*" + cantCoronas, att);
+				doc.insertString(doc.getLength(),"*"+cantCoronas,att);
 			} catch (BadLocationException e1) {
 				e1.printStackTrace();
 			}
@@ -174,13 +174,13 @@ public class PanelTablero extends JPanel {
 
 		int centradoAlto = (finFilasAMostrar - inicioFilasAMostrar == tablero.getTamanio() - 1) ? alto : 0;
 
-		int centradoLargo = (finColumnasAMostrar - inicioColumnasAMostrar == tablero.getTamanio() - 1) ? largo : 0;
+		int centradoLargo = (finColumnasAMostrar - inicioColumnasAMostrar== tablero.getTamanio() - 1) ? largo : 0;
 		/*
 		 * Estas variables son para acomodar el tablero cuando se haya llegado al limite
 		 * de construccion(por ej 5x5)
 		 * 
 		 */
-
+		
 		for (int i = inicioFilasAMostrar, y = 0; i <= finFilasAMostrar; i++, y++) {
 			for (int j = inicioColumnasAMostrar, x = 0; j <= finColumnasAMostrar; j++, x++) {
 				PanelFicha panelFicha = new PanelFicha(fichas[i][j], i, j, escala);
@@ -191,7 +191,7 @@ public class PanelTablero extends JPanel {
 
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						panelFicha.fichaClickeada(e.getXOnScreen(), e.getYOnScreen());
+						panelFicha.fichaClickeada(e.getXOnScreen(),e.getYOnScreen());
 					}
 				});
 				panelConDimension.add(panelFicha, 0);
@@ -201,7 +201,7 @@ public class PanelTablero extends JPanel {
 		// "debajo"
 		// de las fichas vacias.Estaria bueno cambiar esto
 
-		JLabel nombre = new JLabel(nombreJugador, SwingConstants.CENTER);
+		JLabel nombre = new JLabel(nombreJugador,SwingConstants.CENTER);
 		nombre.setBounds(0, 0, tamTableroVisual, alto);
 		nombre.setForeground(new Color(0x40FFDE));
 		panelConDimension.add(nombre, 1);
@@ -225,7 +225,7 @@ public class PanelTablero extends JPanel {
 		panelFicha.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				panelFicha.fichaClickeada(e.getXOnScreen(), e.getYOnScreen());
+				panelFicha.fichaClickeada(e.getXOnScreen(),e.getYOnScreen());
 			}
 		});
 		panelConDimension.add(panelFicha, 0);
