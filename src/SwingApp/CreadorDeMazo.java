@@ -2,6 +2,7 @@ package SwingApp;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Graphics2D;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,6 +12,7 @@ import reyes.Carta;
 import reyes.Ficha;
 import reyes.Mazo;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -21,8 +23,10 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -63,7 +67,7 @@ public class CreadorDeMazo extends JFrame {
 	private JPanel panelPreviewCarta;
 	private JPanel panelPreviewMazo;
 	public CreadorDeMazo() throws FileNotFoundException {
-		Scanner sc = new Scanner(new File("./assets/cartas.txt"));
+		Scanner sc = new Scanner(new File("./assets/original.txt"));
 		int i = 0;
 		while(sc.hasNext()) {
 			String tipo =  sc.nextLine();
@@ -281,9 +285,9 @@ public class CreadorDeMazo extends JFrame {
 			pF.setBounds(i%16*PanelFicha.LARGO_FICHA,(i/16)*PanelFicha.ALTO_FICHA,PanelFicha.LARGO_FICHA,PanelFicha.ALTO_FICHA);
 			i++;
 			panelPreviewMazo.add(pF);
+			
 		}
 		panelPreviewMazo.repaint();
-		
 		
 	}
 }

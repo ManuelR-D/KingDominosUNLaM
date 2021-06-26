@@ -17,7 +17,6 @@ public class Mazo {
 	public Mazo(int cantidadCartas) {
 		cartas = new ArrayList<Carta>(cantidadCartas);
 	}
-
 	public void armarMazo(int cantidadCartas, String nombreMazo) {
 		List<Carta> cartas = new ArrayList<Carta>(cantidadCartas);
 		File file = new File("./assets/"+nombreMazo+".txt");
@@ -31,9 +30,13 @@ public class Mazo {
 				if (scanner.hasNextLine()) {
 					String tipoIzq = scanner.nextLine();
 					int cantCoronasI = Integer.parseInt(scanner.nextLine());
+					int idFichaI = Integer.parseInt(scanner.nextLine());
 					String tipoDer = scanner.nextLine();
 					int cantCoronasD = Integer.parseInt(scanner.nextLine());
-					cartas.add(new Carta(idCarta, tipoIzq, cantCoronasI, tipoDer, cantCoronasD));
+					int idFichaD = Integer.parseInt(scanner.nextLine());
+					Ficha fI = new Ficha(tipoIzq, cantCoronasI, 0, 0, idFichaI, null);
+					Ficha fD = new Ficha(tipoDer, cantCoronasD, 0, 1, idFichaD, null);
+					cartas.add(new Carta(idCarta,fI,fD));
 					idCarta++;
 				} else {
 					scanner.close(); // volvemos al inicio del archivo y seguimos cargando
@@ -73,8 +76,8 @@ public class Mazo {
 		String ret = "";
 		for (Carta carta : cartas) {
 			Ficha[] fichas = carta.getFichas();
-			ret = ret + fichas[0].getTipo() + "\n" + fichas[0].getCantCoronas() + "\n" 
-					  + fichas[1].getTipo() + "\n" + fichas[1].getCantCoronas() + "\n";
+			ret = ret + fichas[0].getTipo() + "\n" + fichas[0].getCantCoronas() + "\n" + fichas[0].getId() + "\n" 
+					  + fichas[1].getTipo() + "\n" + fichas[1].getCantCoronas() + "\n" + fichas[1].getId() + "\n";
 		}
 		return ret;
 	}

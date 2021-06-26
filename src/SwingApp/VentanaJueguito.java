@@ -24,7 +24,8 @@ import reyes.Partida;
 public class VentanaJueguito extends JFrame {
 
 	private static final long serialVersionUID = 4460429712849713216L;
-	private static String texturaCarta = "./assets/highTest.png";
+	//Texturas por defecto
+	private static String texturaCarta = "./assets/mazos/original.png";
 	private static String texturaCastilloAmarillo = "./assets/castilloAmarillo.png";
 	private static String texturaCastilloAzul = "./assets/castilloAzul.png";
 	private static String texturaCastilloRojo = "./assets/castilloRojo.png";
@@ -100,7 +101,7 @@ public class VentanaJueguito extends JFrame {
 		try {
 			Sonido s = new Sonido("./assets/Sound/main.wav");
 			s.setVolume(0.1f);
-			s.play(Clip.LOOP_CONTINUOUSLY);
+			//s.play(Clip.LOOP_CONTINUOUSLY);
 			sonido = s;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,7 +195,9 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void setPSeleccionVisible(boolean b) {
-		pSeleccion.setVisible(b);
+		//Esto puede suceder por condiciones de carrera. Arreglar de manera mas elegante luego
+		if(pSeleccion != null)
+			pSeleccion.setVisible(b);
 	}
 
 	public void actualizarTablero(int indice, int fila, int columna) {
@@ -202,7 +205,7 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void cargarTextura(String textura) {
-		File texturaCarta = new File("./assets/" + textura + ".png");
+		File texturaCarta = new File("./assets/mazos/" + textura + ".png");
 		try {
 			VentanaJueguito.bufferCarta = ImageIO.read(texturaCarta);
 		} catch (IOException e) {
@@ -220,9 +223,9 @@ public class VentanaJueguito extends JFrame {
 
 	@Override
 	public void dispose() {
+		super.dispose();
 		if (sonido != null)
 			sonido.stop();
-		super.dispose();
 	}
 
 	public void deshabilitarBotonesPuntaje() {
@@ -254,6 +257,14 @@ public class VentanaJueguito extends JFrame {
 			e.printStackTrace();
 			System.out.println("Error generando imagenes clase VentanaJueguito");
 		}
+	}
+
+	public static void cargarTexturaMazo(String skin) {
+		try {
+			VentanaJueguito.bufferCarta = ImageIO.read(new File("./assets/mazos/"+skin+".png") );
+		}catch(IOException e) {
+			e.printStackTrace();
+		}	
 	}
 
 }

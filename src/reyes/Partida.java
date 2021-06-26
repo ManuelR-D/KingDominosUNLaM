@@ -110,12 +110,15 @@ public class Partida {
 			for (Jugador jugador : jugadores) {
 				sumatoriaPuntajes.put(jugador.getNombreUsuario(), 0);
 			}
-			for (int i = 0; i < 3; i++, VentanaJueguito.mainFrame.dispose()) {
+			for (int i = 0; i < 3; i++) {
+				
 				iniciarPartida();
 				for (Map.Entry<Jugador, Integer> entry : puntajes.entrySet()) {
 					sumatoriaPuntajes.put(entry.getKey().getNombreUsuario(),
 							entry.getValue() + sumatoriaPuntajes.get(entry.getKey().getNombreUsuario()));
 				}
+				VentanaJueguito.mainFrame.dispose();
+				mazo = new Mazo(cantidadCartas,variante.substring(0, variante.indexOf("|")));
 			}
 			sortedset.addAll(sumatoriaPuntajes.entrySet());
 			System.out.println(sortedset);

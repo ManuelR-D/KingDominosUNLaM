@@ -46,17 +46,7 @@ public class PanelFicha extends JPanel {
 	}
 
 	private BufferedImage getTexturaFicha(Ficha f) {
-		/*
-		 * Nos traemos una copia de bufferCarta, puesto que vamos a dibujar las coronas.
-		 * Si trabajaramos sobre la referencia directa de VentanaJueguito.bufferCarta,
-		 * perderíamos la textura original. Esto genera un bug para los mazos
-		 * personalizados que pueden reutilizar la misma textura con coronas distintas
-		 */
-		ColorModel cm = VentanaJueguito.bufferCarta.getColorModel();
-		boolean isAlphaPremultiplied = VentanaJueguito.bufferCarta.isAlphaPremultiplied();
-		WritableRaster raster = VentanaJueguito.bufferCarta.copyData(null);
-		BufferedImage imagen = new BufferedImage(cm, raster, isAlphaPremultiplied, null);
-		
+		BufferedImage imagen = null;
 		
 		if (f == null)
 			return VentanaJueguito.bufferVacio;
@@ -80,19 +70,35 @@ public class PanelFicha extends JPanel {
 			return castillo;
 		} else {
 			int idFicha = f.getId()-2;
-			//System.out.println(idFicha);
-			if(idFicha == 96)
-				imagen = imagen.getSubimage((idFicha%16) * LARGO_FICHA, (idFicha/16-1) * (ALTO_FICHA), LARGO_FICHA, ALTO_FICHA);
-			imagen = imagen.getSubimage((idFicha%16) * LARGO_FICHA, (idFicha/16) * (ALTO_FICHA), LARGO_FICHA, ALTO_FICHA);
-			
-			//imagen = getTexturaCarta(f.getId() / 2, f.getId() % 2 == 0);
+			/*
+			 * Nos traemos una copia de bufferCarta, puesto que vamos a dibujar las coronas.
+			 * Si trabajaramos sobre la referencia directa de VentanaJueguito.bufferCarta,
+			 * perderíamos la textura original. Esto genera un bug para los mazos
+			 * personalizados que pueden reutilizar la misma textura con coronas distintas.
+			 */
+			ColorModel cm = VentanaJueguito.bufferCarta.getColorModel();
+			boolean isAlphaPremultiplied = VentanaJueguito.bufferCarta.isAlphaPremultiplied();
+			/*
+			 * Antes de hacer la copia, primero obtenemos la subimagen que vamos a cortar.
+			 * De esta manera nos evitamos copiar las 96 fichas para solo usar una.
+			 * Implementar esto bajó el render de 240ms a 40ms
+			 */
+			imagen = VentanaJueguito.bufferCarta.getSubimage((idFicha%16) * LARGO_FICHA, (idFicha == 96 ? idFicha/16-1 : idFicha/16) * (ALTO_FICHA), LARGO_FICHA, ALTO_FICHA);
+			//Dado que la imagen fue cortada, hay que obtener un raster compatible
+			WritableRaster raster = imagen.copyData(imagen.getRaster().createCompatibleWritableRaster());
+			//Clonamos la imagen de la ficha para luego dibujarle las coronas
+			imagen = new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 		}
 		
+		//Dibujamos las coronas. Esto se podria hacer tambien en paintComponent, pero seria mas ineficiente
+		//dado que se dibujarian encima de la textura cada vez que se llamara a repaint(); es decir, se 
+		//redibujaría la textura Y las coronas en cada llamado. Por esto optamos por clonar la textura original,
+		//dibujarle las coronas al clon, y guardar el clon en bufferFicha.
+		//De esta manera fusionamos ambas texturas en bufferFicha, y solo dibujamos eso en paintComponent.
+		//Esto bajo el render de 40ms a 29ms, testeando el peor caso (3 coronas en cada ficha, 4 talberos completos)
+		
 		Graphics2D g2d = (Graphics2D) imagen.getGraphics();
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
+		
 		if(ficha != null && ficha.getCantCoronas() > 0) {
 			int cantidadCoronas = ficha.getCantCoronas();
 			if(ficha.getId()%2 != 0)

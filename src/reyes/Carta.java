@@ -15,6 +15,8 @@ public class Carta implements Comparable<Carta> {
 	 */
 	public Carta(int idCarta, Ficha fichaIzq, Ficha fichaDer) {
 		this.id = idCarta;
+		fichaIzq.setCarta(this);
+		fichaDer.setCarta(this);
 		fichas[0] = fichaIzq;
 		fichas[1] = fichaDer;
 	}

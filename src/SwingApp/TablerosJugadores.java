@@ -110,28 +110,10 @@ public class TablerosJugadores extends JPanel {
 	}
 
 	public void actualizarTableros() {
-		Thread[] ths = new Thread[tableros.size()];
-		int i = 0;
-		for (PanelJugador tableroIndividual : tableros) {
-			Thread th = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					tableroIndividual.actualizarTablero();
-				}
-			});
-			// Preparamos los hilos
-			ths[i++] = th;
-		}
+
 		long tiempoInicial = System.currentTimeMillis();
-		// Lanzamos los hilos
-		for (i = 0; i < tableros.size(); ths[i++].start())
-			;
-		// Esperamos que terminen
-		try {
-			for (i = 0; i < tableros.size(); ths[i++].join())
-				;
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		for (PanelJugador tableroIndividual : tableros) {
+			tableroIndividual.actualizarTablero();
 		}
 		System.out.println("Render tableros: " + (System.currentTimeMillis() - tiempoInicial));
 	}

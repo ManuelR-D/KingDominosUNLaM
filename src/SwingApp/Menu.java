@@ -138,6 +138,7 @@ public class Menu extends JDialog {
 				e1.printStackTrace();
 			}
         }
+        mazos.setSelectedIndex(0);
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -167,8 +168,30 @@ public class Menu extends JDialog {
 		panel.add(lblNewLabel, gbc_lblNewLabel);
 
 		texturas = new JComboBox<String>();
-		texturas.setModel(new DefaultComboBoxModel<String>(
-				new String[] { "airbrush", "highTest", "test", "testPixAir", "testPixelated" }));
+		
+		textFilter = new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".png");
+            }
+        };
+        f = new File("./assets/mazos/");
+        files = f.listFiles(textFilter);
+        
+        for (File file : files) {
+            if (file.isDirectory()) {
+                System.out.print("directory:");
+            } else {
+                System.out.print("     file:");
+            }
+            try {
+				System.out.println(file.getCanonicalPath());
+				System.out.println(file.getName().substring(0,file.getName().length()-4));
+				texturas.addItem(file.getName().substring(0,file.getName().length()-4));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        }
 		texturas.setSelectedIndex(1);
 		GridBagConstraints gbc_texturas = new GridBagConstraints();
 		gbc_texturas.insets = new Insets(0, 0, 5, 5);
@@ -311,6 +334,7 @@ public class Menu extends JDialog {
 		Ficha f = null;
 		PanelFicha pF = null;
 		VentanaJueguito.cargarTexturas();
+		VentanaJueguito.cargarTexturaMazo((String)texturas.getSelectedItem());
 		Mazo mazo = new Mazo(48,(String)mazos.getSelectedItem());
 		List<Carta> cartas = mazo.getCartas();
 		int i = 0;

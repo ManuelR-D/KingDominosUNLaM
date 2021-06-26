@@ -60,6 +60,9 @@ public class Ficha {
 	public void setPuntajeContado(boolean puntajeContado) {
 		this.puntajeContado = puntajeContado;
 	}
+	public void setCarta(Carta carta2) {
+		this.carta = carta2;
+	}
 	
 	
 }

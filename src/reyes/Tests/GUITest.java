@@ -1,8 +1,12 @@
 package reyes.Tests;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import reyes.Bot;
 import reyes.Jugador;
@@ -22,7 +26,8 @@ public class GUITest {
 		jugadores.add(new Bot("Bot 4", tamTablero));
 		Partida p = new Partida(jugadores, tamTablero, cantidadCartas);
 		long tiempoInicial = System.currentTimeMillis();
-		p.iniciarPartida();
+		String modo = "mazoNuevo|";
+		p.iniciarPartida(modo);
 		System.out.println("Tiempo total de partida: " + (System.currentTimeMillis() - tiempoInicial)/1000 + " segundos");
 		
 	}
