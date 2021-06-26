@@ -41,6 +41,7 @@ public class PanelTablero extends JPanel {
 	private int inicioColumnasAMostrar;
 	private int largo;
 	private int alto;
+	private JLabel nombre;
 
 	public PanelTablero(Tablero tablero, int tamTableroVisual,int numJugador) {
 		setLayout(null);
@@ -213,7 +214,7 @@ public class PanelTablero extends JPanel {
 		// "debajo"
 		// de las fichas vacias.Estaria bueno cambiar esto
 
-		JLabel nombre = new JLabel(nombreJugador,SwingConstants.CENTER);
+		nombre = new JLabel(nombreJugador,SwingConstants.CENTER);
 		nombre.setBounds(0, 0, tamTableroVisual, alto);
 		nombre.setForeground(new Color(0x40FFDE));
 		panelConDimension.add(nombre, 1);
@@ -251,6 +252,7 @@ public class PanelTablero extends JPanel {
 				pFVecino.pintarPreview(c.getFichas()[1]);
 		}
 		pFSeleccionado.pintarPreview(c.getFichas()[0]);
+		nombre.repaint();
 
 	}
 

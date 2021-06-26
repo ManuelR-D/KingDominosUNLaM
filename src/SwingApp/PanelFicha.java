@@ -1,16 +1,12 @@
 package SwingApp;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import reyes.Carta;
@@ -28,8 +24,7 @@ public class PanelFicha extends JPanel {
 	private int x, y;
 	private BufferedImage bufferFicha;
 	double escala;
-	private int rotacion;
-	private boolean transparente;
+	private boolean seteada = false;
 
 	public PanelFicha(Ficha f, int y, int x) {
 		this.x = x;
@@ -57,6 +52,7 @@ public class PanelFicha extends JPanel {
 		else if (f.getId() < 0) {
 			int indice = f.getId();
 			BufferedImage castillo = null;
+			seteada = true;
 			switch (indice) {
 			case -1:
 				castillo = VentanaJueguito.bufferCastilloAmarillo;
@@ -73,7 +69,7 @@ public class PanelFicha extends JPanel {
 			}
 			return castillo;
 		} else {
-			rotacion = f.getRotacion()-1;
+			int rotacion = f.getRotacion()-1;
 			int idFicha = f.getId() - 2;
 			/*
 			 * Nos traemos una copia de bufferCarta, puesto que vamos a dibujar las coronas.
@@ -116,14 +112,16 @@ public class PanelFicha extends JPanel {
 				g2d.translate((LARGO_FICHA - LARGO_CORONA * (cantidadCoronas)) * escala - 7, 5);
 			else
 				g2d.translate(7, 5);
-			AffineTransform scale = new AffineTransform();
-			scale.scale(escala, escala);
+			//AffineTransform scale = new AffineTransform();
+			//scale.scale(escala, escala);
 			for (int i = 0; i < cantidadCoronas; i++) {
 				// System.out.println(i);
-				g2d.drawImage(VentanaJueguito.bufferCorona, scale, null);
+				g2d.drawImage(VentanaJueguito.bufferCorona, null, null);
 				g2d.translate(LARGO_CORONA * escala, 0);
 			}
+			
 		}
+		seteada = true;
 		return imagen;
 	}
 
@@ -147,6 +145,7 @@ public class PanelFicha extends JPanel {
 		Graphics2D g2d = (Graphics2D) g;
 		AffineTransform affineTransform = new AffineTransform();
 		affineTransform.scale(escala, escala);
+		int rotacion = 0;
 		if (ficha != null) {
 			rotacion = ficha.getRotacion() - 1;	
 		}
@@ -174,6 +173,7 @@ public class PanelFicha extends JPanel {
 		Carta c = VentanaJueguito.mainFrame.pSeleccion.getCartaElegida();
 		if (c == null || ficha != null )
 			return;
+		
 		bufferFicha = getTexturaFicha(c.getFichas()[0]);
 		int turno = VentanaJueguito.getTurnoJugador();
 		//VentanaJueguito.mainFrame.tableros.tableros.get(turno)c.
@@ -181,10 +181,11 @@ public class PanelFicha extends JPanel {
 	}
 
 	public void mouseAfuera() {
-		if(ficha != null)
-			return;
-		bufferFicha = getTexturaFicha(null);
-		repaint();
+		if(seteada == false) {
+			this.ficha = null;
+			bufferFicha = getTexturaFicha(null);
+			repaint();
+		}
 	}
 	public int getFila() {
 		return y;
@@ -194,9 +195,11 @@ public class PanelFicha extends JPanel {
 	}
 
 	public void pintarPreview(Ficha ficha) {
-		if(bufferFicha != VentanaJueguito.bufferVacio )
+		if(seteada == true )
 			return;
+		this.ficha = ficha;
 		bufferFicha = getTexturaFicha(ficha);
+		seteada = false;
 		repaint();
 	}
 }
