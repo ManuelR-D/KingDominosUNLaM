@@ -138,7 +138,7 @@ public class Menu extends JDialog {
 				e1.printStackTrace();
 			}
         }
-        mazos.setSelectedIndex(0);
+        mazos.setSelectedIndex(1);
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;

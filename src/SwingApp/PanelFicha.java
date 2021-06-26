@@ -1,5 +1,6 @@
 package SwingApp;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -7,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import reyes.Carta;
@@ -201,5 +203,54 @@ public class PanelFicha extends JPanel {
 		bufferFicha = getTexturaFicha(ficha);
 		seteada = false;
 		repaint();
+	}
+
+	public void pintarBorde(Ficha ficha,int grosor,Color color) {
+		if(ficha==null) {
+			this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, grosor, grosor, color));		
+			return;			
+		}
+		if(ficha.getId()<0) {			
+			this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, grosor, grosor, color));				
+			return;
+		}
+		boolean izquierda=(ficha.getId()%2==0);
+		int rotacion=ficha.getRotacion();
+
+		switch (rotacion) {
+		case 1:
+			if(izquierda) {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, grosor, 0, color));				
+			}else {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, 0, grosor, grosor, color));
+			}
+			break;
+		case 2:
+			if(izquierda) {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, 0, grosor, color));				
+			}else {
+				this.setBorder(BorderFactory.createMatteBorder(0, grosor, grosor, grosor, color));
+			}			
+			break;
+		case 3:
+			if(izquierda) {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, 0, grosor, grosor, color));
+			}else {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, grosor, 0, color));				
+			}
+			break;
+		case 4:
+			if(izquierda) {
+				this.setBorder(BorderFactory.createMatteBorder(0, grosor, grosor, grosor, color));
+			}else {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, 0, grosor, color));				
+			}
+			break;
+
+
+		default:
+			break;
+		}
+		this.repaint();
 	}
 }
