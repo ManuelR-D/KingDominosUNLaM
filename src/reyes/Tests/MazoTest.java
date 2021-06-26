@@ -14,14 +14,14 @@ public class MazoTest {
 
 	@Test
 	public void armarMazo() {
-		Mazo mazo = new Mazo(48,"cartas");
+		Mazo mazo = new Mazo(48,"original");
 
 		assertEquals(48, mazo.getTam());
 	}
 
 	@Test
 	public void mezclarMazo() {
-		Mazo mazo = new Mazo(48,"cartas");
+		Mazo mazo = new Mazo(48,"original");
 
 		mazo.mezclarMazo();
 		assertEquals(48, mazo.getTam());
@@ -29,7 +29,7 @@ public class MazoTest {
 
 	@Test
 	public void quitarNCartasDelMazo() {
-		Mazo mazo = new Mazo(48,"cartas");
+		Mazo mazo = new Mazo(48,"original");
 		List<Carta> cartasOrdenadas = new ArrayList<Carta>();
 		
 		mazo.mezclarMazo();
