@@ -20,7 +20,7 @@ public class PanelTableroSeleccion extends JPanel {
 	private CountDownLatch startLatch = new CountDownLatch(1);
 	Carta cartaElegida;
 	public static volatile int idCartaElegida;
-
+	
 	public PanelTableroSeleccion(List<Carta> cartasAElegir) {
 		int largo = VentanaJueguito.LARGO_FICHA;
 		int alto = VentanaJueguito.ALTO_FICHA;
@@ -52,6 +52,9 @@ public class PanelTableroSeleccion extends JPanel {
 
 	public CountDownLatch getStartLatch() {
 		return startLatch;
+	}
+	public Carta getCartaElegida() {
+		return cartaElegida;
 	}
 
 	public void setStartLatch(CountDownLatch countDownLatch) {

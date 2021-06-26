@@ -106,7 +106,15 @@ public class VentanaJueguito extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		//Inicializamos pSeleccion con cartas vacias, esto evita problemas con condiciones de carrera
+		//además, no es intuitivo que pSeleccion no exista hasta que se le envien cartas, puesto
+		//que delega la responsabilidad de su creacion a Partida, que no es una clase grafica
+		List<Carta> cartasAElegir = new ArrayList<Carta>();
+		cartasAElegir.add(null);
+		mostrarCartasAElegir(cartasAElegir);
+		
 		VentanaJueguito.mainFrame = this;
+		
 	}
 
 	public synchronized int[] obtenerInputCoordenadas(Carta carta) {

@@ -18,6 +18,8 @@ import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+
+import reyes.Carta;
 import reyes.Ficha;
 import reyes.Tablero;
 
@@ -111,7 +113,9 @@ public class PanelTablero extends JPanel {
 		Ficha[][] fichas = tablero.getTablero();
 		boolean necesitaRedibujar = this.fMax != fMax || this.fMin != fMin || this.cMax != cMax || this.cMin != cMin;
 		if (necesitaRedibujar) {
+			long tiempoInicial = System.currentTimeMillis();
 			reCrearTablero(nombre);
+			System.out.println("Render tableros: " + (System.currentTimeMillis() - tiempoInicial) );
 		} else {
 			insertarPFichaEnTablero(fila, columna, fichas);
 
@@ -193,6 +197,14 @@ public class PanelTablero extends JPanel {
 					public void mouseClicked(MouseEvent e) {
 						panelFicha.fichaClickeada(e.getXOnScreen(),e.getYOnScreen());
 					}
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						pintarPreview(panelFicha);
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						borrarPreview(panelFicha);
+					}
 				});
 				panelConDimension.add(panelFicha, 0);
 			}
@@ -210,6 +222,35 @@ public class PanelTablero extends JPanel {
 		this.fMin = fMin;
 		this.cMax = cMax;
 		this.cMin = cMin;
+
+	}
+
+	protected void borrarPreview(PanelFicha pFSeleccionado) {
+		Carta c = VentanaJueguito.mainFrame.pSeleccion.getCartaElegida();
+		if (c == null )
+			return;
+		int i = pFSeleccionado.getFila() + c.getFichas()[1].getFila();
+		int j = pFSeleccionado.getColumna() + c.getFichas()[1].getColumna();
+		if(i>0 && i<matrizPaneles.length && j > 0 && j < matrizPaneles[i].length) {
+			PanelFicha pFVecino = matrizPaneles[i][j];
+			if(pFVecino != null)
+				pFVecino.mouseAfuera();
+		}
+		pFSeleccionado.mouseAfuera();
+	}
+
+	protected void pintarPreview(PanelFicha pFSeleccionado) {
+		Carta c = VentanaJueguito.mainFrame.pSeleccion.getCartaElegida();
+		if (c == null )
+			return;
+		int i = pFSeleccionado.getFila() + c.getFichas()[1].getFila();
+		int j = pFSeleccionado.getColumna() + c.getFichas()[1].getColumna();
+		if(i>0 && i<matrizPaneles.length && j > 0 && j < matrizPaneles[i].length) {
+			PanelFicha pFVecino = matrizPaneles[i][j];
+			if(pFVecino != null)
+				pFVecino.pintarPreview(c.getFichas()[1]);
+		}
+		pFSeleccionado.pintarPreview(c.getFichas()[0]);
 
 	}
 
