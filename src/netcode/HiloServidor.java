@@ -143,16 +143,17 @@ public class HiloServidor extends Thread {
 		String nombreSala = mensajeAServidor.getSala().getNombreSala();
 		Sala s = null;
 		for (Sala sala : salas) {
-			if(sala.getNombreSala().equals(nombreSala)) {
-				s = sala; break;
+			if (sala.getNombreSala().equals(nombreSala)) {
+				s = sala;
+				break;
 			}
 		}
-		if(s == null) {
+		if (s == null) {
 			System.err.println("SALA INEXSITENTE: " + nombreSala);
 		}
 		System.out.println("Sala: " + s);
 		List<String> jugadores = s.getUsuariosConectados();
-		
+
 		String[] datosPaquete = mensajeAServidor.getTexto().split(",");
 		String emisor = datosPaquete[3];
 		System.out.println("Recibi mensaje del jugador " + emisor);
@@ -309,10 +310,13 @@ public class HiloServidor extends Thread {
 		Sala salaActual = mapaSalas.get(sala.getNombreSala());
 		long tiempoInicioSesion = System.currentTimeMillis();
 		salaActual.agregarUsuario(mensajeServidor.getTexto(), tiempoInicioSesion);
-		
-		// mensaje tipo 3: une al usuario a la sala		
+
+		// mensaje tipo 3: une al usuario a la sala
 		MensajeACliente msj = new MensajeACliente(null, 3, salaActual);
 		enviarMensajeAUsuario(msj, mensajeServidor.getTexto());
+		String notificacion= mensajeServidor.getTexto()+" se ha unido a la sala";
+		MensajeAServidor msjServidor = new MensajeAServidor(notificacion,salaActual,0);
+		recibirMensaje(msjServidor);
 
 		if (salaActual.getCantUsuarios() == 4) {
 			msj = new MensajeACliente(null, 11, salaActual);

@@ -31,6 +31,8 @@ import javax.swing.border.EmptyBorder;
 import netcode.Cliente;
 import netcode.MensajeAServidor;
 import netcode.Sala;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 
 public class SalaChat extends JFrame {
 
@@ -137,10 +139,17 @@ public class SalaChat extends JFrame {
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setLineWrap(true);
-		textArea.setText("Has ingresado a la sala"
-				+ (salaPrivada ? "\nEsta sala se cerrara si uno de los dos usuarios sale de ella." : ""));
+//		textArea.setText("Has ingresado a la sala"
+//				+ (salaPrivada ? "\nEsta sala se cerrara si uno de los dos usuarios sale de ella." : ""));
 		JScrollPane scroll = new JScrollPane(textArea);
 		contentPane.add(scroll, BorderLayout.CENTER);
+		
+		JPanel panel_1 = new JPanel();
+		contentPane.add(panel_1, BorderLayout.EAST);
+		panel_1.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		JButton btnNewButton_1 = new JButton("IniciarPartida");
+		panel_1.add(btnNewButton_1);
 		setLocationRelativeTo(cliente.getLobby());
 		setVisible(true);
 	}
