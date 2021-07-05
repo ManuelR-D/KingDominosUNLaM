@@ -21,10 +21,16 @@ public class PanelTableroSeleccion extends JPanel {
 	private CountDownLatch startLatch = new CountDownLatch(1);
 	Carta cartaElegida;
 	public static volatile int idCartaElegida;
-	
-	public PanelTableroSeleccion(List<Carta> cartasAElegir) {
-		int largo = VentanaJueguito.LARGO_FICHA;
-		int alto = VentanaJueguito.ALTO_FICHA;
+	double escalaLargo;
+	double escalaAlto;
+	public PanelTableroSeleccion(List<Carta> cartasAElegir, int largoPanel, int altoPanel) {
+		int tamFicha = VentanaJueguito.TAM_FICHA;
+		double largoFicha=largoPanel/2;
+		double altoFicha=altoPanel/4;
+		escalaLargo=largoFicha/tamFicha;
+		escalaAlto=altoFicha/tamFicha;
+		int largo=(int) (tamFicha*escalaLargo);
+		int alto=(int) (tamFicha*escalaAlto);
 		setLayout(null);
 		for (int i = 0, x = 0; i < cartasAElegir.size(); i++, x++) {
 			Ficha[] fichasActuales = new Ficha[2];
@@ -36,7 +42,7 @@ public class PanelTableroSeleccion extends JPanel {
 				fichasActuales[1]=null;
 			}
 			for (int j = 0, y = 0; j < 2; j++, y++) {
-				PanelFicha ficha = new PanelFicha(fichasActuales[j], y, x);
+				PanelFicha ficha = new PanelFicha(fichasActuales[j], y, x,escalaLargo,escalaAlto);
 				ficha.setBounds(y * largo, x * alto, largo, alto);
 				ficha.setBackground(new Color(0x614828));
 				ficha.addMouseListener(new MouseAdapter() {
@@ -76,8 +82,10 @@ public class PanelTableroSeleccion extends JPanel {
 		this.removeAll();
 		
 
-		int largo = VentanaJueguito.LARGO_FICHA;
-		int alto = VentanaJueguito.ALTO_FICHA;
+		int tamFicha= VentanaJueguito.TAM_FICHA;
+		int largo=(int) (tamFicha*escalaLargo);
+		int alto=(int) (tamFicha*escalaAlto);
+
 		Ficha[] fichas=carta.getFichas();
 		int rotacion=fichas[0].getRotacion();
 		
@@ -105,7 +113,7 @@ public class PanelTableroSeleccion extends JPanel {
 			break;
 		case 4:
 			x1=0;
-			y1=largo;
+			y1=alto;
 			x2=0;
 			y2=0;
 			break;
@@ -114,18 +122,18 @@ public class PanelTableroSeleccion extends JPanel {
 			break;
 		}
 
-		PanelFicha ficha1 = new PanelFicha(fichas[0], 0, 0);
+		PanelFicha ficha1 = new PanelFicha(fichas[0], 0, 0,escalaLargo,escalaAlto);
 		ficha1.setBorder(BorderFactory.createLineBorder(Color.orange,5));
 		ficha1.setBounds(x1,y1, largo, alto);
 		this.add(ficha1);
 		
-		PanelFicha ficha2 = new PanelFicha(fichas[1], 0, 0);
+		PanelFicha ficha2 = new PanelFicha(fichas[1], 0, 0,escalaLargo,escalaAlto);
 		ficha2.setBounds(x2,y2, largo, alto);
 		this.add(ficha2);
 		ImageIcon rotarIcon = new ImageIcon("./assets/rotar.png");
 		JButton boton = new JButton(rotarIcon);
 		
-		boton.setBounds(0, 3 * largo, largo * 2, alto);
+		boton.setBounds(0, 3 * alto, largo * 2, alto);
 		this.add(boton);
 		this.setBackground(new Color(0x614828));
 

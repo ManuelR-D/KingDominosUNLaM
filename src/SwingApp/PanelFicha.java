@@ -16,30 +16,30 @@ public class PanelFicha extends JPanel {
 
 	private static final long serialVersionUID = 5537172421677141208L;
 	private Ficha ficha;
-	static final int LARGO_CARTA = 160;
-	static final int ALTO_CARTA = 80;
-	static final int LARGO_FICHA = LARGO_CARTA / 2;
-	static final int ALTO_FICHA = ALTO_CARTA;
+	static final int TAM_FICHA = VentanaJueguito.TAM_FICHA;
 	private static final int LARGO_CORONA = 22;
 	private int x, y;
 	private BufferedImage bufferFicha;
-	double escala;
+	double escalaLargo;
+	double escalaAlto;
 	private boolean seteada = false;
 
 	public PanelFicha(Ficha f, int y, int x) {
 		this.x = x;
 		this.y = y;
 		this.ficha = f;
-		this.escala = 1;
+		this.escalaLargo = 1;
+		this.escalaAlto= 1;
 
 		bufferFicha = getTexturaFicha(f);
 	}
 
-	public PanelFicha(Ficha f, int y, int x, double escala) {
+	public PanelFicha(Ficha f, int y, int x, double escalaLargo, double escalaAlto) {
 		this.x = x;
 		this.y = y;
 		this.ficha = f;
-		this.escala = escala;
+		this.escalaLargo = escalaLargo;
+		this.escalaAlto= escalaAlto;
 		bufferFicha = getTexturaFicha(f);
 
 	}
@@ -84,8 +84,8 @@ public class PanelFicha extends JPanel {
 			 * De esta manera nos evitamos copiar las 96 fichas para solo usar una.
 			 * Implementar esto bajó el render de 240ms a 40ms
 			 */
-			imagen = VentanaJueguito.bufferCarta.getSubimage((idFicha % 16) * LARGO_FICHA,
-					(idFicha == 96 ? idFicha / 16 - 1 : idFicha / 16) * (ALTO_FICHA), LARGO_FICHA, ALTO_FICHA);
+			imagen = VentanaJueguito.bufferCarta.getSubimage((idFicha % 16) * TAM_FICHA,
+					(idFicha == 96 ? idFicha / 16 - 1 : idFicha / 16) * (TAM_FICHA), TAM_FICHA, TAM_FICHA);
 			// Dado que la imagen fue cortada, hay que obtener un raster compatible
 			WritableRaster raster = imagen.copyData(imagen.getRaster().createCompatibleWritableRaster());
 			// Clonamos la imagen de la ficha para luego dibujarle las coronas
@@ -109,12 +109,12 @@ public class PanelFicha extends JPanel {
 		if (ficha != null && ficha.getCantCoronas() > 0) {
 			int cantidadCoronas = ficha.getCantCoronas();
 			if (ficha.getId() % 2 != 0)
-				g2d.translate((LARGO_FICHA - LARGO_CORONA * (cantidadCoronas)) * escala - 7, 5);
+				g2d.translate((TAM_FICHA - LARGO_CORONA * (cantidadCoronas)) * escalaLargo - 7, 5);
 			else
 				g2d.translate(7, 5);
 			for (int i = 0; i < cantidadCoronas; i++) {
 				g2d.drawImage(VentanaJueguito.bufferCorona, null, null);
-				g2d.translate(LARGO_CORONA * escala, 0);
+				g2d.translate(LARGO_CORONA * escalaLargo, 0);
 			}
 			
 		}
@@ -141,7 +141,7 @@ public class PanelFicha extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		AffineTransform affineTransform = new AffineTransform();
-		affineTransform.scale(escala, escala);
+		affineTransform.scale(escalaLargo, escalaAlto);
 		int rotacion = 0;
 		if (ficha != null) {
 			rotacion = ficha.getRotacion() - 1;	

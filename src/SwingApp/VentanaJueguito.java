@@ -1,6 +1,7 @@
 package SwingApp;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,7 +13,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -41,10 +41,9 @@ public class VentanaJueguito extends JFrame {
 	static BufferedImage bufferCarta;
 	static BufferedImage bufferVacio;
 	static BufferedImage bufferCorona;
-	static final int LARGO_FICHA = 80;
-	static final int ALTO_FICHA = 80;
-	static int LARGO_VENTANA;
-	static int ALTO_VENTANA;
+	static final int TAM_FICHA = 80;
+	static double LARGO_VENTANA;
+	static double ALTO_VENTANA;
 	static int TAM_TABLEROS;
 	PanelTableroSeleccion pSeleccion;
 	TablerosJugadores tableros;
@@ -77,10 +76,11 @@ public class VentanaJueguito extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaJueguito(Partida p) {
+		
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setBounds(100, 100, 800, 600);
+		setBounds(100, 100, 400, 300);
 		getContentPane().setBackground(new Color(0x5E411B));
 
 		cargarTexturas();
@@ -89,13 +89,16 @@ public class VentanaJueguito extends JFrame {
 
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		LARGO_VENTANA = (int) this.getSize().getWidth();
-		ALTO_VENTANA = (int) this.getSize().getHeight();
-		TAM_TABLEROS = ALTO_VENTANA;
+		Dimension dimensiones=getContentPane().getSize();
+//		LARGO_VENTANA = (int) this.getSize().getWidth();
+//		ALTO_VENTANA = (int) this.getSize().getHeight();
+		LARGO_VENTANA = (int) dimensiones.getWidth();
+		ALTO_VENTANA = (int) dimensiones.getHeight();
+		TAM_TABLEROS = (int) ALTO_VENTANA;
 		tableros = new TablerosJugadores(p.getJugadores());
 		tableros.setBounds(0, 0, TAM_TABLEROS, TAM_TABLEROS);
 		getContentPane().add(tableros);
-		informacion.setBounds(TAM_TABLEROS + 20, 20, LARGO_FICHA * 2, ALTO_VENTANA - (ALTO_FICHA * 5));
+		informacion.setBounds(TAM_TABLEROS,0,(int)LARGO_VENTANA-TAM_TABLEROS, (int)ALTO_VENTANA/2);
 		informacion.setBorder(BorderFactory.createLineBorder(Color.black));
 		getContentPane().add(informacion);
 		try {
@@ -180,9 +183,14 @@ public class VentanaJueguito extends JFrame {
 			this.remove(pSeleccion);
 
 		}
-		pSeleccion = new PanelTableroSeleccion(cartasAElegir);
-
-		pSeleccion.setBounds(TAM_TABLEROS + 20, ALTO_VENTANA - ALTO_FICHA * 4, LARGO_FICHA * 2, ALTO_FICHA * 4);
+		
+		int altoPanel=(int) (ALTO_VENTANA/2);
+		int largoPanel=(int) (LARGO_VENTANA-TAM_TABLEROS);
+		
+		
+		
+		pSeleccion = new PanelTableroSeleccion(cartasAElegir,largoPanel,altoPanel);
+		pSeleccion.setBounds(TAM_TABLEROS, altoPanel, largoPanel,altoPanel);
 		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
 		this.getContentPane().add(pSeleccion);
 

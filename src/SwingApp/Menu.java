@@ -340,12 +340,12 @@ public class Menu extends JDialog {
 		int i = 0;
 		for (Carta carta : cartas) {
 			Ficha[] fichas = carta.getFichas();
-			pF = new PanelFicha(fichas[0],0,0,1);
-			pF.setBounds(i%16*PanelFicha.LARGO_FICHA,(i/16)*PanelFicha.ALTO_FICHA,PanelFicha.LARGO_FICHA,PanelFicha.ALTO_FICHA);
+			pF = new PanelFicha(fichas[0],0,0,1,1);
+			pF.setBounds(i%16*PanelFicha.TAM_FICHA,(i/16)*PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA);
 			tempContentPane.add(pF);
 			i++;
-			pF = new PanelFicha(fichas[1],0,0,1);
-			pF.setBounds(i%16*PanelFicha.LARGO_FICHA,(i/16)*PanelFicha.ALTO_FICHA,PanelFicha.LARGO_FICHA,PanelFicha.ALTO_FICHA);
+			pF = new PanelFicha(fichas[1],0,0,1,1);
+			pF.setBounds(i%16*PanelFicha.TAM_FICHA,(i/16)*PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA);
 			i++;
 			tempContentPane.add(pF);
 		}

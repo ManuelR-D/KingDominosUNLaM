@@ -86,8 +86,8 @@ public class PanelTablero extends JPanel {
 			} catch (BadLocationException e1) {
 				e1.printStackTrace();
 			}
-			int largo = (int) (PanelFicha.LARGO_FICHA * escala);
-			int alto = (int) (PanelFicha.ALTO_FICHA * escala);
+			int largo = (int) (PanelFicha.TAM_FICHA * escala);
+			int alto = (int) (PanelFicha.TAM_FICHA * escala);
 			puntaje.setBounds(0, 0, largo, alto);
 			puntaje.setBackground(Color.black);
 			puntaje.setForeground(Color.white);
@@ -165,7 +165,7 @@ public class PanelTablero extends JPanel {
 		 */
 		int fichasMaximas = tablero.getTamanio() + 2;
 		double tamFicha = tamTableroVisual / fichasMaximas;
-		escala = tamFicha / VentanaJueguito.LARGO_FICHA;
+		escala = tamFicha / VentanaJueguito.TAM_FICHA;
 
 		int desplVertical = Math.min(tablero.getTamanio() - (fMax - fMin + 1), 2);
 		int desplHorizontal = Math.min(tablero.getTamanio() - (cMax - cMin + 1), 2);
@@ -174,8 +174,8 @@ public class PanelTablero extends JPanel {
 		int finFilasAMostrar = Math.min(fMax + desplVertical, fichas.length - 1);
 		inicioColumnasAMostrar = Math.max(cMin - desplHorizontal, 0);
 		int finColumnasAMostrar = Math.min(cMax + desplHorizontal, fichas.length - 1);
-		largo = (int) (PanelFicha.LARGO_FICHA * escala);
-		alto = (int) (PanelFicha.ALTO_FICHA * escala);
+		largo = (int) (PanelFicha.TAM_FICHA * escala);
+		alto = (int) (PanelFicha.TAM_FICHA * escala);
 
 		int centradoAlto = (finFilasAMostrar - inicioFilasAMostrar == tablero.getTamanio() - 1) ? alto : 0;
 
@@ -188,7 +188,7 @@ public class PanelTablero extends JPanel {
 		
 		for (int i = inicioFilasAMostrar, y = 0; i <= finFilasAMostrar; i++, y++) {
 			for (int j = inicioColumnasAMostrar, x = 0; j <= finColumnasAMostrar; j++, x++) {
-				PanelFicha panelFicha = new PanelFicha(fichas[i][j], i, j, escala);
+				PanelFicha panelFicha = new PanelFicha(fichas[i][j], i, j, escala,escala);
 				matrizPaneles[i][j] = panelFicha;
 				panelFicha.setBounds((x * largo) + centradoLargo, (y * alto) + centradoAlto, largo, alto);
 				panelFicha.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -261,7 +261,7 @@ public class PanelTablero extends JPanel {
 		int y = (fila - inicioFilasAMostrar);
 		int centradoAlto = (fMax - fMin == tablero.getTamanio() - 1) ? alto : 0;
 		int centradoLargo = (cMax - cMin == tablero.getTamanio() - 1) ? largo : 0;
-		PanelFicha panelFicha = new PanelFicha(fichas[fila][columna], fila, columna, escala);
+		PanelFicha panelFicha = new PanelFicha(fichas[fila][columna], fila, columna, escala,escala);
 		matrizPaneles[fila][columna] = panelFicha;
 		panelFicha.setBounds((x * largo) + centradoLargo, (y * alto) + centradoAlto, largo, alto);
 		panelFicha.setBorder(BorderFactory.createLineBorder(Color.black));
