@@ -16,12 +16,14 @@ import reyes.Usuario;
 public class Sala implements Serializable {
 
 	private static final long serialVersionUID = 1238067019847995537L;
+	private String creador;
 	private String nombreSala;
 	private List<String> usuariosConectados;
 	private Map<String,Long> tiempoUsuarios;
 	private boolean privada;
 
-	public Sala(String nombreSala,boolean privada) {
+	public Sala(String nombreSala,boolean privada,String creador) {
+		this.creador=creador;
 		this.nombreSala = nombreSala;
 		this.usuariosConectados = new ArrayList<String>();
 		this.tiempoUsuarios=new HashMap<String,Long>();
@@ -89,5 +91,7 @@ public class Sala implements Serializable {
 	public boolean isPrivada() {
 		return privada;
 	}
-
+	public String getCreador() {
+		return creador;
+	}
 }

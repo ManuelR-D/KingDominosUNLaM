@@ -239,8 +239,9 @@ public class Lobby extends JFrame {
 	protected void ingresarNombreSalaACrear() {
 		String respuesta = JOptionPane.showInputDialog(this, "Ingrese nombre de sala:", "");
 		if (respuesta != null && !respuesta.equals("")) {
-			Sala sala = new Sala(respuesta, false);
-			MensajeAServidor msj = new MensajeAServidor(cliente.getNombre(), sala, 2);
+			String nombreCliente = cliente.getNombre();
+			Sala sala = new Sala(respuesta, false,nombreCliente);
+			MensajeAServidor msj = new MensajeAServidor(nombreCliente, sala, 2);
 			cliente.enviarMensaje(msj);
 		}
 	}
@@ -358,6 +359,16 @@ public class Lobby extends JFrame {
 	
 	public Sala getSalaActual() {
 		return salaActual;
+	}
+
+	public void setEnabledBtnIniciarPartida(MensajeACliente mensaje) {
+		String texto=mensaje.getTexto();
+		boolean enabled=texto.equals("true")?true:false;
+		Sala salaMensaje = mensaje.getSala();
+		if (salasAbiertas.size() > 0) {
+			SalaChat salaAbiertaActual = mapaSalasAbiertas.get(salaMensaje.getNombreSala());
+			salaAbiertaActual.setEnabledBtnIniciarPartida(enabled);;
+		}
 	}
 
 }

@@ -45,11 +45,14 @@ public class SalaChat extends JFrame {
 	private JButton btnEnviar;
 	private Sala sala;
 	private boolean salaPrivada;
+	JButton btnIniciarPartida;
 
 	public SalaChat(Sala sala, Cliente cliente) {
 		this.sala = sala;
 		this.cliente = cliente;
+		String nombreCliente = cliente.getNombre();
 		this.salaPrivada = sala.isPrivada();
+
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {
@@ -63,7 +66,7 @@ public class SalaChat extends JFrame {
 		}
 		setBounds(100, 100, 450, 300);
 		this.nombre = sala.getNombreSala();
-		this.setTitle("Usuario:" + cliente.getNombre() + "- Nombre de la sala:" + nombre);
+		this.setTitle("Usuario:" + nombreCliente + "- Nombre de la sala:" + nombre);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -130,7 +133,6 @@ public class SalaChat extends JFrame {
 		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				enviarMensaje();
-
 			}
 
 		});
@@ -139,19 +141,36 @@ public class SalaChat extends JFrame {
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setLineWrap(true);
-//		textArea.setText("Has ingresado a la sala"
-//				+ (salaPrivada ? "\nEsta sala se cerrara si uno de los dos usuarios sale de ella." : ""));
 		JScrollPane scroll = new JScrollPane(textArea);
 		contentPane.add(scroll, BorderLayout.CENTER);
-		
+
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.EAST);
 		panel_1.setLayout(new GridLayout(0, 1, 0, 0));
-		
-		JButton btnNewButton_1 = new JButton("IniciarPartida");
-		panel_1.add(btnNewButton_1);
+
+		// Solo el creador de la sala puede iniciar la partida
+		if (nombreCliente.equals(sala.getCreador())) {
+			btnIniciarPartida = new JButton("IniciarPartida");
+			btnIniciarPartida.setEnabled(false);
+			btnIniciarPartida.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					iniciarPartida();
+				}
+			});
+			panel_1.add(btnIniciarPartida);
+		}
 		setLocationRelativeTo(cliente.getLobby());
 		setVisible(true);
+	}
+
+	protected void iniciarPartida() {
+		MensajeAServidor msj = new MensajeAServidor(cliente.getNombre(), sala, 13);
+		cliente.enviarMensaje(msj);
+
+	}
+
+	public void setEnabledBtnIniciarPartida(boolean enabled) {
+		btnIniciarPartida.setEnabled(enabled);
 	}
 
 	protected void crearSalaPrivada() {
@@ -284,7 +303,7 @@ public class SalaChat extends JFrame {
 					return;
 				}
 				// mensaje tipo 9:creacion de sala privada
-				Sala salaPrivada = new Sala(nombreSalaACrear, true);
+				Sala salaPrivada = new Sala(nombreSalaACrear, true, cliente.getNombre());
 				long tiempoInicioSesion = System.currentTimeMillis();
 				salaPrivada.agregarUsuario(participantes[0], tiempoInicioSesion);
 				salaPrivada.agregarUsuario(participantes[1], tiempoInicioSesion);

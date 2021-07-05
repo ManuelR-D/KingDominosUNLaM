@@ -111,6 +111,9 @@ public class HiloServidor extends Thread {
 				case 12:// recibo un paquete con la carta elegida y posicion
 					procesarTurnoJugador(mensajeAServidor);
 					break;
+				case 13:// creacion de partida
+					crearPartida(mensajeAServidor);
+					break;
 				}
 
 				if (tipoMensaje != 0) {
@@ -136,6 +139,16 @@ public class HiloServidor extends Thread {
 			System.out.println("Error desconectando cliente");
 			e.printStackTrace();
 		}
+
+	}
+
+	private void crearPartida(MensajeAServidor mensajeServidor) {
+		Sala sala = mensajeServidor.getSala();
+		Sala salaActual = mapaSalas.get(sala.getNombreSala());
+
+		MensajeACliente msj = new MensajeACliente(null, 11, salaActual);
+		// mensaje a dueño de sala de que inicie la partida
+		enviarMensajeAUsuario(msj, salaActual.getUsuariosConectados().get(0));
 
 	}
 
@@ -302,6 +315,15 @@ public class HiloServidor extends Thread {
 		// mensaje tipo 4: saca al usuario de la sala
 		MensajeACliente msj = new MensajeACliente(null, 4, salaActual);
 		enviarMensajeAUsuario(msj, mensajeServidor.getTexto());
+		
+		String notificacion = mensajeServidor.getTexto() + " se ha desconectado de la sala";
+		MensajeAServidor msjServidor = new MensajeAServidor(notificacion, salaActual, 0);
+		recibirMensaje(msjServidor);
+		
+		if (salaActual.getCantUsuarios() < 2) {
+			msj = new MensajeACliente("false", 14, salaActual);
+			enviarMensajeAUsuario(msj, salaActual.getUsuariosConectados().get(0));
+		}
 
 	}
 
@@ -314,13 +336,13 @@ public class HiloServidor extends Thread {
 		// mensaje tipo 3: une al usuario a la sala
 		MensajeACliente msj = new MensajeACliente(null, 3, salaActual);
 		enviarMensajeAUsuario(msj, mensajeServidor.getTexto());
-		String notificacion= mensajeServidor.getTexto()+" se ha unido a la sala";
-		MensajeAServidor msjServidor = new MensajeAServidor(notificacion,salaActual,0);
+		String notificacion = mensajeServidor.getTexto() + " se ha unido a la sala";
+		MensajeAServidor msjServidor = new MensajeAServidor(notificacion, salaActual, 0);
 		recibirMensaje(msjServidor);
 
-		if (salaActual.getCantUsuarios() == 4) {
-			msj = new MensajeACliente(null, 11, salaActual);
-			// mensaje a dueño de sala de que inicie la partida
+		// habilitacion o deshabilitacion segun cantidad de jugadores
+		if (salaActual.getCantUsuarios() >= 2) {
+			msj = new MensajeACliente("true", 14, salaActual);
 			enviarMensajeAUsuario(msj, salaActual.getUsuariosConectados().get(0));
 		}
 

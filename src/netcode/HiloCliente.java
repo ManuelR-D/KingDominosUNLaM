@@ -102,6 +102,10 @@ public class HiloCliente extends Thread {
 					//13: procesar un turno jugado
 					procesarTurnoJugador(mensaje);
 					break;
+				case 14:
+					//14: recibe la habilitacion o deshabilitacion del boton de iniciarPartida
+					setEnabledBtnIniciarPartida(mensaje);
+					break;
 				}
 				if(tipoMensaje==-2) {
 					mostrarErrorPorPantalla("Elija otro nombre de usuario", "Desconexion del servidor");
@@ -113,6 +117,10 @@ public class HiloCliente extends Thread {
 			System.out.println("Error en lectura de mensaje en hiloCliente");
 			e.printStackTrace();
 		}
+	}
+
+	private void setEnabledBtnIniciarPartida(MensajeACliente mensaje) {
+		ventana.setEnabledBtnIniciarPartida(mensaje);
 	}
 
 	private void procesarTurnoJugador(MensajeACliente mensaje) {

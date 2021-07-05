@@ -45,7 +45,9 @@ public class MensajeACliente implements Serializable{
 	public int getTipo() {
 		return tipo;
 	}
-	
+	public void setTexto(String texto) {
+		this.texto = texto;
+	}
 	@Override
 	public String toString() {
 		return "MensajeACliente [mensaje=" + texto + ", sala=" + sala + ", tipo=" + tipo + "]";
