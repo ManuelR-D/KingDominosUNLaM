@@ -76,7 +76,7 @@ public class VentanaJueguito extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaJueguito(Partida p) {
-		
+		setResizable(false);
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -84,21 +84,21 @@ public class VentanaJueguito extends JFrame {
 		getContentPane().setBackground(new Color(0x5E411B));
 
 		cargarTexturas();
-		//setUndecorated(true);
-		informacion = new PanelInformacion(p.getJugadores());
+		
 
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		Dimension dimensiones=getContentPane().getSize();
-//		LARGO_VENTANA = (int) this.getSize().getWidth();
-//		ALTO_VENTANA = (int) this.getSize().getHeight();
 		LARGO_VENTANA = (int) dimensiones.getWidth();
 		ALTO_VENTANA = (int) dimensiones.getHeight();
 		TAM_TABLEROS = (int) ALTO_VENTANA;
 		tableros = new TablerosJugadores(p.getJugadores());
 		tableros.setBounds(0, 0, TAM_TABLEROS, TAM_TABLEROS);
 		getContentPane().add(tableros);
-		informacion.setBounds(TAM_TABLEROS,0,(int)LARGO_VENTANA-TAM_TABLEROS, (int)ALTO_VENTANA/2);
+		int largoPanelInformacion=(int)LARGO_VENTANA-TAM_TABLEROS;
+		int altoPanelInformacion = (int)ALTO_VENTANA/2;
+		informacion = new PanelInformacion(p.getJugadores(),largoPanelInformacion,altoPanelInformacion);
+		informacion.setBounds(TAM_TABLEROS,0,largoPanelInformacion, altoPanelInformacion);
 		informacion.setBorder(BorderFactory.createLineBorder(Color.black));
 		getContentPane().add(informacion);
 		try {

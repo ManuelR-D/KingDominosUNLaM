@@ -436,7 +436,7 @@ public class Menu extends JDialog {
 						modo = modo + "ReinoMedio|";
 					if (rdbtnArmonia.isSelected())
 						modo = modo + "Armonia|";
-					p.iniciarPartida(modo);
+					p.iniciarPartida(modo,"ModoMenu");
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (KingDominoExcepcion e) {

@@ -85,7 +85,7 @@ public class PartidaTest {
 		jugadores.add(new Bot("Jugador 1",tamTablero));
 		
 		Partida p = new Partida(jugadores, tamTablero, cantidadCartas);
-		assertEquals(true, p.iniciarPartida("original|"));
+		assertEquals(true, p.iniciarPartida("original|","PartidaTest"));
 	}
 /*
 	@Test

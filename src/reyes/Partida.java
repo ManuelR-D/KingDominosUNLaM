@@ -33,6 +33,7 @@ public class Partida {
 	private boolean isMazoMezclado = false;
 	private static boolean esTurnoJugadorLocal = false;
 	private String jugadorLocal;
+	private String tituloVentana;
 
 	public static CountDownLatch mtxEsperarPaquete = new CountDownLatch(1);
 	public static String paquete;
@@ -101,7 +102,8 @@ public class Partida {
 	/*
 	 * El formato de variante es: {mazo}|{variante1}|{variante2}|{varianteN}
 	 */
-	public boolean iniciarPartida(String variante) throws IOException {
+	public boolean iniciarPartida(String variante, String tituloVentana) throws IOException {
+		this.tituloVentana=tituloVentana;
 		System.out.println(variante);
 		armonia = variante.contains("Armonia");
 		reinoMedio = variante.contains("ReinoMedio");
@@ -160,6 +162,7 @@ public class Partida {
 		}
 
 		ventana = new VentanaJueguito(this);
+		ventana.setTitle(tituloVentana);
 		if (textura != null) {
 			ventana.cargarTextura(textura);
 		}

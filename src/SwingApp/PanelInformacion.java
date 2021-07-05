@@ -2,6 +2,7 @@ package SwingApp;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -24,15 +25,13 @@ public class PanelInformacion extends JPanel {
 	int i = 0;
 
 	private static final long serialVersionUID = -6580547458892714155L;
-	//JTextArea info;
 	JTextPane info;
 	List<JButton> botones;
 	private List<Jugador> jugadores;
 
-	PanelInformacion(List<Jugador> jugadores) {
+	PanelInformacion(List<Jugador> jugadores, int largoPanel, int altoPanel) {
 		this.jugadores = jugadores;
 		setLayout(new BorderLayout());
-		//info = new JTextArea();
 		info = new JTextPane();
 		info.setEditable(false);
 		info.setBackground(new Color(0xE3BB86));
@@ -59,7 +58,7 @@ public class PanelInformacion extends JPanel {
 			panelBotones.add(boton);
 			i++;
 		}
-
+		panelBotones.setPreferredSize(new Dimension(largoPanel,altoPanel/4));
 		this.add(panelBotones, BorderLayout.SOUTH);
 	}
 

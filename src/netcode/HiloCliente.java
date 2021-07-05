@@ -133,6 +133,7 @@ public class HiloCliente extends Thread {
 		Sala s = mensaje.getSala();
 		List<String> jugadoresEnSala = s.getUsuariosConectados();
 		List<Jugador> jugadores = new ArrayList<Jugador>(4);
+		String tituloVentana="Jugador:"+ventana.getNombreCliente()+" Sala:"+ mensaje.getSala().getNombreSala();
 		for (String string : jugadoresEnSala) {
 			jugadores.add(new Jugador(new Usuario(string,"123")));
 		}
@@ -144,7 +145,7 @@ public class HiloCliente extends Thread {
 					p.setMazo(mensaje.estado.getMazoMezcladoDePartida());
 					p.setTurnosIniciales(mensaje.estado.getTurnosIniciales());
 					p.setJugadorLocal(ventana.getNombreCliente());
-					p.iniciarPartida();
+					p.iniciarPartida("",tituloVentana);
 				} catch (KingDominoExcepcion | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -157,6 +158,7 @@ public class HiloCliente extends Thread {
 	private void iniciarPartida(MensajeACliente mensaje) {
 		List<Jugador> jugadores = new ArrayList<Jugador>(4);
 		List<String> usuarios = mensaje.getSala().getUsuariosConectados();
+		String tituloVentana="Jugador:"+ventana.getNombreCliente()+" Sala:"+ mensaje.getSala().getNombreSala();
 		for (String string : usuarios) {
 			jugadores.add(new Jugador(new Usuario(string,"123")));
 		}
@@ -167,7 +169,7 @@ public class HiloCliente extends Thread {
 				try {
 					Partida p = new Partida(jugadores,5,48);
 					p.setJugadorLocal(ventana.getNombreCliente());
-					p.iniciarPartida("");
+					p.iniciarPartida("",tituloVentana);
 				} catch (KingDominoExcepcion | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
