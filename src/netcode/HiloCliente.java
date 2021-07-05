@@ -106,6 +106,10 @@ public class HiloCliente extends Thread {
 					//14: recibe la habilitacion o deshabilitacion del boton de iniciarPartida
 					setEnabledBtnIniciarPartida(mensaje);
 					break;
+				case 15:
+					//15: error ya hay 4 usuarios en la sala
+					mostrarErrorPorPantalla("Ya hay 4 usuarios en la sala", "Error uniendose a sala");
+					break;
 				}
 				if(tipoMensaje==-2) {
 					mostrarErrorPorPantalla("Elija otro nombre de usuario", "Desconexion del servidor");
@@ -145,7 +149,7 @@ public class HiloCliente extends Thread {
 					p.setMazo(mensaje.estado.getMazoMezcladoDePartida());
 					p.setTurnosIniciales(mensaje.estado.getTurnosIniciales());
 					p.setJugadorLocal(ventana.getNombreCliente());
-					p.iniciarPartida("",tituloVentana);
+					p.iniciarPartida(tituloVentana);
 				} catch (KingDominoExcepcion | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

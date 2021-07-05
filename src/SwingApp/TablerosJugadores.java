@@ -3,6 +3,7 @@ package SwingApp;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +71,8 @@ public class TablerosJugadores extends JPanel {
 			}
 
 
-			matrizCoordenadas[i][0] = x + ajusteX;
-			matrizCoordenadas[i][1] = y + ajusteY;
+			matrizCoordenadas[i][0] = x;
+			matrizCoordenadas[i][1] = y;
 			panelJugador.setBounds(x, y, tamTablero, tamTablero);
 			this.add(panelJugador);
 		}
@@ -84,18 +85,21 @@ public class TablerosJugadores extends JPanel {
 			try {
 				VentanaJueguito.getLatchCartaElegida().await();
 				//Al implementar cliente/servidor, esto es innecesario
-				/*int xMouse = VentanaJueguito.coordenadasElegidas[2];
-				int yMouse = VentanaJueguito.coordenadasElegidas[3];
-				int xTablero = matrizCoordenadas[turno][0];
-				int yTablero = matrizCoordenadas[turno][1];
-				if (!((xMouse >= xTablero && xMouse <= xTablero + tamTablero)
-						&& (yMouse >= yTablero && yMouse <= yTablero + tamTablero))) {
-					VentanaJueguito.coordenadasElegidas[0] = 0;
-					VentanaJueguito.coordenadasElegidas[1] = 0;
-					JOptionPane.showMessageDialog(this, "Tablero incorrecto", "Movimiento no permitido",
-							JOptionPane.ERROR_MESSAGE);
-					VentanaJueguito.setLatchCartaElegida(new CountDownLatch(1));
-				}*/
+//				int xMouse = VentanaJueguito.coordenadasElegidas[2];
+//				int yMouse = VentanaJueguito.coordenadasElegidas[3];
+//				Rectangle dimensiones=this.getBounds();
+//				System.out.println("X:"+dimensiones.getWidth()); 
+//				System.out.println("Y:"+dimensiones.getHeight()); 
+//				int xTablero = matrizCoordenadas[turno][0];
+//				int yTablero = matrizCoordenadas[turno][1];
+//				if (!((xMouse >= xTablero && xMouse <= xTablero + tamTablero)
+//						&& (yMouse >= yTablero && yMouse <= yTablero + tamTablero))) {
+//					VentanaJueguito.coordenadasElegidas[0] = 0;
+//					VentanaJueguito.coordenadasElegidas[1] = 0;
+//					JOptionPane.showMessageDialog(this, "Tablero incorrecto", "Movimiento no permitido",
+//							JOptionPane.ERROR_MESSAGE);
+//					VentanaJueguito.setLatchCartaElegida(new CountDownLatch(1));
+//				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				System.out.println("Error obteniendo coordenadas, clase TablerosJugador");

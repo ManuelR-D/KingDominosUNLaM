@@ -53,7 +53,7 @@ public class Sala implements Serializable {
 
 	public void crearPartida() throws KingDominoExcepcion, IOException {
 		Partida partida = new Partida(jugadoresEnSala);
-		partida.iniciarPartida();
+		partida.iniciarPartida("Creado por sala");
 	}
 
 	public void quitarJugadorDeSala(Usuario usuario) {

@@ -33,7 +33,6 @@ public class Partida {
 	private boolean isMazoMezclado = false;
 	private static boolean esTurnoJugadorLocal = false;
 	private String jugadorLocal;
-	private String tituloVentana;
 
 	public static CountDownLatch mtxEsperarPaquete = new CountDownLatch(1);
 	public static String paquete;
@@ -103,7 +102,6 @@ public class Partida {
 	 * El formato de variante es: {mazo}|{variante1}|{variante2}|{varianteN}
 	 */
 	public boolean iniciarPartida(String variante, String tituloVentana) throws IOException {
-		this.tituloVentana=tituloVentana;
 		System.out.println(variante);
 		armonia = variante.contains("Armonia");
 		reinoMedio = variante.contains("ReinoMedio");
@@ -123,7 +121,7 @@ public class Partida {
 			}
 			for (int i = 0; i < 3; i++) {
 
-				iniciarPartida();
+				iniciarPartida(tituloVentana);
 				for (Map.Entry<Jugador, Integer> entry : puntajes.entrySet()) {
 					sumatoriaPuntajes.put(entry.getKey().getNombreUsuario(),
 							entry.getValue() + sumatoriaPuntajes.get(entry.getKey().getNombreUsuario()));
@@ -136,11 +134,11 @@ public class Partida {
 			VentanaJueguito.mainFrame.mostrarVentanaMensaje("El ganador es: " + sortedset.last());
 			VentanaJueguito.mainFrame.dispose();
 		} else
-			iniciarPartida();
+			iniciarPartida(tituloVentana);
 		return true;
 	}
 
-	public boolean iniciarPartida() throws IOException {
+	public boolean iniciarPartida(String tituloVentana) throws IOException {
 
 		List<Integer> turnos = determinarTurnosIniciales();
 		List<Carta> cartasAElegirSig = new ArrayList<Carta>();
