@@ -13,6 +13,7 @@ import javax.swing.ImageIcon;
 
 import reyes.Carta;
 import reyes.Ficha;
+import reyes.Partida;
 
 public class PanelTableroSeleccion extends JPanel {
 
@@ -68,6 +69,8 @@ public class PanelTableroSeleccion extends JPanel {
 	}
 
 	public synchronized void onCartaElegida(Carta carta) {
+		if(!Partida.esTurnoJugadorLocal())
+			return;
 		this.cartaElegida = carta;
 		idCartaElegida = carta.getId();
 		this.removeAll();

@@ -1,6 +1,8 @@
 package reyes;
 
-public class Carta implements Comparable<Carta> {
+import java.io.Serializable;
+
+public class Carta implements Comparable<Carta>, Serializable {
 	private int id;
 	private Ficha[] fichas = new Ficha[2];
 	private int rotacion = 1;
@@ -19,6 +21,13 @@ public class Carta implements Comparable<Carta> {
 		fichaDer.setCarta(this);
 		fichas[0] = fichaIzq;
 		fichas[1] = fichaDer;
+	}
+	//Constructor de copia
+	public Carta(Carta carta) {
+		Ficha[] cartaFichas = carta.getFichas();
+		this.id = carta.getId();
+		fichas[0] = new Ficha(cartaFichas[0].getTipo(), cartaFichas[0].getCantCoronas(), 0, 0,this.id*2, this);
+		fichas[1] = new Ficha(cartaFichas[1].getTipo(), cartaFichas[1].getCantCoronas(), 0, 1,this.id*2+1, this);
 	}
 	public void setDefault() {
 		this.rotacion = 1;

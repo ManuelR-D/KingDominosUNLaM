@@ -83,7 +83,8 @@ public class TablerosJugadores extends JPanel {
 		while (VentanaJueguito.coordenadasElegidas[0] == 0 && VentanaJueguito.coordenadasElegidas[1] == 0) {
 			try {
 				VentanaJueguito.getLatchCartaElegida().await();
-				int xMouse = VentanaJueguito.coordenadasElegidas[2];
+				//Al implementar cliente/servidor, esto es innecesario
+				/*int xMouse = VentanaJueguito.coordenadasElegidas[2];
 				int yMouse = VentanaJueguito.coordenadasElegidas[3];
 				int xTablero = matrizCoordenadas[turno][0];
 				int yTablero = matrizCoordenadas[turno][1];
@@ -94,7 +95,7 @@ public class TablerosJugadores extends JPanel {
 					JOptionPane.showMessageDialog(this, "Tablero incorrecto", "Movimiento no permitido",
 							JOptionPane.ERROR_MESSAGE);
 					VentanaJueguito.setLatchCartaElegida(new CountDownLatch(1));
-				}
+				}*/
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				System.out.println("Error obteniendo coordenadas, clase TablerosJugador");

@@ -112,10 +112,7 @@ public class PanelFicha extends JPanel {
 				g2d.translate((LARGO_FICHA - LARGO_CORONA * (cantidadCoronas)) * escala - 7, 5);
 			else
 				g2d.translate(7, 5);
-			//AffineTransform scale = new AffineTransform();
-			//scale.scale(escala, escala);
 			for (int i = 0; i < cantidadCoronas; i++) {
-				// System.out.println(i);
 				g2d.drawImage(VentanaJueguito.bufferCorona, null, null);
 				g2d.translate(LARGO_CORONA * escala, 0);
 			}

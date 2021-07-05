@@ -10,10 +10,13 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.CountDownLatch;
 
 import SwingApp.VentanaJueguito;
+import netcode.HiloCliente;
 
 public class Partida {
+	private static Mazo mazoInicial = null;
 	private Mazo mazo;
 	private List<Jugador> jugadores;
 	private static final int DEFAULT_TAM_TABLERO = 5;
@@ -27,7 +30,13 @@ public class Partida {
 	private Map<Jugador, Integer> puntajes = new HashMap<Jugador, Integer>();
 	private boolean reinoMedio = false;
 	private boolean armonia = false;
-
+	private boolean isMazoMezclado = false;
+	private static boolean esTurnoJugadorLocal = false;
+	private String jugadorLocal;
+	
+	public static CountDownLatch mtxEsperarPaquete = new CountDownLatch(1);
+	public static String paquete;
+	
 	public Partida() {
 		this.tamanioTablero = DEFAULT_TAM_TABLERO;
 		this.cantidadCartas = DEFAULT_CANT_CARTAS;
@@ -47,7 +56,7 @@ public class Partida {
 			throw new KingDominoExcepcion("La cantidad de jugadores es invalida!!");
 		}
 	}
-
+	
 	public Partida(List<Jugador> jugadores, int tamanioTablero, int cantidadCartas) throws KingDominoExcepcion {
 
 		if (cantidadCartas != 48) {
@@ -88,6 +97,7 @@ public class Partida {
 		this.jugadores = jugadores;
 		this.textura = textura;
 	}
+
 	/*
 	 * El formato de variante es:
 	 * {mazo}|{variante1}|{variante2}|{varianteN}
@@ -96,17 +106,18 @@ public class Partida {
 		System.out.println(variante);
 		armonia = variante.contains("Armonia");
 		reinoMedio = variante.contains("ReinoMedio");
-		mazo = new Mazo(cantidadCartas,variante.substring(0, variante.indexOf("|")));
+		if(!variante.isEmpty())
+			mazo = new Mazo(cantidadCartas,variante.substring(0, variante.indexOf("|")));
+		else
+			mazo = new Mazo(cantidadCartas,"original"); //si no especificaron variante, usamos la original
     
 		if (variante.contains("Dinastia")) {
 			Map<String, Integer> sumatoriaPuntajes = new HashMap<String, Integer>();
+			
 			SortedSet<Map.Entry<String, Integer>> sortedset = new TreeSet<Map.Entry<String, Integer>>(
-					new Comparator<Map.Entry<String, Integer>>() {
-						@Override
-						public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
-							return e1.getValue().compareTo(e2.getValue());
-						}
-					});
+					( a, b ) -> a.getValue().compareTo(b.getValue())); //lambda porque soy re fancy
+			
+			
 			for (Jugador jugador : jugadores) {
 				sumatoriaPuntajes.put(jugador.getNombreUsuario(), 0);
 			}
@@ -128,13 +139,17 @@ public class Partida {
 			iniciarPartida();
 		return true;
 	}
-
 	public boolean iniciarPartida() throws IOException {
 
 		List<Integer> turnos = determinarTurnosIniciales();
 		List<Carta> cartasAElegirSig = new ArrayList<Carta>();
 		// armamos y mezclamos el mazo
-		mazo.mezclarMazo();
+		if(!isMazoMezclado) {
+			mazo.mezclarMazo();
+			isMazoMezclado = true;
+			
+		}
+		Partida.mazoInicial = new Mazo(this.mazo); //Deepcopy.
 		// seteamos el tablero para cada jugador
 		for (Jugador jugador : jugadores) {
 			jugador.setTablero(this.tamanioTablero);
@@ -229,23 +244,53 @@ public class Partida {
 	private void jugarRonda(List<Carta> cartasAElegir, List<Integer> turnos, VentanaJueguito entrada)
 			throws IOException {
 
-		int numeroElegido;
+		int numeroElegido = 0;
 		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
 
 		for (int i = 0; i < turnos.size(); i++) {
 			entrada.mostrarCartasAElegir(cartasAElegir);
 
 			int turno = turnos.get(i);
+			boolean pudoInsertar = false;
 			VentanaJueguito.setTurnoJugador(turno);
 			entrada.mostrarMensaje("Turno del jugador\n" + jugadores.get(turno).getNombre());
-			numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
-			Carta cartaElegida = cartasAElegir.get(numeroElegido);
-			boolean pudoInsertar = jugadores.get(turno).insertaEnTablero(cartaElegida, entrada);
-			int coordenadaX = cartaElegida.getFichas()[0].getColumna();
-			int coordenadaY = cartaElegida.getFichas()[0].getFila();
-			if (pudoInsertar) {
-				ventana.actualizarTablero(turno, coordenadaY, coordenadaX);
+			int coordenadaX = 0;
+			int coordenadaY = 0;
+			Carta cartaElegida = null;
+			if(jugadorLocal.equals(jugadores.get(turno).getNombre())) {
+				//Si es el turno del jugador local, tiene que elegir su carta y posicion
+				esTurnoJugadorLocal = true;
+				numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
+				cartaElegida = cartasAElegir.get(numeroElegido);
+				pudoInsertar = jugadores.get(turno).insertaEnTablero(cartaElegida, entrada);
+				coordenadaX = cartaElegida.getFichas()[0].getColumna();
+				coordenadaY = cartaElegida.getFichas()[0].getFila();
+				crearPaquete(numeroElegido,coordenadaX,coordenadaY);
+			}else {
+				//Sino, tiene que esperar a que el servidor informe lo que hizo el otro jugador
+				esTurnoJugadorLocal = false;
+				try {
+					mtxEsperarPaquete.await();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				mtxEsperarPaquete = new CountDownLatch(1);
+				String[] paqueteActual = Partida.paquete.split(",");
+				Partida.paquete = null;
+				numeroElegido = Integer.valueOf(paqueteActual[0]);
+				coordenadaX = Integer.valueOf(paqueteActual[1]);
+				coordenadaY = Integer.valueOf(paqueteActual[2]);
+				System.out.println("Paquete en crudo: " + paqueteActual);
+				System.out.println("Se leyo el paquete: " + numeroElegido + ";" + coordenadaX + ";" + coordenadaY + ";" + paqueteActual[3]);
+				
+				jugadores.get(turno).tablero.ponerCarta(cartasAElegir.get(numeroElegido), coordenadaX, coordenadaY, true, ventana);
+				
 			}
+			
+			/*if (pudoInsertar) {
+				ventana.actualizarTablero(turno, coordenadaY, coordenadaX);
+			}*/
+			ventana.actualizarTablero(turno, coordenadaY, coordenadaX);
 			cartasAElegir.set(numeroElegido, null);
 			nuevoOrdenDeTurnos.put(numeroElegido, turno);
 		}
@@ -253,18 +298,28 @@ public class Partida {
 		for (Map.Entry<Integer, Integer> entry : nuevoOrdenDeTurnos.entrySet())
 			turnos.add(entry.getValue());
 	}
+	
+	private void crearPaquete(int numeroElegido, int coordenadaX, int coordenadaY) {
+		Partida.paquete = numeroElegido + "," + coordenadaX + "," + coordenadaY + "," + jugadorLocal;
+		HiloCliente.mtxPaquetePartida.countDown(); //aviso a mi hilo que tiene preparado un paquete
+	}
 
+	private static List<Integer> turnosIniciales = null;
 	private List<Integer> determinarTurnosIniciales() {
+		if(Partida.turnosIniciales != null)
+			return Partida.turnosIniciales;
 		List<Integer> idJugadores = new ArrayList<Integer>(4);
-
+		
 		for (int i = 0; i < cantidadJugadores; i++) {
 			idJugadores.add(i);
 		}
 		Collections.shuffle(idJugadores);
-
+		turnosIniciales = idJugadores; //lo usa el servidor para sincronizar el estado inicial
 		return idJugadores;
 	}
-
+	public static List<Integer> getTurnosIniciales(){
+		return turnosIniciales;
+	}
 	public List<Jugador> getJugadores() {
 		return jugadores;
 	}
@@ -272,5 +327,24 @@ public class Partida {
 	public void setReinoMedio(boolean b) {
 		reinoMedio = b;
 	}
+	public static Mazo getMazo() {
+		return mazoInicial;
+	}
 
+	public void setMazo(Mazo mazoMezcladoDePartida) {
+		Partida.mazoInicial = mazoMezcladoDePartida;
+		this.mazo = mazoMezcladoDePartida;
+		isMazoMezclado = true;
+	}
+
+	public void setTurnosIniciales(List<Integer> turnosIniciales) {
+		Partida.turnosIniciales = turnosIniciales;
+	}
+	public void setJugadorLocal(String nombre) {
+		jugadorLocal = nombre;
+	}
+
+	public static boolean esTurnoJugadorLocal() {
+		return esTurnoJugadorLocal;
+	}
 }

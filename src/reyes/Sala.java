@@ -1,10 +1,11 @@
 package reyes;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sala {
+public class Sala implements Serializable {
 	private int idSala;
 	private String nombreSala;
 	private List<Jugador> jugadoresEnSala = new ArrayList<Jugador>();
@@ -26,6 +27,15 @@ public class Sala {
 
 	public void añadirJugadorASala(Usuario user) {
 		jugadoresEnSala.add(new Jugador(user));
+		System.out.println(jugadoresEnSala.size());
+		if(jugadoresEnSala.size() == 4) {
+			try {
+				crearPartida();
+			} catch (KingDominoExcepcion | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void setIdSala(int idSala) {
@@ -38,7 +48,7 @@ public class Sala {
 
 	@Override
 	public String toString() {
-		return "Sala [" + idSala + "]" + nombreSala + " Jugadores en la sala: " + jugadoresEnSala.size();
+		return idSala + "," + nombreSala + "," + jugadoresEnSala.size();
 	}
 
 	public void crearPartida() throws KingDominoExcepcion, IOException {
@@ -52,7 +62,12 @@ public class Sala {
 				this.jugadoresEnSala.remove(jugador);
 		}
 	}
-
+	public List<Jugador> getJugadoresEnSala(){
+		return this.jugadoresEnSala;
+	}
+	public int getId() {
+		return this.idSala;
+	}
 	public Usuario getJugador(int i) {
 		return jugadoresEnSala.get(i);
 	}

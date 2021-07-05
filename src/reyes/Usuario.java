@@ -1,8 +1,9 @@
 package reyes;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class Usuario {
+public class Usuario implements Serializable {
 	private String nombreUsuario;
 	private String contraseña;
 	private int idUsuario;
@@ -80,7 +81,7 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return "Usuario: " + nombreUsuario;
+		return nombreUsuario + "," + contraseña;
 	}
 
 	public String getNombreUsuario() {

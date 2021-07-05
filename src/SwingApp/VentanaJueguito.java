@@ -84,7 +84,7 @@ public class VentanaJueguito extends JFrame {
 		getContentPane().setBackground(new Color(0x5E411B));
 
 		cargarTexturas();
-		setUndecorated(true);
+		//setUndecorated(true);
 		informacion = new PanelInformacion(p.getJugadores());
 
 		this.setLocationRelativeTo(null);
@@ -101,7 +101,7 @@ public class VentanaJueguito extends JFrame {
 		try {
 			Sonido s = new Sonido("./assets/Sound/main.wav");
 			s.setVolume(0.01f);
-			s.play(Clip.LOOP_CONTINUOUSLY);
+			//s.play(Clip.LOOP_CONTINUOUSLY);
 			sonido = s;
 		} catch (Exception e) {
 			e.printStackTrace();

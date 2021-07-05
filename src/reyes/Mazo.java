@@ -2,12 +2,13 @@ package reyes;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-public class Mazo {
+public class Mazo implements Serializable {
 	private List<Carta> cartas;
 
 	public Mazo(int cantidadCartas, String nombreMazo) {
@@ -17,6 +18,14 @@ public class Mazo {
 	public Mazo(int cantidadCartas) {
 		cartas = new ArrayList<Carta>(cantidadCartas);
 	}
+	//Constructor de copia
+	public Mazo(Mazo mazo) {
+		cartas = new ArrayList<Carta>(mazo.getCartas().size());
+		for (Carta carta : mazo.getCartas()) {
+			cartas.add(new Carta(carta));
+		}
+	}
+
 	public void armarMazo(int cantidadCartas, String nombreMazo) {
 		List<Carta> cartas = new ArrayList<Carta>(cantidadCartas);
 		File file = new File("./assets/"+nombreMazo+".txt");
