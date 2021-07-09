@@ -74,7 +74,7 @@ public class TestFrame extends JFrame {
 		for(int i = 2; i <= 98; i++) {
 			f = new Ficha("Campo", 0,0,0,i,null);
 			pF = new PanelFicha(f,0,0,1,1);
-			pF.setBounds((i-2)%16*PanelFicha.TAM_FICHA,((i-2)/16)*PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA);
+			pF.setBounds((i-2)%16*PanelFicha.getTamFicha(),((i-2)/16)*PanelFicha.getTamFicha(),PanelFicha.getTamFicha(),PanelFicha.getTamFicha());
 			
 			contentPane.add(pF);
 		}

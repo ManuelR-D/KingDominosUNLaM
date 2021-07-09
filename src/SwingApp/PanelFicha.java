@@ -16,7 +16,7 @@ public class PanelFicha extends JPanel {
 
 	private static final long serialVersionUID = 5537172421677141208L;
 	private Ficha ficha;
-	static final int TAM_FICHA = VentanaJueguito.TAM_FICHA;
+	private static final int TAM_FICHA = VentanaJueguito.TAM_FICHA;
 	private static final int LARGO_CORONA = 22;
 	private int x, y;
 	private BufferedImage bufferFicha;
@@ -84,8 +84,8 @@ public class PanelFicha extends JPanel {
 			 * De esta manera nos evitamos copiar las 96 fichas para solo usar una.
 			 * Implementar esto bajó el render de 240ms a 40ms
 			 */
-			imagen = VentanaJueguito.bufferCarta.getSubimage((idFicha % 16) * TAM_FICHA,
-					(idFicha == 96 ? idFicha / 16 - 1 : idFicha / 16) * (TAM_FICHA), TAM_FICHA, TAM_FICHA);
+			imagen = VentanaJueguito.bufferCarta.getSubimage((idFicha % 16) * getTamFicha(),
+					(idFicha == 96 ? idFicha / 16 - 1 : idFicha / 16) * (getTamFicha()), getTamFicha(), getTamFicha());
 			// Dado que la imagen fue cortada, hay que obtener un raster compatible
 			WritableRaster raster = imagen.copyData(imagen.getRaster().createCompatibleWritableRaster());
 			// Clonamos la imagen de la ficha para luego dibujarle las coronas
@@ -109,7 +109,7 @@ public class PanelFicha extends JPanel {
 		if (ficha != null && ficha.getCantCoronas() > 0) {
 			int cantidadCoronas = ficha.getCantCoronas();
 			if (ficha.getId() % 2 != 0)
-				g2d.translate((TAM_FICHA - LARGO_CORONA * (cantidadCoronas)) * escalaLargo - 7, 5);
+				g2d.translate((getTamFicha() - LARGO_CORONA * (cantidadCoronas)) * escalaLargo - 7, 5);
 			else
 				g2d.translate(7, 5);
 			for (int i = 0; i < cantidadCoronas; i++) {
@@ -198,5 +198,9 @@ public class PanelFicha extends JPanel {
 		bufferFicha = getTexturaFicha(ficha);
 		seteada = false;
 		repaint();
+	}
+
+	public static int getTamFicha() {
+		return TAM_FICHA;
 	}
 }

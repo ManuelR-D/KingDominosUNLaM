@@ -2,6 +2,7 @@
 package SwingMenu;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -31,10 +32,8 @@ import javax.swing.border.EmptyBorder;
 import netcode.Cliente;
 import netcode.MensajeAServidor;
 import netcode.Sala;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 
-public class SalaChat extends JFrame {
+public class SalaDeEspera extends JFrame {
 
 	private static final long serialVersionUID = -4289720049025252601L;
 	private JPanel contentPane;
@@ -46,8 +45,9 @@ public class SalaChat extends JFrame {
 	private Sala sala;
 	private boolean salaPrivada;
 	JButton btnIniciarPartida;
+	Menu menu;
 
-	public SalaChat(Sala sala, Cliente cliente) {
+	public SalaDeEspera(Sala sala, Cliente cliente) {
 		this.sala = sala;
 		this.cliente = cliente;
 		String nombreCliente = cliente.getNombre();
@@ -150,8 +150,8 @@ public class SalaChat extends JFrame {
 
 		// Solo el creador de la sala puede iniciar la partida
 		if (nombreCliente.equals(sala.getCreador())) {
-			btnIniciarPartida = new JButton("IniciarPartida");
-			btnIniciarPartida.setEnabled(false);
+			btnIniciarPartida = new JButton("Configuracion de partida");
+			btnIniciarPartida.setEnabled(true);
 			btnIniciarPartida.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					iniciarPartida();
@@ -164,8 +164,9 @@ public class SalaChat extends JFrame {
 	}
 
 	protected void iniciarPartida() {
-		MensajeAServidor msj = new MensajeAServidor(cliente.getNombre(), sala, 13);
-		cliente.enviarMensaje(msj);
+		//Pide la lista de usuarios al servidor para pasarselo a menu
+		MensajeAServidor mensaje=new MensajeAServidor(cliente.getNombre(), sala, 14);
+		cliente.enviarMensaje(mensaje);
 
 	}
 
@@ -254,7 +255,7 @@ public class SalaChat extends JFrame {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SalaChat other = (SalaChat) obj;
+		SalaDeEspera other = (SalaDeEspera) obj;
 		if (nombre == null) {
 			if (other.nombre != null)
 				return false;
@@ -314,6 +315,11 @@ public class SalaChat extends JFrame {
 			JOptionPane.showMessageDialog(this, "No hay mas usuarios en la sala", "No se puede crear sala privada",
 					JOptionPane.WARNING_MESSAGE);
 		}
+	}
+
+	public void abrirMenuCreacionPartida(String nombresUsuarios) {
+		btnIniciarPartida.setEnabled(false);
+		menu=new Menu(cliente,sala,this,nombresUsuarios);
 	}
 
 }

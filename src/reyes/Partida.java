@@ -105,7 +105,7 @@ public class Partida {
 		System.out.println(variante);
 		armonia = variante.contains("Armonia");
 		reinoMedio = variante.contains("ReinoMedio");
-		if (!variante.isEmpty())
+		if (variante.equals("N"))
 			mazo = new Mazo(cantidadCartas, variante.substring(0, variante.indexOf("|")));
 		else
 			mazo = new Mazo(cantidadCartas, "original"); // si no especificaron variante, usamos la original
@@ -166,9 +166,7 @@ public class Partida {
 		}
 		ventana.actualizarTableros();
 		while (mazo.getTam() > 1) {
-			cartasAElegirSig.clear();
 			mazo.quitarPrimerasNCartas(4, cartasAElegirSig);
-			cartasAElegirSig.sort(Carta::compareTo);
 			jugarRonda(cartasAElegirSig, turnos, ventana);
 
 		}

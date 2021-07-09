@@ -102,13 +102,13 @@ public class HiloCliente extends Thread {
 					//13: procesar un turno jugado
 					procesarTurnoJugador(mensaje);
 					break;
-				case 14:
-					//14: recibe la habilitacion o deshabilitacion del boton de iniciarPartida
-					setEnabledBtnIniciarPartida(mensaje);
-					break;
 				case 15:
 					//15: error ya hay 4 usuarios en la sala
 					mostrarErrorPorPantalla("Ya hay 4 usuarios en la sala", "Error uniendose a sala");
+					break;
+				case 16:
+					//16: recepcion lista usuarios para menu de creacion de partida
+					recibirListaUsuarios(mensaje);
 					break;
 				}
 				if(tipoMensaje==-2) {
@@ -123,9 +123,6 @@ public class HiloCliente extends Thread {
 		}
 	}
 
-	private void setEnabledBtnIniciarPartida(MensajeACliente mensaje) {
-		ventana.setEnabledBtnIniciarPartida(mensaje);
-	}
 
 	private void procesarTurnoJugador(MensajeACliente mensaje) {
 		System.out.println(ventana.getNombreCliente() + "recibi el turno de otro jugador!");
@@ -134,24 +131,37 @@ public class HiloCliente extends Thread {
 	}
 
 	private void unirsePartida(MensajeACliente mensaje) {
-		Sala s = mensaje.getSala();
-		List<String> jugadoresEnSala = s.getUsuariosConectados();
-		List<Jugador> jugadores = new ArrayList<Jugador>(4);
+		String[] configuracion=mensaje.getEstado().getConfiguracion();
+		String tiposJugadores=configuracion[0];
+		String[] nombresJugadores=configuracion[1].split("\\|");
+		int tamTablero=Integer.parseInt(configuracion[2]);
+		String textura=configuracion[3];
+		String nombreMazo=configuracion[4];
+		String modoDeJuego=configuracion[5];
+		List<Jugador> jugadores = new ArrayList<Jugador>();
 		String tituloVentana="Jugador:"+ventana.getNombreCliente()+" Sala:"+ mensaje.getSala().getNombreSala();
-		for (String string : jugadoresEnSala) {
-			jugadores.add(new Jugador(new Usuario(string,"123")));
+
+		for(int i=0;i<tiposJugadores.length();i++) {
+			char tipo=tiposJugadores.charAt(i);
+			Jugador jugador;
+			if(tipo=='B') {
+				jugador=new Bot(nombresJugadores[i],tamTablero);
+			}else {
+				jugador=new Jugador(nombresJugadores[i],tamTablero);				
+			}
+			jugadores.add(jugador);
 		}
+		String variante=nombreMazo+"|"+modoDeJuego;
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					Partida p = new Partida(jugadores,5,48);
+					Partida p = new Partida(jugadores,tamTablero,48,textura);
 					p.setMazo(mensaje.estado.getMazoMezcladoDePartida());
 					p.setTurnosIniciales(mensaje.estado.getTurnosIniciales());
 					p.setJugadorLocal(ventana.getNombreCliente());
 					p.iniciarPartida(tituloVentana);
 				} catch (KingDominoExcepcion | IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -160,20 +170,37 @@ public class HiloCliente extends Thread {
 	}
 
 	private void iniciarPartida(MensajeACliente mensaje) {
-		List<Jugador> jugadores = new ArrayList<Jugador>(4);
-		List<String> usuarios = mensaje.getSala().getUsuariosConectados();
+		String[] configuracion=mensaje.getTexto().split(",");
+		String tiposJugadores=configuracion[0];
+		String[] nombresJugadores=configuracion[1].split("\\|");
+		int tamTablero=Integer.parseInt(configuracion[2]);
+		String textura=configuracion[3];
+		String nombreMazo=configuracion[4];
+		String modoDeJuego=configuracion[5];
+		List<Jugador> jugadores = new ArrayList<Jugador>();
 		String tituloVentana="Jugador:"+ventana.getNombreCliente()+" Sala:"+ mensaje.getSala().getNombreSala();
-		for (String string : usuarios) {
-			jugadores.add(new Jugador(new Usuario(string,"123")));
+		
+		for(int i=0;i<tiposJugadores.length();i++) {
+			char tipo=tiposJugadores.charAt(i);
+			Jugador jugador;
+			if(tipo=='B') {
+				jugador=new Bot(nombresJugadores[i],tamTablero);
+			}else {
+				jugador=new Jugador(nombresJugadores[i],tamTablero);				
+			}
+			jugadores.add(jugador);
 		}
+		
+		 // El formato de variante es: {mazo}|{variante1}|{variante2}|{varianteN}
+		String variante=nombreMazo+"|"+modoDeJuego;
 		//Iniciamos el juego
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					Partida p = new Partida(jugadores,5,48);
+					Partida p = new Partida(jugadores,tamTablero,48,textura);
 					p.setJugadorLocal(ventana.getNombreCliente());
-					p.iniciarPartida("",tituloVentana);
+					p.iniciarPartida(variante,tituloVentana);
 				} catch (KingDominoExcepcion | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -190,12 +217,11 @@ public class HiloCliente extends Thread {
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} while(mazo == null || turnos == null);
 		
-		MensajeEstadoPartida msj = new MensajeEstadoPartida(mazo, turnos);
+		MensajeEstadoPartida msj = new MensajeEstadoPartida(mazo,configuracion, turnos);
 		MensajeAServidor msjServidor = new MensajeAServidor(getName(), mensaje.getSala(), 11, msj);
 		System.out.println("Cliente host: Inicien!");
 		ventana.enviarMensaje(msjServidor);

@@ -1,4 +1,4 @@
-package SwingApp;
+package SwingMenu;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -7,13 +7,15 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,6 +27,11 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import SwingApp.PanelFicha;
+import SwingApp.VentanaJueguito;
+import netcode.Cliente;
+import netcode.MensajeAServidor;
+import netcode.Sala;
 import reyes.Bot;
 import reyes.Carta;
 import reyes.Ficha;
@@ -32,23 +39,17 @@ import reyes.Jugador;
 import reyes.KingDominoExcepcion;
 import reyes.Mazo;
 import reyes.Partida;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Menu extends JDialog {
 
 	private static final long serialVersionUID = -7979669249255750493L;
 	private JPanel contentPane;
-	private JTextField txtJugador1;
-	private JTextField txtJugador2;
-	private JTextField txtJugador3;
-	private JTextField txtJugador4;
+	private List<JTextField> txtJugadores=new ArrayList<JTextField>(4);
 	private JComboBox<Integer> cantJugadores;
 	private JRadioButton rdbtnElGranDuelo;
-	private JRadioButton rdbtnBot1;
-	private JRadioButton rdbtnBot2;
-	private JRadioButton rdbtnBot3;
-	private JRadioButton rdbtnBot4;
+	private List<JRadioButton> rdbtns;
 	private JLabel lblNewLabel;
 	private JComboBox<String> texturas;
 	private JRadioButton rdbtnDinastia;
@@ -57,27 +58,25 @@ public class Menu extends JDialog {
 	private JComboBox<String> mazos;
 	private JLabel lblNewLabel_1;
 	private JButton btnNewButton;
+	private Cliente cliente;
+	private Sala sala;
+	private List<String> usuarios;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Menu frame = new Menu();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+	public Menu(Cliente cliente, Sala sala, SalaDeEspera salaDeEspera, String nombresUsuarios) {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				salaDeEspera.setEnabledBtnIniciarPartida(true);
 			}
 		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public Menu() {
+		this.cliente = cliente;
+		this.sala = sala;
+		usuarios=new ArrayList<String>();
+		String[] arrayNombresUsuarios=nombresUsuarios.split("\\n");
+		for(String nombre:arrayNombresUsuarios) {
+			usuarios.add(nombre);
+		}
+		setVisible(true);
 		setTitle("Menu");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 500, 350);
@@ -115,30 +114,30 @@ public class Menu extends JDialog {
 		mazos = new JComboBox<String>();
 		File f = new File("./assets");
 
-        FilenameFilter textFilter = new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".txt");
-            }
-        };
+		FilenameFilter textFilter = new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				return name.toLowerCase().endsWith(".txt");
+			}
+		};
 
-        File[] files = f.listFiles(textFilter);
-        
-        for (File file : files) {
-            if (file.isDirectory()) {
-                System.out.print("directory:");
-            } else {
-                System.out.print("     file:");
-            }
-            try {
+		File[] files = f.listFiles(textFilter);
+
+		for (File file : files) {
+			if (file.isDirectory()) {
+				System.out.print("directory:");
+			} else {
+				System.out.print("     file:");
+			}
+			try {
 				System.out.println(file.getCanonicalPath());
-				System.out.println(file.getName().substring(0,file.getName().length()-4));
-				mazos.addItem(file.getName().substring(0,file.getName().length()-4));
+				System.out.println(file.getName().substring(0, file.getName().length() - 4));
+				mazos.addItem(file.getName().substring(0, file.getName().length() - 4));
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-        }
-        mazos.setSelectedIndex(0);
+		}
+		mazos.setSelectedIndex(0);
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -168,30 +167,30 @@ public class Menu extends JDialog {
 		panel.add(lblNewLabel, gbc_lblNewLabel);
 
 		texturas = new JComboBox<String>();
-		
+
 		textFilter = new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".png");
-            }
-        };
-        f = new File("./assets/mazos/");
-        files = f.listFiles(textFilter);
-        
-        for (File file : files) {
-            if (file.isDirectory()) {
-                System.out.print("directory:");
-            } else {
-                System.out.print("     file:");
-            }
-            try {
+			public boolean accept(File dir, String name) {
+				return name.toLowerCase().endsWith(".png");
+			}
+		};
+		f = new File("./assets/mazos/");
+		files = f.listFiles(textFilter);
+
+		for (File file : files) {
+			if (file.isDirectory()) {
+				System.out.print("directory:");
+			} else {
+				System.out.print("     file:");
+			}
+			try {
 				System.out.println(file.getCanonicalPath());
-				System.out.println(file.getName().substring(0,file.getName().length()-4));
-				texturas.addItem(file.getName().substring(0,file.getName().length()-4));
+				System.out.println(file.getName().substring(0, file.getName().length() - 4));
+				texturas.addItem(file.getName().substring(0, file.getName().length() - 4));
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-        }
+		}
 		texturas.setSelectedIndex(1);
 		GridBagConstraints gbc_texturas = new GridBagConstraints();
 		gbc_texturas.insets = new Insets(0, 0, 5, 5);
@@ -210,10 +209,10 @@ public class Menu extends JDialog {
 		cantJugadores = new JComboBox<Integer>();
 		cantJugadores.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cantJugadoresSeleccionado();
+				cantJugadoresSeleccionado(usuarios);
 			}
 		});
-		cantJugadores.setModel(new DefaultComboBoxModel<Integer>(new Integer[] { 2, 3, 4 }));
+
 		GridBagConstraints gbc_cantJugadores = new GridBagConstraints();
 		gbc_cantJugadores.insets = new Insets(0, 0, 5, 5);
 		gbc_cantJugadores.fill = GridBagConstraints.HORIZONTAL;
@@ -228,7 +227,9 @@ public class Menu extends JDialog {
 		gbc_rdbtnElGranDuelo.gridy = 2;
 		panel.add(rdbtnElGranDuelo, gbc_rdbtnElGranDuelo);
 
-		txtJugador1 = new JTextField();
+		JTextField txtJugador1 = new JTextField();
+		txtJugadores.add(txtJugador1);
+		txtJugador1.setEnabled(false);
 		txtJugador1.setText("Jugador 1");
 		GridBagConstraints gbc_txtJugador1 = new GridBagConstraints();
 		gbc_txtJugador1.insets = new Insets(0, 0, 5, 5);
@@ -238,7 +239,10 @@ public class Menu extends JDialog {
 		panel.add(txtJugador1, gbc_txtJugador1);
 		txtJugador1.setColumns(10);
 
-		rdbtnBot1 = new JRadioButton("Bot");
+		rdbtns=new ArrayList<JRadioButton>();
+		JRadioButton rdbtnBot1 = new JRadioButton("Bot");
+		rdbtns.add(rdbtnBot1);
+		rdbtnBot1.setEnabled(false);
 		GridBagConstraints gbc_rdbtnBot1 = new GridBagConstraints();
 		gbc_rdbtnBot1.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnBot1.gridx = 2;
@@ -252,7 +256,8 @@ public class Menu extends JDialog {
 		gbc_rdbtnNewRadioButton.gridy = 4;
 		panel.add(rdbtnDinastia, gbc_rdbtnNewRadioButton);
 
-		txtJugador2 = new JTextField();
+		JTextField txtJugador2 = new JTextField();
+		txtJugadores.add(txtJugador2);
 		txtJugador2.setText("Jugador 2");
 		GridBagConstraints gbc_txtJugador2 = new GridBagConstraints();
 		gbc_txtJugador2.insets = new Insets(0, 0, 5, 5);
@@ -262,7 +267,8 @@ public class Menu extends JDialog {
 		panel.add(txtJugador2, gbc_txtJugador2);
 		txtJugador2.setColumns(10);
 
-		rdbtnBot2 = new JRadioButton("Bot");
+		JRadioButton rdbtnBot2 = new JRadioButton("Bot");
+		rdbtns.add(rdbtnBot2);
 		GridBagConstraints gbc_rdbtnBot2 = new GridBagConstraints();
 		gbc_rdbtnBot2.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnBot2.gridx = 2;
@@ -276,7 +282,8 @@ public class Menu extends JDialog {
 		gbc_rdbtnNewRadioButton_1.gridy = 5;
 		panel.add(rdbtnElReinoMedio, gbc_rdbtnNewRadioButton_1);
 
-		txtJugador3 = new JTextField();
+		JTextField txtJugador3 = new JTextField();
+		txtJugadores.add(txtJugador3);
 		txtJugador3.setEnabled(false);
 		txtJugador3.setEditable(false);
 		txtJugador3.setText("Jugador 3");
@@ -288,7 +295,8 @@ public class Menu extends JDialog {
 		panel.add(txtJugador3, gbc_txtJugador3);
 		txtJugador3.setColumns(10);
 
-		rdbtnBot3 = new JRadioButton("Bot");
+		JRadioButton rdbtnBot3 = new JRadioButton("Bot");
+		rdbtns.add(rdbtnBot3);
 		rdbtnBot3.setEnabled(false);
 		GridBagConstraints gbc_rdbtnBot3 = new GridBagConstraints();
 		gbc_rdbtnBot3.insets = new Insets(0, 0, 5, 5);
@@ -303,7 +311,8 @@ public class Menu extends JDialog {
 		gbc_rdbtnNewRadioButton_2.gridy = 6;
 		panel.add(rdbtnArmonia, gbc_rdbtnNewRadioButton_2);
 
-		txtJugador4 = new JTextField();
+		JTextField txtJugador4 = new JTextField();
+		txtJugadores.add(txtJugador4);
 		txtJugador4.setEnabled(false);
 		txtJugador4.setEditable(false);
 		txtJugador4.setText("Jugador 4");
@@ -315,46 +324,90 @@ public class Menu extends JDialog {
 		panel.add(txtJugador4, gbc_txtJugador4);
 		txtJugador4.setColumns(10);
 
-		rdbtnBot4 = new JRadioButton("Bot");
+		JRadioButton rdbtnBot4 = new JRadioButton("Bot");
+		rdbtns.add(rdbtnBot4);
 		rdbtnBot4.setEnabled(false);
 		GridBagConstraints gbc_rdbtnBot4 = new GridBagConstraints();
 		gbc_rdbtnBot4.insets = new Insets(0, 0, 0, 5);
 		gbc_rdbtnBot4.gridx = 2;
 		gbc_rdbtnBot4.gridy = 7;
 		panel.add(rdbtnBot4, gbc_rdbtnBot4);
+		actualizarComboBox(usuarios.size());
+		actualizarNombresJugadores(usuarios);
+	}
+
+	private void actualizarNombresJugadores(List<String> usuarios) {
+		
+		int i=0;
+		while(i<usuarios.size()) {
+			JTextField jTextField = txtJugadores.get(i);
+			jTextField.setText(usuarios.get(i));
+			jTextField.setEnabled(false);
+			jTextField.setEditable(false);
+			rdbtns.get(i).setEnabled(false);
+			i++;
+		}
+		while(i<4) {
+			JTextField jTextField = txtJugadores.get(i);
+			jTextField.setText("Jugador "+(i+1));
+			jTextField.setEnabled(true);
+			jTextField.setEditable(true);
+			rdbtns.get(i).setEnabled(true);
+			i++;
+		}
+	}
+
+	private void actualizarComboBox(int cantJugadoresActualizado) {
+		List<Integer> jugadores=new ArrayList<Integer>(cantJugadoresActualizado);
+		for(int i=cantJugadoresActualizado;i<=4;i++) {
+			jugadores.add(i);
+		}
+		if(jugadores.isEmpty()) {
+			cantJugadores.setEnabled(false);
+		}else {
+			cantJugadores.setEnabled(true);			
+		}
+		cantJugadores.setModel(new DefaultComboBoxModel<Integer>(jugadores.toArray(new Integer[jugadores.size()])));
 	}
 
 	protected void onClickVisualizarMazo() {
 		JFrame tempFrame = new JFrame();
 		JPanel tempContentPane = new JPanel();
-		tempFrame.setSize(1340,540);
+		tempFrame.setSize(1340, 540);
 		tempContentPane.setLayout(null);
 		tempFrame.setContentPane(tempContentPane);
-		
-		Ficha f = null;
+
 		PanelFicha pF = null;
 		VentanaJueguito.cargarTexturas();
-		VentanaJueguito.cargarTexturaMazo((String)texturas.getSelectedItem());
-		Mazo mazo = new Mazo(48,(String)mazos.getSelectedItem());
+		VentanaJueguito.cargarTexturaMazo((String) texturas.getSelectedItem());
+		Mazo mazo = new Mazo(48, (String) mazos.getSelectedItem());
 		List<Carta> cartas = mazo.getCartas();
 		int i = 0;
 		for (Carta carta : cartas) {
 			Ficha[] fichas = carta.getFichas();
-			pF = new PanelFicha(fichas[0],0,0,1,1);
-			pF.setBounds(i%16*PanelFicha.TAM_FICHA,(i/16)*PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA);
+			pF = new PanelFicha(fichas[0], 0, 0, 1, 1);
+			int tamFicha = PanelFicha.getTamFicha();
+			pF.setBounds(i % 16 * tamFicha, (i / 16) * tamFicha, tamFicha,
+					tamFicha);
 			tempContentPane.add(pF);
 			i++;
-			pF = new PanelFicha(fichas[1],0,0,1,1);
-			pF.setBounds(i%16*PanelFicha.TAM_FICHA,(i/16)*PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA);
+			pF = new PanelFicha(fichas[1], 0, 0, 1, 1);
+			pF.setBounds(i % 16 * tamFicha, (i / 16) * tamFicha, tamFicha,
+					tamFicha);
 			i++;
 			tempContentPane.add(pF);
 		}
 		tempFrame.setVisible(true);
-		
+
 	}
 
-	protected void cantJugadoresSeleccionado() {
+	protected void cantJugadoresSeleccionado(List<String> usuarios) {
+		JTextField txtJugador3=txtJugadores.get(2);
+		JTextField txtJugador4=txtJugadores.get(3);
+		JRadioButton rdbtnBot3=rdbtns.get(2);
+		JRadioButton rdbtnBot4=rdbtns.get(3);
 		int cant = (int) cantJugadores.getSelectedItem();
+		int cantidadUsuarios=usuarios.size();
 		switch (cant) {
 		case 2:
 			rdbtnElGranDuelo.setEnabled(true);
@@ -368,84 +421,99 @@ public class Menu extends JDialog {
 		case 3:
 			rdbtnElGranDuelo.setSelected(false);
 			rdbtnElGranDuelo.setEnabled(false);
-			rdbtnBot3.setEnabled(true);
+			if(cantidadUsuarios<3) {
+				rdbtnBot3.setEnabled(true);
+				txtJugador3.setEditable(true);
+				txtJugador3.setEnabled(true);				
+			}
 			rdbtnBot4.setEnabled(false);
-			txtJugador3.setEditable(true);
 			txtJugador4.setEditable(false);
-			txtJugador3.setEnabled(true);
 			txtJugador4.setEnabled(false);
 
 			break;
 		case 4:
 			rdbtnElGranDuelo.setSelected(false);
 			rdbtnElGranDuelo.setEnabled(false);
-			rdbtnBot3.setEnabled(true);
-			rdbtnBot4.setEnabled(true);
-			txtJugador3.setEditable(true);
-			txtJugador4.setEditable(true);
-			txtJugador3.setEnabled(true);
-			txtJugador4.setEnabled(true);
+			if(cantidadUsuarios<3) {
+				rdbtnBot3.setEnabled(true);
+				txtJugador3.setEditable(true);
+				txtJugador3.setEnabled(true);				
+			}
+			if(cantidadUsuarios<4) {
+				rdbtnBot4.setEnabled(true);
+				txtJugador4.setEditable(true);
+				txtJugador4.setEnabled(true);
+				
+			}
 			break;
 		}
 	}
 
 	protected void enviarDatos() {
-		int cantidadCartas = 48;
 		int tamTablero = rdbtnElGranDuelo.isSelected() ? 7 : 5;
 		int cant = (int) cantJugadores.getSelectedItem();
-		List<Jugador> jugadores = new ArrayList<Jugador>(cant);
+		JTextField txtJugador1=txtJugadores.get(0);
+		JTextField txtJugador2=txtJugadores.get(1);
+		JTextField txtJugador3=txtJugadores.get(2);
+		JTextField txtJugador4=txtJugadores.get(3);
+		JRadioButton rdbtnBot1=rdbtns.get(0);
+		JRadioButton rdbtnBot2=rdbtns.get(1);
+		JRadioButton rdbtnBot3=rdbtns.get(2);
+		JRadioButton rdbtnBot4=rdbtns.get(3);
+		String nombreJugadores="";
+		String mensajeCrearPartida = "";
 
 		if (rdbtnBot1.isSelected()) {
-			jugadores.add(new Bot(txtJugador1.getText(), tamTablero));
+			mensajeCrearPartida += "B";
 		} else {
-			jugadores.add(new Jugador(txtJugador1.getText(), tamTablero));
+			mensajeCrearPartida += "J";
 		}
+		nombreJugadores+=txtJugador1.getText()+"|";
 		if (rdbtnBot2.isSelected()) {
-			jugadores.add(new Bot(txtJugador2.getText(), tamTablero));
+			mensajeCrearPartida += "B";
 		} else {
-			jugadores.add(new Jugador(txtJugador2.getText(), tamTablero));
+			mensajeCrearPartida += "J";
 		}
+		nombreJugadores+=txtJugador2.getText()+"|";
 		if (cant > 2) {
 			if (rdbtnBot3.isSelected()) {
-				jugadores.add(new Bot(txtJugador3.getText(), tamTablero));
+				mensajeCrearPartida += "B";
 			} else {
-				jugadores.add(new Jugador(txtJugador3.getText(), tamTablero));
+				mensajeCrearPartida += "J";
 			}
+			nombreJugadores+=txtJugador3.getText()+"|";
 			if (cant > 3) {
 				if (rdbtnBot4.isSelected()) {
-					jugadores.add(new Bot(txtJugador4.getText(), tamTablero));
+					mensajeCrearPartida += "B";
 				} else {
-					jugadores.add(new Jugador(txtJugador4.getText(), tamTablero));
+					mensajeCrearPartida += "J";
 				}
-
+				nombreJugadores+=txtJugador4.getText()+"|";
 			}
 
 		}
+		mensajeCrearPartida+=","+nombreJugadores;
+		mensajeCrearPartida+=","+tamTablero;
+
 		String textura = (String) texturas.getSelectedItem();
+		mensajeCrearPartida += "," + textura;
 		this.setVisible(false);
+		String mazo = (String) mazos.getSelectedItem();
+		mensajeCrearPartida += "," + mazo;
+		String modoDeJuego="";
+		if (rdbtnDinastia.isSelected())
+			modoDeJuego += ",D";
+		if (rdbtnElReinoMedio.isSelected())
+			modoDeJuego+= ",R";
+		if (rdbtnArmonia.isSelected())
+			modoDeJuego+= ",A";
+		if (modoDeJuego=="") {
+			modoDeJuego="N";
+		}
+		mensajeCrearPartida+=","+modoDeJuego;
+		MensajeAServidor msj = new MensajeAServidor(mensajeCrearPartida, sala, 13);
+		cliente.enviarMensaje(msj);
 
-		Thread thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					String modo = (String) mazos.getSelectedItem() + "|";
-					Partida p = new Partida(jugadores, tamTablero, cantidadCartas, textura);
-					if (rdbtnDinastia.isSelected())
-						modo = modo + "Dinastia|";
-					if (rdbtnElReinoMedio.isSelected())
-						modo = modo + "ReinoMedio|";
-					if (rdbtnArmonia.isSelected())
-						modo = modo + "Armonia|";
-					p.iniciarPartida(modo,"ModoMenu");
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (KingDominoExcepcion e) {
-					e.printStackTrace();
-				}
-
-			}
-		});
-		thread.start();
 		this.dispose();
 	}
 

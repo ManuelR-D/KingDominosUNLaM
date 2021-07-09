@@ -279,11 +279,11 @@ public class CreadorDeMazo extends JFrame {
 			Ficha[] fichas = carta.getFichas();
 			System.out.println(fichas[0].getId());
 			pF = new PanelFicha(fichas[0],0,0,1,1);
-			pF.setBounds(i%16*PanelFicha.TAM_FICHA,(i/16)*PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA);
+			pF.setBounds(i%16*PanelFicha.getTamFicha(),(i/16)*PanelFicha.getTamFicha(),PanelFicha.getTamFicha(),PanelFicha.getTamFicha());
 			panelPreviewMazo.add(pF);
 			i++;
 			pF = new PanelFicha(fichas[1],0,0,1,1);
-			pF.setBounds(i%16*PanelFicha.TAM_FICHA,(i/16)*PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA,PanelFicha.TAM_FICHA);
+			pF.setBounds(i%16*PanelFicha.getTamFicha(),(i/16)*PanelFicha.getTamFicha(),PanelFicha.getTamFicha(),PanelFicha.getTamFicha());
 			i++;
 			panelPreviewMazo.add(pF);
 			

@@ -114,6 +114,9 @@ public class HiloServidor extends Thread {
 				case 13:// creacion de partida
 					crearPartida(mensajeAServidor);
 					break;
+				case 14:// Se envia al cliente la lista de usuarios en la sala
+					enviarListaUsuariosSala(mensajeAServidor);
+					break;
 				}
 
 				if (tipoMensaje != 0) {
@@ -146,7 +149,7 @@ public class HiloServidor extends Thread {
 		Sala sala = mensajeServidor.getSala();
 		Sala salaActual = mapaSalas.get(sala.getNombreSala());
 
-		MensajeACliente msj = new MensajeACliente(null, 11, salaActual);
+		MensajeACliente msj = new MensajeACliente(mensajeServidor.getTexto(), 11, salaActual);
 		// mensaje a dueño de sala de que inicie la partida
 		enviarMensajeAUsuario(msj, salaActual.getUsuariosConectados().get(0));
 
@@ -252,8 +255,11 @@ public class HiloServidor extends Thread {
 		for (String user : usuarios) {
 			cad += user + "\n";
 		}
+		int tipo = mensaje.getTipo() == 8 ? 7 : 16;
 		// mensaje tipo 7:envia la lista de usuarios en la sala
-		MensajeACliente msj = new MensajeACliente(cad, 7, salaActual);
+		// mensaje tipo 16:envia la lista de usuarios en la sala para menu iniciar
+		// partida
+		MensajeACliente msj = new MensajeACliente(cad, tipo, salaActual);
 		enviarMensajeAUsuario(msj, mensaje.getTexto());
 	}
 
@@ -315,24 +321,18 @@ public class HiloServidor extends Thread {
 		// mensaje tipo 4: saca al usuario de la sala
 		MensajeACliente msj = new MensajeACliente(null, 4, salaActual);
 		enviarMensajeAUsuario(msj, mensajeServidor.getTexto());
-		
+
 		String notificacion = mensajeServidor.getTexto() + " se ha desconectado de la sala";
 		MensajeAServidor msjServidor = new MensajeAServidor(notificacion, salaActual, 0);
 		recibirMensaje(msjServidor);
-		
-		if (salaActual.getCantUsuarios() < 2) {
-			msj = new MensajeACliente("false", 14, salaActual);
-			enviarMensajeAUsuario(msj, salaActual.getUsuariosConectados().get(0));
-		}
-
 	}
 
 	private void unirseASala(MensajeAServidor mensajeServidor) {
 		Sala sala = mensajeServidor.getSala();
 		Sala salaActual = mapaSalas.get(sala.getNombreSala());
-		MensajeACliente msj; 
-		
-		if(salaActual.getCantUsuarios()<4) {
+		MensajeACliente msj;
+
+		if (salaActual.getCantUsuarios() < 4) {
 			long tiempoInicioSesion = System.currentTimeMillis();
 			salaActual.agregarUsuario(mensajeServidor.getTexto(), tiempoInicioSesion);
 			// mensaje tipo 3: une al usuario a la sala
@@ -340,17 +340,11 @@ public class HiloServidor extends Thread {
 			enviarMensajeAUsuario(msj, mensajeServidor.getTexto());
 			String notificacion = mensajeServidor.getTexto() + " se ha unido a la sala";
 			MensajeAServidor msjServidor = new MensajeAServidor(notificacion, salaActual, 0);
-			recibirMensaje(msjServidor);			
-			// habilitacion o deshabilitacion segun cantidad de jugadores
-			if (salaActual.getCantUsuarios() >= 2) {
-				msj = new MensajeACliente("true", 14, salaActual);
-				enviarMensajeAUsuario(msj, salaActual.getCreador());
-			}
-		}else {
-			msj= new MensajeACliente(null,15,null);
+			recibirMensaje(msjServidor);
+		} else {
+			msj = new MensajeACliente(null, 15, null);
 			enviarMensajeAUsuario(msj, mensajeServidor.getTexto());
 		}
-
 
 	}
 

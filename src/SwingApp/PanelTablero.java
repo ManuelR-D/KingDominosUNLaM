@@ -86,8 +86,8 @@ public class PanelTablero extends JPanel {
 			} catch (BadLocationException e1) {
 				e1.printStackTrace();
 			}
-			int largo = (int) (PanelFicha.TAM_FICHA * escala);
-			int alto = (int) (PanelFicha.TAM_FICHA * escala);
+			int largo = (int) (PanelFicha.getTamFicha() * escala);
+			int alto = (int) (PanelFicha.getTamFicha() * escala);
 			puntaje.setBounds(0, 0, largo, alto);
 			puntaje.setBackground(Color.black);
 			puntaje.setForeground(Color.white);
@@ -174,8 +174,8 @@ public class PanelTablero extends JPanel {
 		int finFilasAMostrar = Math.min(fMax + desplVertical, fichas.length - 1);
 		inicioColumnasAMostrar = Math.max(cMin - desplHorizontal, 0);
 		int finColumnasAMostrar = Math.min(cMax + desplHorizontal, fichas.length - 1);
-		largo = (int) (PanelFicha.TAM_FICHA * escala);
-		alto = (int) (PanelFicha.TAM_FICHA * escala);
+		largo = (int) (PanelFicha.getTamFicha() * escala);
+		alto = (int) (PanelFicha.getTamFicha() * escala);
 
 		int centradoAlto = (finFilasAMostrar - inicioFilasAMostrar == tablero.getTamanio() - 1) ? alto : 0;
 
