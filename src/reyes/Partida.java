@@ -102,13 +102,20 @@ public class Partida {
 	 * El formato de variante es: {mazo}|{variante1}|{variante2}|{varianteN}
 	 */
 	public boolean iniciarPartida(String variante, String tituloVentana) throws IOException {
+		
 		System.out.println(variante);
 		armonia = variante.contains("Armonia");
 		reinoMedio = variante.contains("ReinoMedio");
-		if (variante.equals("N"))
-			mazo = new Mazo(cantidadCartas, variante.substring(0, variante.indexOf("|")));
-		else
-			mazo = new Mazo(cantidadCartas, "original"); // si no especificaron variante, usamos la original
+		if (variante.equals("N")) {
+			if(!isMazoMezclado) {
+				mazo = new Mazo(cantidadCartas, variante.substring(0, variante.indexOf("|")));							
+			}
+		}
+		else {
+			if(!isMazoMezclado) {
+				mazo = new Mazo(cantidadCartas, "original"); // si no especificaron variante, usamos la original							
+			}
+		}
 
 		if (variante.contains("Dinastia")) {
 			Map<String, Integer> sumatoriaPuntajes = new HashMap<String, Integer>();

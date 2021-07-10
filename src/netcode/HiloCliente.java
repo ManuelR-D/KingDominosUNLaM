@@ -125,7 +125,7 @@ public class HiloCliente extends Thread {
 
 
 	private void procesarTurnoJugador(MensajeACliente mensaje) {
-		System.out.println(ventana.getNombreCliente() + "recibi el turno de otro jugador!");
+//		System.out.println(ventana.getNombreCliente() + "recibi el turno de otro jugador!");
 		Partida.paquete = mensaje.getTexto();
 		Partida.mtxEsperarPaquete.countDown(); //le aviso a partida que tiene un paquete a procesar
 	}
@@ -160,7 +160,7 @@ public class HiloCliente extends Thread {
 					p.setMazo(mensaje.estado.getMazoMezcladoDePartida());
 					p.setTurnosIniciales(mensaje.estado.getTurnosIniciales());
 					p.setJugadorLocal(ventana.getNombreCliente());
-					p.iniciarPartida(tituloVentana);
+					p.iniciarPartida(variante,tituloVentana);
 				} catch (KingDominoExcepcion | IOException e) {
 					e.printStackTrace();
 				}

@@ -180,6 +180,10 @@ public class PanelTablero extends JPanel {
 		int centradoAlto = (finFilasAMostrar - inicioFilasAMostrar == tablero.getTamanio() - 1) ? alto : 0;
 
 		int centradoLargo = (finColumnasAMostrar - inicioColumnasAMostrar== tablero.getTamanio() - 1) ? largo : 0;
+		if(fMin==fMax && cMax==cMin) {
+			centradoAlto=alto;
+			centradoLargo=largo;
+		}
 		/*
 		 * Estas variables son para acomodar el tablero cuando se haya llegado al limite
 		 * de construccion(por ej 5x5)
