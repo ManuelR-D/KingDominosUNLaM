@@ -72,7 +72,9 @@ public class Carta implements Comparable<Carta>, Serializable {
 		fichas[0].setRotacion(rotacion);
 		fichas[1].setRotacion(rotacion);
 	}
-
+	public int getRotacion() {
+		return rotacion;
+	}
 	@Override
 	public String toString() {
 		String ret = "";

@@ -18,7 +18,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import reyes.Jugador;
+import reyes.Jugador;import reyes.Partida;
 import reyes.Tablero;
 
 public class PanelInformacion extends JPanel {
@@ -46,7 +46,14 @@ public class PanelInformacion extends JPanel {
 		
 		JPanel panelBotones = new JPanel();
 		botones=new ArrayList<JButton>();
-		panelBotones.setLayout(new GridLayout(jugadores.size(), 1));
+		panelBotones.setLayout(new GridLayout(jugadores.size()+1, 1));
+		JButton botonRendirse=new JButton("Rendirse/Salir");
+		panelBotones.add(botonRendirse);
+		botonRendirse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rendirse();
+			}
+		});
 		while (i < jugadores.size()) {
 			JButton boton = new JButton("Ver puntaje tablero " + (i + 1));
 			botones.add(boton);
@@ -60,6 +67,10 @@ public class PanelInformacion extends JPanel {
 		}
 		panelBotones.setPreferredSize(new Dimension(largoPanel,altoPanel/4));
 		this.add(panelBotones, BorderLayout.SOUTH);
+	}
+
+	protected void rendirse() {
+		System.out.println(Partida.getJugadorLocal());
 	}
 
 	protected void mostrarPuntaje(Object object) {

@@ -32,7 +32,7 @@ public class Partida {
 	private boolean armonia = false;
 	private boolean isMazoMezclado = false;
 	private static boolean esTurnoJugadorLocal = false;
-	private String jugadorLocal;
+	private static String jugadorLocal;
 
 	public static CountDownLatch mtxEsperarPaquete = new CountDownLatch(1);
 	public static String paquete;
@@ -150,9 +150,6 @@ public class Partida {
 		}
 		Partida.mazoInicial = new Mazo(this.mazo); // Deepcopy.
 		// seteamos el tablero para cada jugador
-		for (Jugador jugador : jugadores) {
-			jugador.setTablero(this.tamanioTablero);
-		}
 		for (int i = 0; i < jugadores.size(); i++) {
 			Jugador jugador = jugadores.get(i);
 			jugador.setTablero(this.tamanioTablero);
@@ -173,8 +170,8 @@ public class Partida {
 		VentanaJueguito.setTurnoJugador(-1);
 		ventana.setPSeleccionVisible(false);
 		List<Integer> puntajesFinales = calcularPuntajesFinales(ventana);
-
 		ventana.terminarPartida(determinarGanadores(puntajesFinales));
+		
 		return true;
 	}
 
@@ -247,26 +244,30 @@ public class Partida {
 		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
 
 		for (int i = 0; i < turnos.size(); i++) {
+			
 			entrada.mostrarCartasAElegir(cartasAElegir);
-
 			int turno = turnos.get(i);
 			boolean pudoInsertar = false;
 			String insercion = null;
+			
 			VentanaJueguito.setTurnoJugador(turno);
-			entrada.mostrarMensaje("Turno del jugador\n" + jugadores.get(turno).getNombre());
+			Jugador jugadorTurnoActual = jugadores.get(turno);
+			entrada.mostrarMensaje("Turno del jugador\n" + jugadorTurnoActual.getNombre());
 			int coordenadaX = 0;
 			int coordenadaY = 0;
 			Carta cartaElegida = null;
-			if (jugadorLocal.equals(jugadores.get(turno).getNombre())) {
+			
+			if (jugadorLocal.equals(jugadorTurnoActual.getNombre())) {
 				// Si es el turno del jugador local, tiene que elegir su carta y posicion
 				esTurnoJugadorLocal = true;
-				numeroElegido = jugadores.get(turno).eligeCarta(cartasAElegir, entrada);
+				numeroElegido = jugadorTurnoActual.eligeCarta(cartasAElegir, entrada);
 				cartaElegida = cartasAElegir.get(numeroElegido);
-				pudoInsertar = jugadores.get(turno).insertaEnTablero(cartaElegida, entrada);
+				pudoInsertar = jugadorTurnoActual.insertaEnTablero(cartaElegida, entrada);
 				insercion = pudoInsertar ? "S" : "N";
 				coordenadaX = cartaElegida.getFichas()[0].getColumna();
 				coordenadaY = cartaElegida.getFichas()[0].getFila();
-				crearPaquete(numeroElegido, coordenadaX, coordenadaY, pudoInsertar);
+				int rotacion=cartaElegida.getRotacion();
+				crearPaquete(numeroElegido, coordenadaX, coordenadaY, pudoInsertar,rotacion);
 			} else {
 				// Sino, tiene que esperar a que el servidor informe lo que hizo el otro jugador
 				esTurnoJugadorLocal = false;
@@ -282,21 +283,18 @@ public class Partida {
 				coordenadaX = Integer.valueOf(paqueteActual[1]);
 				coordenadaY = Integer.valueOf(paqueteActual[2]);
 				insercion = paqueteActual[4];
-				System.out.println("INSERCION" + insercion);
-				System.out.println("Paquete en crudo: " + paqueteActual);
-				System.out.println("Se leyo el paquete: " + numeroElegido + ";" + coordenadaX + ";" + coordenadaY + ";"
-						+ paqueteActual[3]);
+				int rotacion=Integer.parseInt(paqueteActual[5]);
+//				System.out.println("INSERCION" + insercion);
+//				System.out.println("Paquete en crudo: " + paqueteActual);
+//				System.out.println("Se leyo el paquete: " + numeroElegido + ";" + coordenadaX + ";" + coordenadaY + ";"
+//						+ paqueteActual[3]);
 				if (insercion.equals("S")) {
-					jugadores.get(turno).tablero.ponerCarta(cartasAElegir.get(numeroElegido), coordenadaX, coordenadaY,
+					jugadorTurnoActual.tablero.ponerCarta(cartasAElegir.get(numeroElegido), coordenadaX, coordenadaY,
 							true, ventana);
 				}
 			}
-
-			/*
-			 * if (pudoInsertar) { ventana.actualizarTablero(turno, coordenadaY,
-			 * coordenadaX); }
-			 */
 			if (insercion.equals("S")) {
+				System.out.println("Turno:"+turno+" y:"+coordenadaY+" x:"+coordenadaX);
 				ventana.actualizarTablero(turno, coordenadaY, coordenadaX);
 			}
 			cartasAElegir.set(numeroElegido, null);
@@ -307,9 +305,9 @@ public class Partida {
 			turnos.add(entry.getValue());
 	}
 
-	private void crearPaquete(int numeroElegido, int coordenadaX, int coordenadaY, boolean pudoInsertar) {
+	private void crearPaquete(int numeroElegido, int coordenadaX, int coordenadaY, boolean pudoInsertar, int rotacion) {
 		String insercion = pudoInsertar ? "S" : "N";
-		Partida.paquete = numeroElegido + "," + coordenadaX + "," + coordenadaY + "," + jugadorLocal + "," + insercion;
+		Partida.paquete = numeroElegido + "," + coordenadaX + "," + coordenadaY + "," + jugadorLocal + "," + insercion+","+rotacion;
 		HiloCliente.mtxPaquetePartida.countDown(); // aviso a mi hilo que tiene preparado un paquete
 	}
 
@@ -360,5 +358,9 @@ public class Partida {
 
 	public static boolean esTurnoJugadorLocal() {
 		return esTurnoJugadorLocal;
+	}
+	
+	public static String getJugadorLocal() {
+		return jugadorLocal;
 	}
 }

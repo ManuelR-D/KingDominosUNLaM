@@ -46,7 +46,7 @@ public class Menu extends JDialog {
 
 	private static final long serialVersionUID = -7979669249255750493L;
 	private JPanel contentPane;
-	private List<JTextField> txtJugadores=new ArrayList<JTextField>(4);
+	private List<JTextField> txtJugadores = new ArrayList<JTextField>(4);
 	private JComboBox<Integer> cantJugadores;
 	private JRadioButton rdbtnElGranDuelo;
 	private List<JRadioButton> rdbtns;
@@ -71,9 +71,9 @@ public class Menu extends JDialog {
 		});
 		this.cliente = cliente;
 		this.sala = sala;
-		usuarios=new ArrayList<String>();
-		String[] arrayNombresUsuarios=nombresUsuarios.split("\\n");
-		for(String nombre:arrayNombresUsuarios) {
+		usuarios = new ArrayList<String>();
+		String[] arrayNombresUsuarios = nombresUsuarios.split("\\n");
+		for (String nombre : arrayNombresUsuarios) {
 			usuarios.add(nombre);
 		}
 		setVisible(true);
@@ -209,7 +209,7 @@ public class Menu extends JDialog {
 		cantJugadores = new JComboBox<Integer>();
 		cantJugadores.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cantJugadoresSeleccionado(usuarios);
+				cantJugadoresSeleccionado(usuarios.size());
 			}
 		});
 
@@ -239,7 +239,7 @@ public class Menu extends JDialog {
 		panel.add(txtJugador1, gbc_txtJugador1);
 		txtJugador1.setColumns(10);
 
-		rdbtns=new ArrayList<JRadioButton>();
+		rdbtns = new ArrayList<JRadioButton>();
 		JRadioButton rdbtnBot1 = new JRadioButton("Bot");
 		rdbtns.add(rdbtnBot1);
 		rdbtnBot1.setEnabled(false);
@@ -269,6 +269,7 @@ public class Menu extends JDialog {
 
 		JRadioButton rdbtnBot2 = new JRadioButton("Bot");
 		rdbtns.add(rdbtnBot2);
+		rdbtnBot2.setEnabled(false);
 		GridBagConstraints gbc_rdbtnBot2 = new GridBagConstraints();
 		gbc_rdbtnBot2.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnBot2.gridx = 2;
@@ -298,6 +299,7 @@ public class Menu extends JDialog {
 		JRadioButton rdbtnBot3 = new JRadioButton("Bot");
 		rdbtns.add(rdbtnBot3);
 		rdbtnBot3.setEnabled(false);
+
 		GridBagConstraints gbc_rdbtnBot3 = new GridBagConstraints();
 		gbc_rdbtnBot3.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnBot3.gridx = 2;
@@ -337,37 +339,37 @@ public class Menu extends JDialog {
 	}
 
 	private void actualizarNombresJugadores(List<String> usuarios) {
-		
-		int i=0;
-		while(i<usuarios.size()) {
+
+		int i = 0;
+		while (i < usuarios.size()) {
 			JTextField jTextField = txtJugadores.get(i);
 			jTextField.setText(usuarios.get(i));
 			jTextField.setEnabled(false);
 			jTextField.setEditable(false);
-			rdbtns.get(i).setEnabled(false);
 			i++;
 		}
-		while(i<4) {
+		while (i < 4) {
 			JTextField jTextField = txtJugadores.get(i);
-			jTextField.setText("Jugador "+(i+1));
-			jTextField.setEnabled(true);
-			jTextField.setEditable(true);
-			rdbtns.get(i).setEnabled(true);
+			jTextField.setText("Jugador " + (i + 1));
+			jTextField.setEnabled(false);
+			jTextField.setEditable(false);
 			i++;
 		}
+		cantJugadoresSeleccionado(usuarios.size());
 	}
 
 	private void actualizarComboBox(int cantJugadoresActualizado) {
-		List<Integer> jugadores=new ArrayList<Integer>(cantJugadoresActualizado);
-		for(int i=cantJugadoresActualizado;i<=4;i++) {
+		List<Integer> jugadores = new ArrayList<Integer>(cantJugadoresActualizado);
+		for (int i = Math.max(cantJugadoresActualizado, 2); i <= 4; i++) {
 			jugadores.add(i);
 		}
-		if(jugadores.isEmpty()) {
+		if (jugadores.isEmpty()) {
 			cantJugadores.setEnabled(false);
-		}else {
-			cantJugadores.setEnabled(true);			
+		} else {
+			cantJugadores.setEnabled(true);
 		}
 		cantJugadores.setModel(new DefaultComboBoxModel<Integer>(jugadores.toArray(new Integer[jugadores.size()])));
+		cantJugadores.setSelectedIndex(0);
 	}
 
 	protected void onClickVisualizarMazo() {
@@ -387,13 +389,11 @@ public class Menu extends JDialog {
 			Ficha[] fichas = carta.getFichas();
 			pF = new PanelFicha(fichas[0], 0, 0, 1, 1);
 			int tamFicha = PanelFicha.getTamFicha();
-			pF.setBounds(i % 16 * tamFicha, (i / 16) * tamFicha, tamFicha,
-					tamFicha);
+			pF.setBounds(i % 16 * tamFicha, (i / 16) * tamFicha, tamFicha, tamFicha);
 			tempContentPane.add(pF);
 			i++;
 			pF = new PanelFicha(fichas[1], 0, 0, 1, 1);
-			pF.setBounds(i % 16 * tamFicha, (i / 16) * tamFicha, tamFicha,
-					tamFicha);
+			pF.setBounds(i % 16 * tamFicha, (i / 16) * tamFicha, tamFicha, tamFicha);
 			i++;
 			tempContentPane.add(pF);
 		}
@@ -401,18 +401,28 @@ public class Menu extends JDialog {
 
 	}
 
-	protected void cantJugadoresSeleccionado(List<String> usuarios) {
-		JTextField txtJugador3=txtJugadores.get(2);
-		JTextField txtJugador4=txtJugadores.get(3);
-		JRadioButton rdbtnBot3=rdbtns.get(2);
-		JRadioButton rdbtnBot4=rdbtns.get(3);
+	protected void cantJugadoresSeleccionado(int cantUsuarios) {
+		JTextField txtJugador2 = txtJugadores.get(1);
+		JTextField txtJugador3 = txtJugadores.get(2);
+		JTextField txtJugador4 = txtJugadores.get(3);
+		JRadioButton rdbtnBot2 = rdbtns.get(1);
+		JRadioButton rdbtnBot3 = rdbtns.get(2);
+		JRadioButton rdbtnBot4 = rdbtns.get(3);
 		int cant = (int) cantJugadores.getSelectedItem();
-		int cantidadUsuarios=usuarios.size();
 		switch (cant) {
 		case 2:
 			rdbtnElGranDuelo.setEnabled(true);
-			rdbtnBot3.setEnabled(false);
-			rdbtnBot4.setEnabled(false);
+			if (cantUsuarios< 2) {
+				txtJugador2.setEditable(true);
+				txtJugador2.setEnabled(true);
+				rdbtnBot2.setSelected(true);
+			} else {
+				txtJugador2.setEditable(false);
+				txtJugador2.setEnabled(false);
+				rdbtnBot2.setSelected(false);
+			}
+			rdbtnBot3.setSelected(false);
+			rdbtnBot4.setSelected(false);
 			txtJugador3.setEditable(false);
 			txtJugador4.setEditable(false);
 			txtJugador3.setEnabled(false);
@@ -421,12 +431,16 @@ public class Menu extends JDialog {
 		case 3:
 			rdbtnElGranDuelo.setSelected(false);
 			rdbtnElGranDuelo.setEnabled(false);
-			if(cantidadUsuarios<3) {
-				rdbtnBot3.setEnabled(true);
+			if (cantUsuarios < 3) {
 				txtJugador3.setEditable(true);
-				txtJugador3.setEnabled(true);				
+				txtJugador3.setEnabled(true);
+				rdbtnBot3.setSelected(true);
+			} else {
+				txtJugador3.setEditable(false);
+				txtJugador3.setEnabled(false);
+				rdbtnBot3.setSelected(false);
 			}
-			rdbtnBot4.setEnabled(false);
+			rdbtnBot4.setSelected(false);
 			txtJugador4.setEditable(false);
 			txtJugador4.setEnabled(false);
 
@@ -434,33 +448,43 @@ public class Menu extends JDialog {
 		case 4:
 			rdbtnElGranDuelo.setSelected(false);
 			rdbtnElGranDuelo.setEnabled(false);
-			if(cantidadUsuarios<3) {
-				rdbtnBot3.setEnabled(true);
+			if (cantUsuarios < 3) {
 				txtJugador3.setEditable(true);
-				txtJugador3.setEnabled(true);				
+				txtJugador3.setEnabled(true);
+				rdbtnBot3.setSelected(true);
+			} else {
+				txtJugador3.setEditable(false);
+				txtJugador3.setEnabled(false);
+				rdbtnBot3.setSelected(false);
 			}
-			if(cantidadUsuarios<4) {
-				rdbtnBot4.setEnabled(true);
+			if (cantUsuarios < 4) {
 				txtJugador4.setEditable(true);
 				txtJugador4.setEnabled(true);
-				
+				rdbtnBot4.setSelected(true);
+			} else {
+				txtJugador4.setEditable(false);
+				txtJugador4.setEnabled(false);
+				rdbtnBot4.setSelected(false);
 			}
 			break;
 		}
+		rdbtnBot2.setEnabled(false);
+		rdbtnBot3.setEnabled(false);
+		rdbtnBot4.setEnabled(false);
 	}
 
 	protected void enviarDatos() {
 		int tamTablero = rdbtnElGranDuelo.isSelected() ? 7 : 5;
 		int cant = (int) cantJugadores.getSelectedItem();
-		JTextField txtJugador1=txtJugadores.get(0);
-		JTextField txtJugador2=txtJugadores.get(1);
-		JTextField txtJugador3=txtJugadores.get(2);
-		JTextField txtJugador4=txtJugadores.get(3);
-		JRadioButton rdbtnBot1=rdbtns.get(0);
-		JRadioButton rdbtnBot2=rdbtns.get(1);
-		JRadioButton rdbtnBot3=rdbtns.get(2);
-		JRadioButton rdbtnBot4=rdbtns.get(3);
-		String nombreJugadores="";
+		JTextField txtJugador1 = txtJugadores.get(0);
+		JTextField txtJugador2 = txtJugadores.get(1);
+		JTextField txtJugador3 = txtJugadores.get(2);
+		JTextField txtJugador4 = txtJugadores.get(3);
+		JRadioButton rdbtnBot1 = rdbtns.get(0);
+		JRadioButton rdbtnBot2 = rdbtns.get(1);
+		JRadioButton rdbtnBot3 = rdbtns.get(2);
+		JRadioButton rdbtnBot4 = rdbtns.get(3);
+		String nombreJugadores = "";
 		String mensajeCrearPartida = "";
 
 		if (rdbtnBot1.isSelected()) {
@@ -468,49 +492,49 @@ public class Menu extends JDialog {
 		} else {
 			mensajeCrearPartida += "J";
 		}
-		nombreJugadores+=txtJugador1.getText()+"|";
+		nombreJugadores += txtJugador1.getText() + "|";
 		if (rdbtnBot2.isSelected()) {
 			mensajeCrearPartida += "B";
 		} else {
 			mensajeCrearPartida += "J";
 		}
-		nombreJugadores+=txtJugador2.getText()+"|";
+		nombreJugadores += txtJugador2.getText() + "|";
 		if (cant > 2) {
 			if (rdbtnBot3.isSelected()) {
 				mensajeCrearPartida += "B";
 			} else {
 				mensajeCrearPartida += "J";
 			}
-			nombreJugadores+=txtJugador3.getText()+"|";
+			nombreJugadores += txtJugador3.getText() + "|";
 			if (cant > 3) {
 				if (rdbtnBot4.isSelected()) {
 					mensajeCrearPartida += "B";
 				} else {
 					mensajeCrearPartida += "J";
 				}
-				nombreJugadores+=txtJugador4.getText()+"|";
+				nombreJugadores += txtJugador4.getText() + "|";
 			}
 
 		}
-		mensajeCrearPartida+=","+nombreJugadores;
-		mensajeCrearPartida+=","+tamTablero;
+		mensajeCrearPartida += "," + nombreJugadores;
+		mensajeCrearPartida += "," + tamTablero;
 
 		String textura = (String) texturas.getSelectedItem();
 		mensajeCrearPartida += "," + textura;
 		this.setVisible(false);
 		String mazo = (String) mazos.getSelectedItem();
 		mensajeCrearPartida += "," + mazo;
-		String modoDeJuego="";
+		String modoDeJuego = "";
 		if (rdbtnDinastia.isSelected())
 			modoDeJuego += ",D";
 		if (rdbtnElReinoMedio.isSelected())
-			modoDeJuego+= ",R";
+			modoDeJuego += ",R";
 		if (rdbtnArmonia.isSelected())
-			modoDeJuego+= ",A";
-		if (modoDeJuego=="") {
-			modoDeJuego="N";
+			modoDeJuego += ",A";
+		if (modoDeJuego == "") {
+			modoDeJuego = "N";
 		}
-		mensajeCrearPartida+=","+modoDeJuego;
+		mensajeCrearPartida += "," + modoDeJuego;
 		MensajeAServidor msj = new MensajeAServidor(mensajeCrearPartida, sala, 13);
 		cliente.enviarMensaje(msj);
 

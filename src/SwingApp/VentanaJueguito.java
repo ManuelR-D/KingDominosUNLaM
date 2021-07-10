@@ -80,7 +80,8 @@ public class VentanaJueguito extends JFrame {
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setBounds(100, 100, 400, 300);
+		setBounds(0, 0, 800, 600);
+		setResizable(true);
 		getContentPane().setBackground(new Color(0x5E411B));
 
 		cargarTexturas();
