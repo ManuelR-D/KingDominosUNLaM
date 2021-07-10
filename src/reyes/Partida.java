@@ -284,12 +284,17 @@ public class Partida {
 				coordenadaY = Integer.valueOf(paqueteActual[2]);
 				insercion = paqueteActual[4];
 				int rotacion=Integer.parseInt(paqueteActual[5]);
+				cartaElegida=cartasAElegir.get(numeroElegido);
+				for(int j=1;j<rotacion;j++) {
+					cartaElegida.rotarCarta();
+				}
+				
 //				System.out.println("INSERCION" + insercion);
 //				System.out.println("Paquete en crudo: " + paqueteActual);
 //				System.out.println("Se leyo el paquete: " + numeroElegido + ";" + coordenadaX + ";" + coordenadaY + ";"
 //						+ paqueteActual[3]);
 				if (insercion.equals("S")) {
-					jugadorTurnoActual.tablero.ponerCarta(cartasAElegir.get(numeroElegido), coordenadaX, coordenadaY,
+					jugadorTurnoActual.tablero.ponerCarta(cartaElegida, coordenadaX, coordenadaY,
 							true, ventana);
 				}
 			}
