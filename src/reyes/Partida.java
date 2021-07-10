@@ -302,6 +302,11 @@ public class Partida {
 				System.out.println("Turno:"+turno+" y:"+coordenadaY+" x:"+coordenadaX);
 				ventana.actualizarTablero(turno, coordenadaY, coordenadaX);
 			}
+			else {
+				if(!jugadorLocal.equals(jugadorTurnoActual.getNombre())) {
+					ventana.mostrarVentanaMensaje(jugadorTurnoActual.getNombre()+" no pudo insertar la carta");
+				}
+			}
 			cartasAElegir.set(numeroElegido, null);
 			nuevoOrdenDeTurnos.put(numeroElegido, turno);
 		}

@@ -20,6 +20,8 @@ import javax.swing.JOptionPane;
 import reyes.Carta;
 import reyes.Jugador;
 import reyes.Partida;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class VentanaJueguito extends JFrame {
 
@@ -54,6 +56,11 @@ public class VentanaJueguito extends JFrame {
 	public static volatile int[] coordenadasElegidas = new int[4];
 	public static VentanaJueguito mainFrame;
 	public static PanelFicha fichaElegida;
+	
+	private static int xVentana;
+	private static int yVentana;
+	
+	
 
 	/**
 	 * Launch the application.
@@ -76,6 +83,12 @@ public class VentanaJueguito extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaJueguito(Partida p) {
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				actualizarCoordenadas();
+			}
+		});
 		setResizable(false);
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -119,6 +132,11 @@ public class VentanaJueguito extends JFrame {
 		
 		VentanaJueguito.mainFrame = this;
 		
+	}
+
+	protected void actualizarCoordenadas() {
+		VentanaJueguito.xVentana=getX();
+		VentanaJueguito.yVentana=getY();
 	}
 
 	public synchronized int[] obtenerInputCoordenadas(Carta carta) {
@@ -282,6 +300,14 @@ public class VentanaJueguito extends JFrame {
 		}catch(IOException e) {
 			e.printStackTrace();
 		}	
+	}
+
+	public static int getXVentana() {
+		return xVentana;
+	}
+
+	public static int getYVentana() {
+		return yVentana;
 	}
 
 }
