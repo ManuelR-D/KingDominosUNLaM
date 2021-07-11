@@ -146,6 +146,7 @@ public class HiloCliente extends Thread {
 			Jugador jugador;
 			if(tipo=='B') {
 				jugador=new Bot(nombresJugadores[i],tamTablero);
+				Partida.addJugadorLocal(nombresJugadores[i]);
 			}else {
 				jugador=new Jugador(nombresJugadores[i],tamTablero);				
 			}
@@ -159,7 +160,7 @@ public class HiloCliente extends Thread {
 					Partida p = new Partida(jugadores,tamTablero,48,textura);
 					p.setMazo(mensaje.estado.getMazoMezcladoDePartida());
 					p.setTurnosIniciales(mensaje.estado.getTurnosIniciales());
-					p.setJugadorLocal(ventana.getNombreCliente());
+					p.addJugadorLocal(ventana.getNombreCliente());
 					p.iniciarPartida(variante,tituloVentana);
 				} catch (KingDominoExcepcion | IOException e) {
 					e.printStackTrace();
@@ -199,7 +200,7 @@ public class HiloCliente extends Thread {
 			public void run() {
 				try {
 					Partida p = new Partida(jugadores,tamTablero,48,textura);
-					p.setJugadorLocal(ventana.getNombreCliente());
+					p.addJugadorLocal(ventana.getNombreCliente());
 					p.iniciarPartida(variante,tituloVentana);
 				} catch (KingDominoExcepcion | IOException e) {
 					// TODO Auto-generated catch block

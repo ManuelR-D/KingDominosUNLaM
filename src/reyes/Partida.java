@@ -32,7 +32,7 @@ public class Partida {
 	private boolean armonia = false;
 	private boolean isMazoMezclado = false;
 	private static boolean esTurnoJugadorLocal = false;
-	private static String jugadorLocal;
+	private static List<String> jugadorLocal = new ArrayList<String>(4);;
 
 	public static CountDownLatch mtxEsperarPaquete = new CountDownLatch(1);
 	public static String paquete;
@@ -264,7 +264,7 @@ public class Partida {
 			int coordenadaY = 0;
 			Carta cartaElegida = null;
 			
-			if (jugadorLocal.equals(jugadorTurnoActual.getNombre())) {
+			if (jugadorLocal.contains(jugadorTurnoActual.getNombre())) {
 				// Si es el turno del jugador local, tiene que elegir su carta y posicion
 				esTurnoJugadorLocal = true;
 				numeroElegido = jugadorTurnoActual.eligeCarta(cartasAElegir, entrada);
@@ -274,7 +274,7 @@ public class Partida {
 				coordenadaX = cartaElegida.getFichas()[0].getColumna();
 				coordenadaY = cartaElegida.getFichas()[0].getFila();
 				int rotacion=cartaElegida.getRotacion();
-				crearPaquete(numeroElegido, coordenadaX, coordenadaY, pudoInsertar,rotacion);
+				jugadorTurnoActual.crearPaquete(numeroElegido, coordenadaX, coordenadaY, pudoInsertar,rotacion);
 			} else {
 				// Sino, tiene que esperar a que el servidor informe lo que hizo el otro jugador
 				esTurnoJugadorLocal = false;
@@ -369,15 +369,16 @@ public class Partida {
 		Partida.turnosIniciales = turnosIniciales;
 	}
 
-	public void setJugadorLocal(String nombre) {
-		jugadorLocal = nombre;
+	public static void addJugadorLocal(String nombre) {
+		//jugadorLocal = nombre;
+		jugadorLocal.add(nombre);
 	}
 
 	public static boolean esTurnoJugadorLocal() {
 		return esTurnoJugadorLocal;
 	}
 	
-	public static String getJugadorLocal() {
+	public static List<String> getJugadorLocal() {
 		return jugadorLocal;
 	}
 }

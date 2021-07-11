@@ -23,7 +23,11 @@ public class Bot extends Jugador {
 	public void setTablero(int tamanioTablero) {
 		this.tablero = new TableroBot(tamanioTablero);
 	}
-
+	@Override
+	public void crearPaquete(int numeroElegido, int coordenadaX, int coordenadaY, boolean pudoInsertar, int rotacion) {
+		// TODO Auto-generated method stub
+		//Bots no crean paquetes.
+	}
 	@Override
 	public int eligeCarta(List<Carta> cartasAElegir, VentanaJueguito ventana) {
 		int numeroElegido = -1;

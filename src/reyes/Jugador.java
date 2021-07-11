@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import SwingApp.VentanaJueguito;
+import netcode.HiloCliente;
 
 public class Jugador extends Usuario {
 	private String nombre;
@@ -78,5 +79,11 @@ public class Jugador extends Usuario {
 
 	public void setIdCastilloCentro(int i) {
 		tablero.setIdCastilloCentro(i);
+	}
+
+	public void crearPaquete(int numeroElegido, int coordenadaX, int coordenadaY, boolean pudoInsertar, int rotacion) {
+		String insercion = pudoInsertar ? "S" : "N";
+		Partida.paquete = numeroElegido + "," + coordenadaX + "," + coordenadaY + "," + this.nombre + "," + insercion+","+rotacion;
+		HiloCliente.mtxPaquetePartida.countDown(); // aviso a mi hilo que tiene preparado un paquete
 	}
 }
