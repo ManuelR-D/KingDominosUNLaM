@@ -126,7 +126,7 @@ public class TablerosJugadores extends JPanel {
 		g.fillRect(0, 0, tamTableros, tamTableros);
 		g.setColor(cAnterior);
 		int turno=VentanaJueguito.getTurnoJugador();
-		if(turno!=-1) {
+		if(turno!=-1 && turno<matrizCoordenadas.length) {//Solucion temporal
 			int x=matrizCoordenadas[turno][0];
 			int y=matrizCoordenadas[turno][1];
 			g.drawRect(x, y, tamTablero, tamTablero);			

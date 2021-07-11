@@ -171,17 +171,23 @@ public class HiloServidor extends Thread {
 		List<String> jugadores = s.getUsuariosConectados();
 
 		String[] datosPaquete = mensajeAServidor.getTexto().split(",");
+		boolean seRindioUsuario = datosPaquete[4].contains("Rendir");
 		String emisor = datosPaquete[3];
-		System.out.println("Recibi mensaje del jugador " + emisor);
-		System.out.println("Mensaje crudo: " + mensajeAServidor.getTexto());
+//		System.out.println("Recibi mensaje del jugador " + emisor);
+//		System.out.println("Mensaje crudo: " + mensajeAServidor.getTexto());
 		for (String jugador : jugadores) {
 			System.out.println(jugador);
 			if (!jugador.equals(emisor)) {
 				MensajeACliente msj = new MensajeACliente(mensajeAServidor.getTexto(), 13, s);
 				enviarMensajeAUsuario(msj, jugador);
-				System.out.println("Lo replique a: " + jugador);
+//				System.out.println("Lo replique a: " + jugador);
 			}
 		}
+		if (seRindioUsuario) {
+			mensajeAServidor.setTexto(emisor);
+			salirDeSala(mensajeAServidor);
+		}
+
 	}
 
 	private void iniciarJuegoClientes(MensajeAServidor mensajeAServidor) {
@@ -198,7 +204,6 @@ public class HiloServidor extends Thread {
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

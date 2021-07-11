@@ -17,6 +17,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import netcode.HiloCliente;
 import reyes.Carta;
 import reyes.Jugador;
 import reyes.Partida;
@@ -26,7 +27,7 @@ import java.awt.event.ComponentEvent;
 public class VentanaJueguito extends JFrame {
 
 	private static final long serialVersionUID = 4460429712849713216L;
-	//Texturas por defecto
+	// Texturas por defecto
 	private static String texturaCarta = "./assets/mazos/original.png";
 	private static String texturaCastilloAmarillo = "./assets/castilloAmarillo.png";
 	private static String texturaCastilloAzul = "./assets/castilloAzul.png";
@@ -47,20 +48,19 @@ public class VentanaJueguito extends JFrame {
 	static double LARGO_VENTANA;
 	static double ALTO_VENTANA;
 	static int TAM_TABLEROS;
-	PanelTableroSeleccion pSeleccion;
+	static PanelTableroSeleccion pSeleccion;
 	TablerosJugadores tableros;
 	PanelInformacion informacion;
+	private Partida partida;
 	private static int turnoJugador;
 
 	private static CountDownLatch latchCartaElegida = new CountDownLatch(1);
 	public static volatile int[] coordenadasElegidas = new int[4];
 	public static VentanaJueguito mainFrame;
 	public static PanelFicha fichaElegida;
-	
+
 	private static int xVentana;
 	private static int yVentana;
-	
-	
 
 	/**
 	 * Launch the application.
@@ -83,6 +83,7 @@ public class VentanaJueguito extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaJueguito(Partida p) {
+		this.partida=p;
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentMoved(ComponentEvent e) {
@@ -91,52 +92,72 @@ public class VentanaJueguito extends JFrame {
 		});
 		setResizable(false);
 		getContentPane().setLayout(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 //		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setBounds(0, 0, 800, 600);
+		setBounds(0, 0, 400, 300);
 		setResizable(true);
 		getContentPane().setBackground(new Color(0x5E411B));
 
 		cargarTexturas();
-		
 
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		Dimension dimensiones=getContentPane().getSize();
+		Dimension dimensiones = getContentPane().getSize();
 		LARGO_VENTANA = (int) dimensiones.getWidth();
 		ALTO_VENTANA = (int) dimensiones.getHeight();
 		TAM_TABLEROS = (int) ALTO_VENTANA;
-		tableros = new TablerosJugadores(p.getJugadores());
-		tableros.setBounds(0, 0, TAM_TABLEROS, TAM_TABLEROS);
-		getContentPane().add(tableros);
-		int largoPanelInformacion=(int)LARGO_VENTANA-TAM_TABLEROS;
-		int altoPanelInformacion = (int)ALTO_VENTANA/2;
-		informacion = new PanelInformacion(p.getJugadores(),largoPanelInformacion,altoPanelInformacion);
-		informacion.setBounds(TAM_TABLEROS,0,largoPanelInformacion, altoPanelInformacion);
-		informacion.setBorder(BorderFactory.createLineBorder(Color.black));
+		inicializarTableros(p.getJugadores());
+		inicializarPanelInformacion(p);
 		getContentPane().add(informacion);
 		try {
 			Sonido s = new Sonido("./assets/Sound/main.wav");
 			s.setVolume(0.01f);
-			//s.play(Clip.LOOP_CONTINUOUSLY);
+			// s.play(Clip.LOOP_CONTINUOUSLY);
 			sonido = s;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//Inicializamos pSeleccion con cartas vacias, esto evita problemas con condiciones de carrera
-		//además, no es intuitivo que pSeleccion no exista hasta que se le envien cartas, puesto
-		//que delega la responsabilidad de su creacion a Partida, que no es una clase grafica
+		// Inicializamos pSeleccion con cartas vacias, esto evita problemas con
+		// condiciones de carrera
+		// además, no es intuitivo que pSeleccion no exista hasta que se le envien
+		// cartas, puesto
+		// que delega la responsabilidad de su creacion a Partida, que no es una clase
+		// grafica
 		List<Carta> cartasAElegir = new ArrayList<Carta>();
 		cartasAElegir.add(null);
 		mostrarCartasAElegir(cartasAElegir);
-		
+
 		VentanaJueguito.mainFrame = this;
-		
+
+	}
+
+	private void inicializarPanelInformacion(Partida p) {
+		int largoPanelInformacion = (int) LARGO_VENTANA - TAM_TABLEROS;
+		int altoPanelInformacion = (int) ALTO_VENTANA / 2;
+		informacion = new PanelInformacion(this, p.getJugadores(), largoPanelInformacion, altoPanelInformacion);
+		informacion.setBounds(TAM_TABLEROS, 0, largoPanelInformacion, altoPanelInformacion);
+		informacion.setBorder(BorderFactory.createLineBorder(Color.black));
+	}
+
+	public void inicializarTableros(List<Jugador> jugadores) {
+		if (tableros != null) {
+			this.remove(tableros);
+			this.repaint();
+		}
+
+		tableros = new TablerosJugadores(jugadores);
+		tableros.setBounds(0, 0, TAM_TABLEROS, TAM_TABLEROS);
+		getContentPane().add(tableros);
+	}
+	
+	public void actualizarInterfaz() {
+		inicializarTableros(partida.getJugadores());
+		inicializarPanelInformacion(partida);
 	}
 
 	protected void actualizarCoordenadas() {
-		VentanaJueguito.xVentana=getX();
-		VentanaJueguito.yVentana=getY();
+		VentanaJueguito.xVentana = getX();
+		VentanaJueguito.yVentana = getY();
 	}
 
 	public synchronized int[] obtenerInputCoordenadas(Carta carta) {
@@ -164,7 +185,6 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public synchronized int leerCartaElegida() {
-		System.out.println("Funcion leerCartaElegida");
 		try {
 			pSeleccion.getStartLatch().await();
 		} catch (InterruptedException e) {
@@ -172,7 +192,6 @@ public class VentanaJueguito extends JFrame {
 			System.out.println("Error en leerCartaElegida");
 		}
 		this.repaint();
-		System.out.println("Saliendo de leerCartaElegida");
 		int idCartaElegida = PanelTableroSeleccion.idCartaElegida;
 		pSeleccion.setStartLatch(new CountDownLatch(1));
 		Sonido.playCartaSeleccionada();
@@ -202,14 +221,12 @@ public class VentanaJueguito extends JFrame {
 			this.remove(pSeleccion);
 
 		}
-		
-		int altoPanel=(int) (ALTO_VENTANA/2);
-		int largoPanel=(int) (LARGO_VENTANA-TAM_TABLEROS);
-		
-		
-		
-		pSeleccion = new PanelTableroSeleccion(cartasAElegir,largoPanel,altoPanel);
-		pSeleccion.setBounds(TAM_TABLEROS, altoPanel, largoPanel,altoPanel);
+
+		int altoPanel = (int) (ALTO_VENTANA / 2);
+		int largoPanel = (int) (LARGO_VENTANA - TAM_TABLEROS);
+
+		pSeleccion = new PanelTableroSeleccion(cartasAElegir, largoPanel, altoPanel);
+		pSeleccion.setBounds(TAM_TABLEROS, altoPanel, largoPanel, altoPanel);
 		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
 		this.getContentPane().add(pSeleccion);
 
@@ -230,8 +247,9 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void setPSeleccionVisible(boolean b) {
-		//Esto puede suceder por condiciones de carrera. Arreglar de manera mas elegante luego
-		if(pSeleccion != null)
+		// Esto puede suceder por condiciones de carrera. Arreglar de manera mas
+		// elegante luego
+		if (pSeleccion != null)
 			pSeleccion.setVisible(b);
 	}
 
@@ -253,12 +271,13 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void mostrarVentanaMensaje(String mensaje) {
-		JOptionPane.showMessageDialog(this, mensaje);
+		JOptionPane.showMessageDialog(this, mensaje, "Informacion", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
+		HiloCliente.rendirse(Partida.getJugadorLocal());
 		if (sonido != null)
 			sonido.stop();
 	}
@@ -296,10 +315,10 @@ public class VentanaJueguito extends JFrame {
 
 	public static void cargarTexturaMazo(String skin) {
 		try {
-			VentanaJueguito.bufferCarta = ImageIO.read(new File("./assets/mazos/"+skin+".png") );
-		}catch(IOException e) {
+			VentanaJueguito.bufferCarta = ImageIO.read(new File("./assets/mazos/" + skin + ".png"));
+		} catch (IOException e) {
 			e.printStackTrace();
-		}	
+		}
 	}
 
 	public static int getXVentana() {
@@ -309,5 +328,14 @@ public class VentanaJueguito extends JFrame {
 	public static int getYVentana() {
 		return yVentana;
 	}
+
+	public static CountDownLatch getStartLatch() {
+		return pSeleccion.getStartLatch();
+	}
+
+	public void rendirse() {
+		HiloCliente.rendirse(Partida.getJugadorLocal());
+	}
+
 
 }

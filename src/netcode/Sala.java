@@ -1,16 +1,10 @@
 package netcode;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import reyes.Jugador;
-import reyes.KingDominoExcepcion;
-import reyes.Partida;
-import reyes.Usuario;
 
 
 public class Sala implements Serializable {

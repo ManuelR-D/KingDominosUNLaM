@@ -29,7 +29,10 @@ public class PanelInformacion extends JPanel {
 	List<JButton> botones;
 	private List<Jugador> jugadores;
 
-	PanelInformacion(List<Jugador> jugadores, int largoPanel, int altoPanel) {
+	private VentanaJueguito ventana;
+
+	PanelInformacion(VentanaJueguito ventana, List<Jugador> jugadores, int largoPanel, int altoPanel) {
+		this.ventana=ventana;
 		this.jugadores = jugadores;
 		setLayout(new BorderLayout());
 		info = new JTextPane();
@@ -47,7 +50,7 @@ public class PanelInformacion extends JPanel {
 		JPanel panelBotones = new JPanel();
 		botones=new ArrayList<JButton>();
 		panelBotones.setLayout(new GridLayout(jugadores.size()+1, 1));
-		JButton botonRendirse=new JButton("Rendirse/Salir");
+		JButton botonRendirse=new JButton("Rendirse");
 		panelBotones.add(botonRendirse);
 		botonRendirse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -70,7 +73,7 @@ public class PanelInformacion extends JPanel {
 	}
 
 	protected void rendirse() {
-		System.out.println(Partida.getJugadorLocal());
+		ventana.rendirse();
 	}
 
 	protected void mostrarPuntaje(Object object) {

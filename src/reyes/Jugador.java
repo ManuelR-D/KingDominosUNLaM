@@ -7,6 +7,8 @@ import SwingApp.VentanaJueguito;
 import netcode.HiloCliente;
 
 public class Jugador extends Usuario {
+
+	private static final long serialVersionUID = -5342621303315896626L;
 	private String nombre;
 	public Tablero tablero;
 	protected boolean reinoCompletamenteOcupado = true;
@@ -55,8 +57,7 @@ public class Jugador extends Usuario {
 				}
 
 			}
-
-		} while (cartasAElegir.get(cartaElegida) == null);
+		} while (!Partida.rendido && cartasAElegir.get(cartaElegida) == null);
 
 		return cartaElegida;
 	}
@@ -83,7 +84,9 @@ public class Jugador extends Usuario {
 
 	public void crearPaquete(int numeroElegido, int coordenadaX, int coordenadaY, boolean pudoInsertar, int rotacion) {
 		String insercion = pudoInsertar ? "S" : "N";
-		Partida.paquete = numeroElegido + "," + coordenadaX + "," + coordenadaY + "," + this.nombre + "," + insercion+","+rotacion;
+		Partida.paquete = numeroElegido + "," + coordenadaX + "," + coordenadaY + "," + this.nombre + "," + insercion
+				+ "," + rotacion;
 		HiloCliente.mtxPaquetePartida.countDown(); // aviso a mi hilo que tiene preparado un paquete
 	}
+
 }

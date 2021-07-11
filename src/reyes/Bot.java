@@ -5,6 +5,8 @@ import java.util.List;
 import SwingApp.VentanaJueguito;
 
 public class Bot extends Jugador {
+
+	private static final long serialVersionUID = -7706573554002056333L;
 	int puntajeMax = 0;
 	int xPuntajeMax;
 	int yPuntajeMax;
@@ -25,7 +27,6 @@ public class Bot extends Jugador {
 	}
 	@Override
 	public void crearPaquete(int numeroElegido, int coordenadaX, int coordenadaY, boolean pudoInsertar, int rotacion) {
-		// TODO Auto-generated method stub
 		//Bots no crean paquetes.
 	}
 	@Override

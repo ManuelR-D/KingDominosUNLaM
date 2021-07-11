@@ -3,7 +3,6 @@ package reyes;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,7 @@ import netcode.HiloCliente;
 public class Partida {
 	private static Mazo mazoInicial = null;
 	private Mazo mazo;
-	private List<Jugador> jugadores;
+	private static List<Jugador> jugadores;
 	private static final int DEFAULT_TAM_TABLERO = 5;
 	private static final int DEFAULT_CANT_CARTAS = 48;
 	private static final int DEFAULT_CANT_JUGADORES = 2;
@@ -26,16 +25,21 @@ public class Partida {
 	private int cantidadCartas;
 	private int cantidadJugadores;
 	private String textura = null;
-	VentanaJueguito ventana;
+	static VentanaJueguito ventana;
 	private Map<Jugador, Integer> puntajes = new HashMap<Jugador, Integer>();
 	private boolean reinoMedio = false;
 	private boolean armonia = false;
 	private boolean isMazoMezclado = false;
+	private boolean partidaEnJuego = true;
+	private List<Integer> turnos;
 	private static boolean esTurnoJugadorLocal = false;
-	private static List<String> jugadorLocal = new ArrayList<String>(4);;
+	private static String jugadorLocal;
+	private static List<String> botsLocales = new ArrayList<String>();
 
 	public static CountDownLatch mtxEsperarPaquete = new CountDownLatch(1);
 	public static String paquete;
+	static boolean rendido = false;
+	private static List<Integer> turnosIniciales;
 
 	public Partida() {
 		this.tamanioTablero = DEFAULT_TAM_TABLERO;
@@ -50,7 +54,7 @@ public class Partida {
 	public Partida(List<Jugador> jugadores) throws KingDominoExcepcion {
 		this.cantidadCartas = DEFAULT_CANT_CARTAS;
 		this.tamanioTablero = DEFAULT_TAM_TABLERO;
-		this.jugadores = jugadores;
+		Partida.jugadores = jugadores;
 		this.cantidadJugadores = jugadores.size();
 		if (cantidadJugadores > 4 || cantidadJugadores < 2) {
 			throw new KingDominoExcepcion("La cantidad de jugadores es invalida!!");
@@ -61,11 +65,11 @@ public class Partida {
 
 		if (cantidadCartas != 48) {
 			throw new KingDominoExcepcion(
-					"La cantidad de cartas tiene que ser 48! (limitación por parte del enunciado)");
+					"La cantidad de cartas tiene que ser 48! (limitaciÃ³n por parte del enunciado)");
 			// El codigo puede funcionar sin problemas con cualquier cantidad de cartas
-			// mientras el total sea múltiplo de 4, pues siempre se roba de a 4 cartas.
-			// Sin embargo, el enunciado tiene la limitación de 48 para todos los modos.
-			// Se puede quitar esta validación en el futuro si quisieramos agregar otros
+			// mientras el total sea mÃºltiplo de 4, pues siempre se roba de a 4 cartas.
+			// Sin embargo, el enunciado tiene la limitaciÃ³n de 48 para todos los modos.
+			// Se puede quitar esta validaciÃ³n en el futuro si quisieramos agregar otros
 			// modos.
 		}
 		this.cantidadJugadores = jugadores.size();
@@ -74,18 +78,18 @@ public class Partida {
 		}
 		this.cantidadCartas = cantidadCartas;
 		this.tamanioTablero = tamanioTablero;
-		this.jugadores = jugadores;
+		Partida.jugadores = jugadores;
 	}
 
 	public Partida(List<Jugador> jugadores, int tamanioTablero, int cantidadCartas, String textura)
 			throws KingDominoExcepcion {
 		if (cantidadCartas != 48) {
 			throw new KingDominoExcepcion(
-					"La cantidad de cartas tiene que ser 48! (limitación por parte del enunciado)");
+					"La cantidad de cartas tiene que ser 48! (limitaciÃ³n por parte del enunciado)");
 			// El codigo puede funcionar sin problemas con cualquier cantidad de cartas
-			// mientras el total sea múltiplo de 4, pues siempre se roba de a 4 cartas.
-			// Sin embargo, el enunciado tiene la limitación de 48 para todos los modos.
-			// Se puede quitar esta validación en el futuro si quisieramos agregar otros
+			// mientras el total sea mÃºltiplo de 4, pues siempre se roba de a 4 cartas.
+			// Sin embargo, el enunciado tiene la limitaciÃ³n de 48 para todos los modos.
+			// Se puede quitar esta validaciÃ³n en el futuro si quisieramos agregar otros
 			// modos.
 		}
 		this.cantidadJugadores = jugadores.size();
@@ -94,7 +98,7 @@ public class Partida {
 		}
 		this.cantidadCartas = cantidadCartas;
 		this.tamanioTablero = tamanioTablero;
-		this.jugadores = jugadores;
+		Partida.jugadores = jugadores;
 		this.textura = textura;
 	}
 
@@ -102,18 +106,16 @@ public class Partida {
 	 * El formato de variante es: {mazo}|{variante1}|{variante2}|{varianteN}
 	 */
 	public boolean iniciarPartida(String variante, String tituloVentana) throws IOException {
-		
-		System.out.println(variante);
+
 		armonia = variante.contains("Armonia");
 		reinoMedio = variante.contains("ReinoMedio");
 		if (variante.equals("N")) {
-			if(!isMazoMezclado) {
-				mazo = new Mazo(cantidadCartas, variante.substring(0, variante.indexOf("|")));							
+			if (!isMazoMezclado) {
+				mazo = new Mazo(cantidadCartas, variante.substring(0, variante.indexOf("|")));
 			}
-		}
-		else {
-			if(!isMazoMezclado) {
-				mazo = new Mazo(cantidadCartas, "original"); // si no especificaron variante, usamos la original							
+		} else {
+			if (!isMazoMezclado) {
+				mazo = new Mazo(cantidadCartas, "original"); // si no especificaron variante, usamos la original
 			}
 		}
 
@@ -146,7 +148,9 @@ public class Partida {
 	}
 
 	public boolean iniciarPartida(String tituloVentana) throws IOException {
-
+		mtxEsperarPaquete = new CountDownLatch(1);
+		partidaEnJuego=true;
+		rendido=false;
 		List<Integer> turnos = determinarTurnosIniciales();
 		List<Carta> cartasAElegirSig = new ArrayList<Carta>();
 		// armamos y mezclamos el mazo
@@ -169,16 +173,20 @@ public class Partida {
 			ventana.cargarTextura(textura);
 		}
 		ventana.actualizarTableros();
-		while (mazo.getTam() > 1) {
+		while (partidaEnJuego && mazo.getTam() > 1) {
 			mazo.quitarPrimerasNCartas(4, cartasAElegirSig);
 			jugarRonda(cartasAElegirSig, turnos, ventana);
 
 		}
-		VentanaJueguito.setTurnoJugador(-1);
-		ventana.setPSeleccionVisible(false);
-		List<Integer> puntajesFinales = calcularPuntajesFinales(ventana);
-		ventana.terminarPartida(determinarGanadores(puntajesFinales));
-		
+		if (partidaEnJuego) {
+			VentanaJueguito.setTurnoJugador(-1);
+			ventana.setPSeleccionVisible(false);
+			List<Integer> puntajesFinales = calcularPuntajesFinales(ventana);
+			ventana.terminarPartida(determinarGanadores(puntajesFinales));
+		}
+		System.out.println(jugadorLocal+" sali de la partida");
+		Partida.turnosIniciales=null;
+		ventana.dispose();
 		return true;
 	}
 
@@ -246,40 +254,33 @@ public class Partida {
 
 	private void jugarRonda(List<Carta> cartasAElegir, List<Integer> turnos, VentanaJueguito entrada)
 			throws IOException {
-
+		this.turnos = turnos;
 		int numeroElegido = 0;
 		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
 
-		for (int i = 0; i < turnos.size(); i++) {
-			
+		for (int i = 0; partidaEnJuego && i < jugadores.size(); i++) {
+
 			entrada.mostrarCartasAElegir(cartasAElegir);
 			int turno = turnos.get(i);
 			boolean pudoInsertar = false;
 			String insercion = null;
-			
+
 			VentanaJueguito.setTurnoJugador(turno);
 			Jugador jugadorTurnoActual = jugadores.get(turno);
 			entrada.mostrarMensaje("Turno del jugador\n" + jugadorTurnoActual.getNombre());
 			int coordenadaX = 0;
 			int coordenadaY = 0;
 			Carta cartaElegida = null;
-			
-			if (jugadorLocal.contains(jugadorTurnoActual.getNombre())) {
-				// Si es el turno del jugador local, tiene que elegir su carta y posicion
-				esTurnoJugadorLocal = true;
-				numeroElegido = jugadorTurnoActual.eligeCarta(cartasAElegir, entrada);
-				cartaElegida = cartasAElegir.get(numeroElegido);
-				pudoInsertar = jugadorTurnoActual.insertaEnTablero(cartaElegida, entrada);
-				insercion = pudoInsertar ? "S" : "N";
-				coordenadaX = cartaElegida.getFichas()[0].getColumna();
-				coordenadaY = cartaElegida.getFichas()[0].getFila();
-				int rotacion=cartaElegida.getRotacion();
-				jugadorTurnoActual.crearPaquete(numeroElegido, coordenadaX, coordenadaY, pudoInsertar,rotacion);
-			} else {
-				// Sino, tiene que esperar a que el servidor informe lo que hizo el otro jugador
+
+			if (!jugadorLocal.equals(jugadorTurnoActual.getNombre())
+					&& !botsLocales.contains(jugadorTurnoActual.getNombre())) {
+				// Si no es ni el jugador local ni un bot, tiene que esperar a que el servidor
+				// informe lo que hizo el otro jugador
 				esTurnoJugadorLocal = false;
 				try {
+					System.out.println(jugadorLocal + ":esperando paquete");
 					mtxEsperarPaquete.await();
+					System.out.println(jugadorLocal + ":recibi paquete");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -289,51 +290,79 @@ public class Partida {
 				numeroElegido = Integer.valueOf(paqueteActual[0]);
 				coordenadaX = Integer.valueOf(paqueteActual[1]);
 				coordenadaY = Integer.valueOf(paqueteActual[2]);
+				String nombreUsuarioPaquete = paqueteActual[3];
 				insercion = paqueteActual[4];
-				int rotacion=Integer.parseInt(paqueteActual[5]);
-				cartaElegida=cartasAElegir.get(numeroElegido);
-				for(int j=1;j<rotacion;j++) {
-					cartaElegida.rotarCarta();
+
+				System.out.println(insercion);
+				if (insercion.contains("Rendir")) {
+					eliminarJugadorRendido(nombreUsuarioPaquete);
+					VentanaJueguito.setTurnoJugador(turno-1);
+					i--;
+				} else {
+					int rotacion = Integer.parseInt(paqueteActual[5]);
+					cartaElegida = cartasAElegir.get(numeroElegido);
+					for (int j = 1; j < rotacion; j++) {
+						cartaElegida.rotarCarta();
+					}
+					if (insercion.equals("S")) {
+						jugadorTurnoActual.tablero.ponerCarta(cartaElegida, coordenadaX, coordenadaY, true, ventana);
+					}
 				}
-				
-//				System.out.println("INSERCION" + insercion);
-//				System.out.println("Paquete en crudo: " + paqueteActual);
-//				System.out.println("Se leyo el paquete: " + numeroElegido + ";" + coordenadaX + ";" + coordenadaY + ";"
-//						+ paqueteActual[3]);
-				if (insercion.equals("S")) {
-					jugadorTurnoActual.tablero.ponerCarta(cartaElegida, coordenadaX, coordenadaY,
-							true, ventana);
+			} else {
+				// Si es el turno del jugador local, tiene que elegir su carta y posicion
+				esTurnoJugadorLocal = true;
+				numeroElegido = jugadorTurnoActual.eligeCarta(cartasAElegir, entrada);
+				if (!rendido) {// El jugador se puede rendir mientras elije cartas
+					cartaElegida = cartasAElegir.get(numeroElegido);
+				}
+				if (!rendido) {// El jugador se puede rendir antes de colocar la carta elegida
+					pudoInsertar = jugadorTurnoActual.insertaEnTablero(cartaElegida, entrada);
+					insercion = pudoInsertar ? "S" : "N";
+					coordenadaX = cartaElegida.getFichas()[0].getColumna();
+					coordenadaY = cartaElegida.getFichas()[0].getFila();
+				}
+				if (!rendido) {
+					// Si no es un bot, envia un paquete
+					if (jugadorLocal.equals(jugadorTurnoActual.getNombre())) {
+						int rotacion = cartaElegida.getRotacion();
+						jugadorTurnoActual.crearPaquete(numeroElegido, coordenadaX, coordenadaY, pudoInsertar,
+								rotacion);
+					}
+				}
+
+			}
+			if (rendido) {
+				partidaEnJuego = false;
+//				Partida.paquete = numeroElegido + "," + coordenadaX + "," + coordenadaY + "," + jugadorLocal
+//						+ ",Rendir," + 0;
+//				HiloCliente.mtxPaquetePartida.countDown(); // aviso a mi hilo que tiene preparado un paquete
+			}
+			if (!rendido) {
+				if (!insercion.contains("Rendir")) {
+					if (insercion.equals("S")) {
+						ventana.actualizarTablero(turno, coordenadaY, coordenadaX);
+					}else {
+						if (!jugadorTurnoActual.getNombre().equals(jugadorLocal)) {
+							ventana.mostrarVentanaMensaje(
+									jugadorTurnoActual.getNombre() + " no pudo insertar la carta");
+						}
+						
+					}
+					cartasAElegir.set(numeroElegido, null);
+					nuevoOrdenDeTurnos.put(numeroElegido, turno);
+					System.out.println("Coloque turnos");
 				}
 			}
-			if (insercion.equals("S")) {
-				System.out.println("Turno:"+turno+" y:"+coordenadaY+" x:"+coordenadaX);
-				ventana.actualizarTablero(turno, coordenadaY, coordenadaX);
-			}
-			else {
-				if(!jugadorLocal.equals(jugadorTurnoActual.getNombre())) {
-					ventana.mostrarVentanaMensaje(jugadorTurnoActual.getNombre()+" no pudo insertar la carta");
-				}
-			}
-			cartasAElegir.set(numeroElegido, null);
-			nuevoOrdenDeTurnos.put(numeroElegido, turno);
 		}
 		turnos.clear();
 		for (Map.Entry<Integer, Integer> entry : nuevoOrdenDeTurnos.entrySet())
 			turnos.add(entry.getValue());
 	}
 
-	private void crearPaquete(int numeroElegido, int coordenadaX, int coordenadaY, boolean pudoInsertar, int rotacion) {
-		String insercion = pudoInsertar ? "S" : "N";
-		Partida.paquete = numeroElegido + "," + coordenadaX + "," + coordenadaY + "," + jugadorLocal + "," + insercion+","+rotacion;
-		HiloCliente.mtxPaquetePartida.countDown(); // aviso a mi hilo que tiene preparado un paquete
-	}
-
-	private static List<Integer> turnosIniciales = null;
-
 	private List<Integer> determinarTurnosIniciales() {
 		if (Partida.turnosIniciales != null)
 			return Partida.turnosIniciales;
-		List<Integer> idJugadores = new ArrayList<Integer>(4);
+		List<Integer> idJugadores = new ArrayList<Integer>();
 
 		for (int i = 0; i < cantidadJugadores; i++) {
 			idJugadores.add(i);
@@ -369,16 +398,70 @@ public class Partida {
 		Partida.turnosIniciales = turnosIniciales;
 	}
 
-	public static void addJugadorLocal(String nombre) {
-		//jugadorLocal = nombre;
-		jugadorLocal.add(nombre);
+	public static void addBotLocal(String nombre) {
+		botsLocales.add(nombre);
 	}
 
 	public static boolean esTurnoJugadorLocal() {
 		return esTurnoJugadorLocal;
 	}
-	
-	public static List<String> getJugadorLocal() {
+
+	public static void setJugadorLocal(String nombre) {
+		jugadorLocal = nombre;
+	}
+
+	public static String getJugadorLocal() {
 		return jugadorLocal;
+	}
+
+	public static void rendirse() {
+		rendido = true;
+		VentanaJueguito.getStartLatch().countDown();
+		VentanaJueguito.getLatchCartaElegida().countDown();
+	}
+
+	private void eliminarJugadorRendido(String nombreJugador) {
+		int i = 0;
+		// busco el indice "del jugador a remover
+		System.out.println("i:"+i+" nombre:"+jugadores.get(i).getNombre());
+		while (!jugadores.get(i).getNombre().equals(nombreJugador)) {
+			i++;
+			System.out.println("i:"+i+" nombre:"+jugadores.get(i).getNombre());
+		}
+		ventana.mostrarVentanaMensaje(jugadores.get(i).getNombre() + " ha abandonado la partida :c");
+		jugadores.remove(i);
+
+		// busco el indice del turno que tenga el indice del jugador removido
+		int j = 0;
+		while (turnos.get(j) != i) {
+			j++;
+		}
+		turnos.remove(j);
+		// decremento los turnos cuyo valor es mayor al jugador removido
+		// ya que si el turno siguiente apuntaba al jugador 4 y removi el
+		// 4, ahora el 4 seria el 3
+		System.out.println("Turnos");
+		for(Integer n:turnos) {
+			System.out.println(n);
+		}
+		j = 0;
+		while (j < turnos.size()) {
+			System.out.println("Turno:"+turnos.get(j));
+			if (turnos.get(j) >= i) {
+				System.out.println("Cambio por:"+(turnos.get(j)-1));
+				turnos.set(j, turnos.get(j) - 1);
+			}
+			j++;
+		}
+		System.out.println("Turnos");
+		for(Integer n:turnos) {
+			System.out.println(n);
+		}
+		ventana.inicializarTableros(jugadores);
+		ventana.actualizarTableros();
+		if (jugadores.size() == 1) {
+			ventana.mostrarVentanaMensaje("Solo quedas vos, ganaste la partida(⌐■_■)");
+		}
+
 	}
 }

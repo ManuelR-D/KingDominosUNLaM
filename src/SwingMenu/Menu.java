@@ -36,7 +36,6 @@ import netcode.Sala;
 import reyes.Carta;
 import reyes.Ficha;
 import reyes.Mazo;
-import reyes.Partida;
 
 public class Menu extends JDialog {
 
@@ -495,14 +494,12 @@ public class Menu extends JDialog {
 
 		if (rdbtnBot1.isSelected()) {
 			mensajeCrearPartida += "B";
-			Partida.addJugadorLocal(txtJugador1.getText());
 		} else {
 			mensajeCrearPartida += "J";
 		}
 		nombreJugadores += txtJugador1.getText() + "|";
 		if (rdbtnBot2.isSelected()) {
 			mensajeCrearPartida += "B";
-			Partida.addJugadorLocal(txtJugador2.getText());
 		} else {
 			mensajeCrearPartida += "J";
 		}
@@ -510,7 +507,6 @@ public class Menu extends JDialog {
 		if (cant > 2) {
 			if (rdbtnBot3.isSelected()) {
 				mensajeCrearPartida += "B";
-				Partida.addJugadorLocal(txtJugador3.getText());
 			} else {
 				mensajeCrearPartida += "J";
 			}
@@ -518,7 +514,6 @@ public class Menu extends JDialog {
 			if (cant > 3) {
 				if (rdbtnBot4.isSelected()) {
 					mensajeCrearPartida += "B";
-					Partida.addJugadorLocal(txtJugador4.getText());
 				} else {
 					mensajeCrearPartida += "J";
 				}
