@@ -218,6 +218,7 @@ public class HiloCliente extends Thread {
 		// el jugador local juega su turno. Luego el servidor replica esa jugada a todos
 		// los demas jugadores.
 		partidaEnProceso = true;
+		mtxPaquetePartida = new CountDownLatch(1);
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
