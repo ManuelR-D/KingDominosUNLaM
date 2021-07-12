@@ -235,6 +235,7 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void actualizarTableros() {
+		pSeleccion.setCartaElegida(null);
 		tableros.actualizarTableros();
 	}
 

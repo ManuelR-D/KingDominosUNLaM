@@ -154,4 +154,8 @@ public class PanelTableroSeleccion extends JPanel {
 		startLatch.countDown();
 	}
 
+	public void setCartaElegida(Carta c) {
+		cartaElegida = c;
+	}
+
 }
