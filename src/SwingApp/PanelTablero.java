@@ -195,7 +195,7 @@ public class PanelTablero extends JPanel {
 				PanelFicha panelFicha = new PanelFicha(fichas[i][j], i, j, escala,escala);
 				matrizPaneles[i][j] = panelFicha;
 				panelFicha.setBounds((x * largo) + centradoLargo, (y * alto) + centradoAlto, largo, alto);
-				panelFicha.setBorder(BorderFactory.createLineBorder(Color.black));
+				panelFicha.pintarBorde(fichas[i][j],1,Color.black);
 				panelFicha.addMouseListener(new MouseAdapter() {
 
 					@Override
@@ -268,7 +268,7 @@ public class PanelTablero extends JPanel {
 		PanelFicha panelFicha = new PanelFicha(fichas[fila][columna], fila, columna, escala,escala);
 		matrizPaneles[fila][columna] = panelFicha;
 		panelFicha.setBounds((x * largo) + centradoLargo, (y * alto) + centradoAlto, largo, alto);
-		panelFicha.setBorder(BorderFactory.createLineBorder(Color.black));
+		panelFicha.pintarBorde(fichas[fila][columna],1,Color.black);
 		panelFicha.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
