@@ -3,7 +3,7 @@ package reyes;
 import java.util.List;
 
 public class TableroSeleccion {
-	Ficha[][] tablero;
+	private Ficha[][] tablero;
 
 	public TableroSeleccion() {
 		tablero = new Ficha[4][3];

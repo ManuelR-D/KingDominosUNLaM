@@ -1,6 +1,8 @@
 package reyes;
 
-public class Ficha {
+import java.io.Serializable;
+
+public class Ficha implements Serializable {
 	private String Tipo;
 	private int fila, columna, cantCoronas;
 	private Carta carta;

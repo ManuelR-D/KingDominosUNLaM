@@ -2,6 +2,7 @@ package SwingApp;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -17,22 +18,23 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import reyes.Jugador;
+import reyes.Jugador;import reyes.Partida;
 import reyes.Tablero;
 
 public class PanelInformacion extends JPanel {
 	int i = 0;
 
 	private static final long serialVersionUID = -6580547458892714155L;
-	//JTextArea info;
-	JTextPane info;
-	List<JButton> botones;
+	private JTextPane info;
+	private List<JButton> botones;
 	private List<Jugador> jugadores;
 
-	PanelInformacion(List<Jugador> jugadores) {
+	private VentanaJueguito ventana;
+
+	PanelInformacion(VentanaJueguito ventana, List<Jugador> jugadores, int largoPanel, int altoPanel) {
+		this.ventana=ventana;
 		this.jugadores = jugadores;
 		setLayout(new BorderLayout());
-		//info = new JTextArea();
 		info = new JTextPane();
 		info.setEditable(false);
 		info.setBackground(new Color(0xE3BB86));
@@ -47,7 +49,14 @@ public class PanelInformacion extends JPanel {
 		
 		JPanel panelBotones = new JPanel();
 		botones=new ArrayList<JButton>();
-		panelBotones.setLayout(new GridLayout(jugadores.size(), 1));
+		panelBotones.setLayout(new GridLayout(jugadores.size()+1, 1));
+		JButton botonRendirse=new JButton("Rendirse");
+		panelBotones.add(botonRendirse);
+		botonRendirse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rendirse();
+			}
+		});
 		while (i < jugadores.size()) {
 			JButton boton = new JButton("Ver puntaje tablero " + (i + 1));
 			botones.add(boton);
@@ -59,8 +68,12 @@ public class PanelInformacion extends JPanel {
 			panelBotones.add(boton);
 			i++;
 		}
-
+		panelBotones.setPreferredSize(new Dimension(largoPanel,altoPanel/4));
 		this.add(panelBotones, BorderLayout.SOUTH);
+	}
+
+	protected void rendirse() {
+		ventana.rendirse();
 	}
 
 	protected void mostrarPuntaje(Object object) {

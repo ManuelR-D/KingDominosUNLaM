@@ -204,11 +204,11 @@ public class CreadorDeMazo extends JFrame {
 		Ficha f = new Ficha((String)tiposFicha.getSelectedItem(),cantidadCoronas.getSelectedIndex(),0,0,idFicha,null);
 		System.out.println("idFicha: " + f.getId() + " cantidadCoronas: " + f.getCantCoronas());
 		
-		PanelFicha pF = new PanelFicha(f,0,0,1);
+		PanelFicha pF = new PanelFicha(f,0,0,1,1);
 		if(fichasActuales[0] == null)
 			pF.setBounds(0,0,80,80);
 		else {
-			PanelFicha pF2 = new PanelFicha(fichasActuales[0],0,0,1);
+			PanelFicha pF2 = new PanelFicha(fichasActuales[0],0,0,1,1);
 			pF2.setBounds(0,0,80,80);
 			pF.setBounds(80,0,80,80);
 			panelPreviewCarta.add(pF2);
@@ -278,12 +278,12 @@ public class CreadorDeMazo extends JFrame {
 		for (Carta carta : cartas) {
 			Ficha[] fichas = carta.getFichas();
 			System.out.println(fichas[0].getId());
-			pF = new PanelFicha(fichas[0],0,0,1);
-			pF.setBounds(i%16*PanelFicha.LARGO_FICHA,(i/16)*PanelFicha.ALTO_FICHA,PanelFicha.LARGO_FICHA,PanelFicha.ALTO_FICHA);
+			pF = new PanelFicha(fichas[0],0,0,1,1);
+			pF.setBounds(i%16*PanelFicha.getTamFicha(),(i/16)*PanelFicha.getTamFicha(),PanelFicha.getTamFicha(),PanelFicha.getTamFicha());
 			panelPreviewMazo.add(pF);
 			i++;
-			pF = new PanelFicha(fichas[1],0,0,1);
-			pF.setBounds(i%16*PanelFicha.LARGO_FICHA,(i/16)*PanelFicha.ALTO_FICHA,PanelFicha.LARGO_FICHA,PanelFicha.ALTO_FICHA);
+			pF = new PanelFicha(fichas[1],0,0,1,1);
+			pF.setBounds(i%16*PanelFicha.getTamFicha(),(i/16)*PanelFicha.getTamFicha(),PanelFicha.getTamFicha(),PanelFicha.getTamFicha());
 			i++;
 			panelPreviewMazo.add(pF);
 			

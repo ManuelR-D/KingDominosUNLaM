@@ -8,12 +8,12 @@ import java.util.Scanner;
 public class Juego {
 	private List<Usuario> usuarios = new ArrayList<Usuario>();
 	private List<Sala> salas = new ArrayList<Sala>();
-	private Menu Menu;
+	private Menu Menu = new Menu(this);
 
 	public static void main(String[] args) throws KingDominoExcepcion, IOException {
-		Juego test = new Juego();
-		test.usuarios.add(new Bot("Bot1", "123"));
-		test.iniciarSalaYMostrar();
+		//Juego test = new Juego();
+		//test.usuarios.add(new Bot("Bot1", "123"));
+		//test.iniciarSalaYMostrar();
 	}
 
 	private void iniciarSalaYMostrar() throws KingDominoExcepcion, IOException {
@@ -39,7 +39,10 @@ public class Juego {
 	public List<Usuario> getUsuarios() {
 		return usuarios;
 	}
-
+	
+	public List<Sala> getSalas(){
+		return salas;
+	}
 	public void mostrarSalas() {
 		for (Sala sala : salas) {
 			System.out.println(sala);

@@ -1,9 +1,8 @@
 package SwingApp;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Toolkit;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -16,12 +15,10 @@ import reyes.Jugador;
 public class TablerosJugadores extends JPanel {
 
 	private static final long serialVersionUID = -5711758328587102246L;
-	int tamTablero;
-	int tamTableros = VentanaJueguito.TAM_TABLEROS;
-	List<PanelJugador> tableros;
-	int[][] matrizCoordenadas;// Tiene 2 coordenadas, x del tablero e y del tablero;
-	int ajusteX;
-	int ajusteY;
+	private int tamTablero;
+	private int tamTableros = VentanaJueguito.TAM_TABLEROS;
+	private List<PanelJugador> tableros;
+	private int[][] matrizCoordenadas;// Tiene 2 coordenadas, x del tablero e y del tablero;
 
 	public TablerosJugadores(List<Jugador> jugadores) {
 		setLayout(null);
@@ -29,21 +26,13 @@ public class TablerosJugadores extends JPanel {
 		tamTablero = tamTableros / 2;
 		matrizCoordenadas = new int[jugadores.size()][2];
 		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // obtiene la resolucion de la pantalla
-		double width = screenSize.getWidth();
-		double height = screenSize.getHeight();
-		// las coordenadas x e y del tablero son respecto al panel padre, entonces le
-		// agrego la x e y reales de la pantalla
-		// estos calculos son posibles ya que la ventana esta centrada y no se puede
-		// desplazar
-		ajusteX = (int) (width / 2 - VentanaJueguito.LARGO_VENTANA / 2);
-		ajusteY = (int) (height / 2 - VentanaJueguito.ALTO_VENTANA / 2);
 		posicionarTableros(jugadores);
 	}
 
 	private void posicionarTableros(List<Jugador> jugadores) {
 		int cantJugadores = jugadores.size();
 		int x = 0, y = 0;
+		
 		for (int i = 0; i < jugadores.size(); i++) {
 			PanelJugador panelJugador = new PanelJugador(jugadores.get(i), tamTablero,i);
 			tableros.add(panelJugador);
@@ -70,23 +59,26 @@ public class TablerosJugadores extends JPanel {
 			}
 
 
-			matrizCoordenadas[i][0] = x + ajusteX;
-			matrizCoordenadas[i][1] = y + ajusteY;
+			matrizCoordenadas[i][0] = x;
+			matrizCoordenadas[i][1] = y;
 			panelJugador.setBounds(x, y, tamTablero, tamTablero);
 			this.add(panelJugador);
 		}
 	}
 
-	public synchronized int[] obtenerInputCoordenadas() {
+	public synchronized int[] obtenerInputCoordenadas(VentanaJueguito ventana) {
 		int turno=VentanaJueguito.getTurnoJugador();
 		int[] coordenadasElegidas = new int[2];
 		while (VentanaJueguito.coordenadasElegidas[0] == 0 && VentanaJueguito.coordenadasElegidas[1] == 0) {
 			try {
 				VentanaJueguito.getLatchCartaElegida().await();
+				//Al implementar cliente/servidor, esto es innecesario
 				int xMouse = VentanaJueguito.coordenadasElegidas[2];
 				int yMouse = VentanaJueguito.coordenadasElegidas[3];
-				int xTablero = matrizCoordenadas[turno][0];
-				int yTablero = matrizCoordenadas[turno][1];
+				int xVentana=ventana.getXVentana();
+				int yVentana=ventana.getYVentana();
+				int xTablero = matrizCoordenadas[turno][0]+xVentana;
+				int yTablero = matrizCoordenadas[turno][1]+yVentana;
 				if (!((xMouse >= xTablero && xMouse <= xTablero + tamTablero)
 						&& (yMouse >= yTablero && yMouse <= yTablero + tamTablero))) {
 					VentanaJueguito.coordenadasElegidas[0] = 0;
@@ -134,10 +126,10 @@ public class TablerosJugadores extends JPanel {
 		g.fillRect(0, 0, tamTableros, tamTableros);
 		g.setColor(cAnterior);
 		int turno=VentanaJueguito.getTurnoJugador();
-		if(turno!=-1) {
+		if(turno!=-1 && turno<matrizCoordenadas.length) {//Solucion temporal
 			int x=matrizCoordenadas[turno][0];
 			int y=matrizCoordenadas[turno][1];
-			g.drawRect(x-ajusteX, y-ajusteY, tamTablero, tamTablero);			
+			g.drawRect(x, y, tamTablero, tamTablero);			
 		}
 	}
 }

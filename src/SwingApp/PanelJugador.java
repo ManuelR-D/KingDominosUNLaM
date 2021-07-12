@@ -8,7 +8,7 @@ public class PanelJugador extends JPanel {
 
 	private static final long serialVersionUID = 1226652105748390999L;
 	private PanelTablero pTablero;
-	Jugador jugador;
+	private Jugador jugador;
 
 	public PanelJugador(Jugador jugador, int tamTablero,int indice) {
 		setLayout(null);
