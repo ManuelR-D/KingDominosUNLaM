@@ -19,15 +19,10 @@ Actualmente el juego permite:
   * "Armonia", +5 puntos si no hubo descartes 
 * Ver jugadores en sala previo a la partida.
 * Sonido!
+* Soporte online!
+  * Se pueden crear y unirse a salas con chat (in-game), para iniciar una partida
+  * Existe la posibilidad de rendirse de una partida para entrar en otra.
 
 TODO:
-* Soporte para jugar online.
-* Crear nuevas salas para que ingresen otros jugadores (lógica ya existe, falta implementar a nivel GUI)
-* Seleccionar una sala de las existentes, para poder ingresar y jugar con los participantes (lógica ya existe, falta implementar a nivel GUI)
-* Poder salir de una sala, incluso si en la misma el juego se encuentra en ejecución (rendirse) (si solo un jugador queda en la sala, este gana la partida).
-
-
-Wishlist:
-* Base de datos? <i>punto extra!</i>
 * Poder expulsar jugadores de salas
-* Chat ingame?
+* Agregar soporte del modo Dinastía al online
