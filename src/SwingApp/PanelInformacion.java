@@ -25,8 +25,8 @@ public class PanelInformacion extends JPanel {
 	int i = 0;
 
 	private static final long serialVersionUID = -6580547458892714155L;
-	JTextPane info;
-	List<JButton> botones;
+	private JTextPane info;
+	private List<JButton> botones;
 	private List<Jugador> jugadores;
 
 	private VentanaJueguito ventana;

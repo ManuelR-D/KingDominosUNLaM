@@ -10,7 +10,7 @@ public class Jugador extends Usuario {
 
 	private static final long serialVersionUID = -5342621303315896626L;
 	private String nombre;
-	public Tablero tablero;
+	protected Tablero tablero;
 	protected boolean reinoCompletamenteOcupado = true;
 
 	public Jugador(String nombre, int tamTablero) {
@@ -45,7 +45,7 @@ public class Jugador extends Usuario {
 		return true;
 	}
 
-	public int eligeCarta(List<Carta> cartasAElegir, VentanaJueguito entrada) throws IOException {
+	public int eligeCarta(List<Carta> cartasAElegir, VentanaJueguito entrada,Partida partida) throws IOException {
 		int cartaElegida = 0;
 		do {
 			cartaElegida = entrada.leerCartaElegida();
@@ -57,7 +57,7 @@ public class Jugador extends Usuario {
 				}
 
 			}
-		} while (!Partida.rendido && cartasAElegir.get(cartaElegida) == null);
+		} while (!partida.isRendido() && cartasAElegir.get(cartaElegida) == null);
 
 		return cartaElegida;
 	}
@@ -82,11 +82,11 @@ public class Jugador extends Usuario {
 		tablero.setIdCastilloCentro(i);
 	}
 
-	public void crearPaquete(int numeroElegido, int coordenadaX, int coordenadaY, boolean pudoInsertar, int rotacion) {
+	public void crearPaquete(Partida partida,HiloCliente hiloCliente,int numeroElegido, int coordenadaX, int coordenadaY, boolean pudoInsertar, int rotacion) {
 		String insercion = pudoInsertar ? "S" : "N";
-		Partida.paquete = numeroElegido + "," + coordenadaX + "," + coordenadaY + "," + this.nombre + "," + insercion
-				+ "," + rotacion;
-		HiloCliente.mtxPaquetePartida.countDown(); // aviso a mi hilo que tiene preparado un paquete
+		partida.setPaquete(numeroElegido + "," + coordenadaX + "," + coordenadaY + "," + this.nombre + "," + insercion
+				+ "," + rotacion);
+		hiloCliente.getMtxPaquetePartida().countDown(); // aviso a mi hilo que tiene preparado un paquete
 	}
 
 }

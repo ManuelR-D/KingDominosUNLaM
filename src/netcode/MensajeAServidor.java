@@ -5,10 +5,11 @@ import java.io.Serializable;
 public class MensajeAServidor implements Serializable{
 
 	private static final long serialVersionUID = -5905903694983224221L;
-	String texto;
-	Sala sala;
-	int tipo;
-	MensajeEstadoPartida estado = null;
+	private String texto;
+	private Sala sala;
+	private int tipo;
+	private MensajeEstadoPartida estado = null;
+	
 	public MensajeAServidor(String texto, Sala sala, int tipo) {
 		this.texto = texto;
 		this.sala = sala;
@@ -37,6 +38,9 @@ public class MensajeAServidor implements Serializable{
 	@Override
 	public String toString() {
 		return "MensajeAServidor [mensaje=" + texto + ", sala=" + sala + ", tipo=" + tipo + "]";
+	}
+	public MensajeEstadoPartida getEstado() {
+		return estado;
 	}
 	
 	

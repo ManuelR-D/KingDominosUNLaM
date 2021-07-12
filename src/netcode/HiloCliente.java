@@ -13,12 +13,13 @@ import reyes.*;
 public class HiloCliente extends Thread {
 	ObjectInputStream entrada;
 	static Lobby ventana;
-	private static Socket socket;
-	public static CountDownLatch mtxPaquetePartida = new CountDownLatch(1);
-	private static boolean partidaEnProceso = false;
+	private Socket socket;
+	private CountDownLatch mtxPaquetePartida = new CountDownLatch(1);
+	private boolean partidaEnProceso = false;
+	private Partida partida;
 
 	public HiloCliente(Socket socket, ObjectInputStream entrada, Lobby ventana) {
-		HiloCliente.socket = socket;
+		this.socket = socket;
 		this.entrada = entrada;
 		HiloCliente.ventana = ventana;
 	}
@@ -104,10 +105,9 @@ public class HiloCliente extends Thread {
 		}
 	}
 
-
 	private void procesarTurnoJugador(MensajeACliente mensaje) {
-		Partida.paquete = mensaje.getTexto();
-		Partida.mtxEsperarPaquete.countDown(); // le aviso a partida que tiene un paquete a procesar
+		partida.setPaquete(mensaje.getTexto());
+		partida.getMtxEsperarPaquete().countDown(); // le aviso a partida que tiene un paquete a procesar
 	}
 
 	private void unirsePartida(MensajeACliente mensaje) {
@@ -126,22 +126,27 @@ public class HiloCliente extends Thread {
 			Jugador jugador;
 			if (tipo == 'B') {
 				jugador = new Bot(nombresJugadores[i], tamTablero);
-				Partida.addBotLocal(nombresJugadores[i]);
 			} else {
 				jugador = new Jugador(nombresJugadores[i], tamTablero);
 			}
 			jugadores.add(jugador);
 		}
 		String variante = nombreMazo + "|" + modoDeJuego;
+		HiloCliente THIS = this;
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					Partida p = new Partida(jugadores, tamTablero, 48, textura);
-					p.setMazo(mensaje.estado.getMazoMezcladoDePartida());
-					p.setTurnosIniciales(mensaje.estado.getTurnosIniciales());
-					Partida.setJugadorLocal(ventana.getNombreCliente());
-					p.iniciarPartida(variante, tituloVentana);
+					partida = new Partida(jugadores, tamTablero, 48, textura, THIS);
+					partida.setMazo(mensaje.estado.getMazoMezcladoDePartida());
+					partida.setTurnosIniciales(mensaje.estado.getTurnosIniciales());
+					partida.setJugadorLocal(ventana.getNombreCliente());
+					for (Jugador jugador : jugadores) {
+						if (jugador instanceof Bot) {
+							partida.addBotLocal(jugador.getNombre());
+						}
+					}
+					partida.iniciarPartida(variante, tituloVentana);
 				} catch (KingDominoExcepcion | IOException e) {
 					e.printStackTrace();
 				}
@@ -168,7 +173,6 @@ public class HiloCliente extends Thread {
 			Jugador jugador;
 			if (tipo == 'B') {
 				jugador = new Bot(nombresJugadores[i], tamTablero);
-				Partida.addBotLocal(nombresJugadores[i]);
 			} else {
 				jugador = new Jugador(nombresJugadores[i], tamTablero);
 			}
@@ -178,26 +182,34 @@ public class HiloCliente extends Thread {
 		// El formato de variante es: {mazo}|{variante1}|{variante2}|{varianteN}
 		String variante = nombreMazo + "|" + modoDeJuego;
 		// Iniciamos el juego
+		HiloCliente THIS = this;
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					Partida p = new Partida(jugadores, tamTablero, 48, textura);
-					Partida.setJugadorLocal(ventana.getNombreCliente());
-					p.iniciarPartida(variante, tituloVentana);
+					partida = new Partida(jugadores, tamTablero, 48, textura, THIS);
+					partida.setJugadorLocal(ventana.getNombreCliente());
+					for (Jugador jugador : jugadores) {
+						if (jugador instanceof Bot) {
+							partida.addBotLocal(jugador.getNombre());
+						}
+					}
+					partida.iniciarPartida(variante, tituloVentana);
 				} catch (KingDominoExcepcion | IOException e) {
 					e.printStackTrace();
 				}
 			}
 		});
 		thread.start();
-		// Le avisamos al servidor que el juego esta iniciado, y le enviamos el estado
-		// del juego.
+//		// Le avisamos al servidor que el juego esta iniciado, y le enviamos el estado
+//		// del juego.
 		Mazo mazo = null;
 		List<Integer> turnos = null;
 		do {
-			mazo = Partida.getMazo();
-			turnos = Partida.getTurnosIniciales();
+			if (partida != null) {
+				mazo = partida.getMazo();
+				turnos = partida.getTurnosIniciales();
+			}
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
@@ -205,8 +217,8 @@ public class HiloCliente extends Thread {
 			}
 		} while (mazo == null || turnos == null);
 
-		MensajeEstadoPartida msj = new MensajeEstadoPartida(mazo, configuracion, turnos);
-		MensajeAServidor msjServidor = new MensajeAServidor(getName(), mensaje.getSala(), 11, msj);
+		MensajeEstadoPartida msjEstadoPartida = new MensajeEstadoPartida(mazo, configuracion, turnos);
+		MensajeAServidor msjServidor = new MensajeAServidor(getName(), mensaje.getSala(), 11, msjEstadoPartida);
 		System.out.println("Cliente host: Inicien!");
 		ventana.enviarMensaje(msjServidor);
 
@@ -218,7 +230,7 @@ public class HiloCliente extends Thread {
 		// el jugador local juega su turno. Luego el servidor replica esa jugada a todos
 		// los demas jugadores.
 		partidaEnProceso = true;
-		mtxPaquetePartida = new CountDownLatch(1);
+		setMtxPaquetePartida(new CountDownLatch(1));
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -226,15 +238,15 @@ public class HiloCliente extends Thread {
 				while (partidaEnProceso) {
 					System.out.println("Iniciando daemon para jugador " + ventana.getNombreCliente());
 					try {
-						mtxPaquetePartida.await();
+						getMtxPaquetePartida().await();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					mtxPaquetePartida = new CountDownLatch(1);
+					setMtxPaquetePartida(new CountDownLatch(1));
 					System.out.println("HiloServidor: Procesando paquete del jugador " + ventana.getNombreCliente());
 					MensajeAServidor msj;
-					msj = new MensajeAServidor(Partida.paquete, ventana.getSalaActual(), 12);
-					Partida.paquete = null;
+					msj = new MensajeAServidor(partida.getPaquete(), ventana.getSalaActual(), 12);
+					partida.setPaquete(null);
 					ventana.enviarMensaje(msj);
 
 				}
@@ -283,11 +295,19 @@ public class HiloCliente extends Thread {
 		ventana.actualizarSalas(mensaje.getSalas());
 	}
 
-	public static void rendirse(String nombre) {
+	public void rendirse(String nombre) {
 		partidaEnProceso = false;
-		Partida.rendirse();
-		Partida.paquete = "1,1,1," + nombre + ",Rendir,1";
-		mtxPaquetePartida.countDown();
+		partida.rendirse();
+		partida.setPaquete("1,1,1," + nombre + ",Rendir,1");
+		getMtxPaquetePartida().countDown();
+	}
+
+	public CountDownLatch getMtxPaquetePartida() {
+		return mtxPaquetePartida;
+	}
+
+	public void setMtxPaquetePartida(CountDownLatch mtxPaquetePartida) {
+		this.mtxPaquetePartida = mtxPaquetePartida;
 	}
 
 }

@@ -15,31 +15,32 @@ import SwingApp.VentanaJueguito;
 import netcode.HiloCliente;
 
 public class Partida {
-	private static Mazo mazoInicial = null;
+	private Mazo mazoInicial = null;
 	private Mazo mazo;
-	private static List<Jugador> jugadores;
-	private static final int DEFAULT_TAM_TABLERO = 5;
-	private static final int DEFAULT_CANT_CARTAS = 48;
-	private static final int DEFAULT_CANT_JUGADORES = 2;
+	private List<Jugador> jugadores;
+	private final int DEFAULT_TAM_TABLERO = 5;
+	private final int DEFAULT_CANT_CARTAS = 48;
+	private final int DEFAULT_CANT_JUGADORES = 2;
 	private int tamanioTablero;
 	private int cantidadCartas;
 	private int cantidadJugadores;
 	private String textura = null;
-	static VentanaJueguito ventana;
+	private VentanaJueguito ventana;
 	private Map<Jugador, Integer> puntajes = new HashMap<Jugador, Integer>();
 	private boolean reinoMedio = false;
 	private boolean armonia = false;
 	private boolean isMazoMezclado = false;
 	private boolean partidaEnJuego = true;
 	private List<Integer> turnos;
-	private static boolean esTurnoJugadorLocal = false;
-	private static String jugadorLocal;
-	private static List<String> botsLocales = new ArrayList<String>();
+	private HiloCliente hiloCliente;
+	private boolean esTurnoJugadorLocal = false;
+	private String jugadorLocal;
+	private List<String> botsLocales = new ArrayList<String>();
 
-	public static CountDownLatch mtxEsperarPaquete = new CountDownLatch(1);
-	public static String paquete;
-	static boolean rendido = false;
-	private static List<Integer> turnosIniciales;
+	private CountDownLatch mtxEsperarPaquete = new CountDownLatch(1);
+	private String paquete;
+	private boolean rendido = false;
+	private List<Integer> turnosIniciales;
 
 	public Partida() {
 		this.tamanioTablero = DEFAULT_TAM_TABLERO;
@@ -54,7 +55,7 @@ public class Partida {
 	public Partida(List<Jugador> jugadores) throws KingDominoExcepcion {
 		this.cantidadCartas = DEFAULT_CANT_CARTAS;
 		this.tamanioTablero = DEFAULT_TAM_TABLERO;
-		Partida.jugadores = jugadores;
+		this.jugadores = jugadores;
 		this.cantidadJugadores = jugadores.size();
 		if (cantidadJugadores > 4 || cantidadJugadores < 2) {
 			throw new KingDominoExcepcion("La cantidad de jugadores es invalida!!");
@@ -78,11 +79,12 @@ public class Partida {
 		}
 		this.cantidadCartas = cantidadCartas;
 		this.tamanioTablero = tamanioTablero;
-		Partida.jugadores = jugadores;
+		this.jugadores = jugadores;
 	}
 
-	public Partida(List<Jugador> jugadores, int tamanioTablero, int cantidadCartas, String textura)
+	public Partida(List<Jugador> jugadores, int tamanioTablero, int cantidadCartas, String textura, HiloCliente hiloCliente)
 			throws KingDominoExcepcion {
+		this.hiloCliente=hiloCliente;
 		if (cantidadCartas != 48) {
 			throw new KingDominoExcepcion(
 					"La cantidad de cartas tiene que ser 48! (limitaciÃ³n por parte del enunciado)");
@@ -98,7 +100,7 @@ public class Partida {
 		}
 		this.cantidadCartas = cantidadCartas;
 		this.tamanioTablero = tamanioTablero;
-		Partida.jugadores = jugadores;
+		this.jugadores = jugadores;
 		this.textura = textura;
 	}
 
@@ -148,7 +150,7 @@ public class Partida {
 	}
 
 	public boolean iniciarPartida(String tituloVentana) throws IOException {
-		mtxEsperarPaquete = new CountDownLatch(1);
+		setMtxEsperarPaquete(new CountDownLatch(1));
 		partidaEnJuego=true;
 		rendido=false;
 		List<Integer> turnos = determinarTurnosIniciales();
@@ -159,7 +161,7 @@ public class Partida {
 			isMazoMezclado = true;
 
 		}
-		Partida.mazoInicial = new Mazo(this.mazo); // Deepcopy.
+		mazoInicial = new Mazo(this.mazo); // Deepcopy.
 		// seteamos el tablero para cada jugador
 		for (int i = 0; i < jugadores.size(); i++) {
 			Jugador jugador = jugadores.get(i);
@@ -185,7 +187,7 @@ public class Partida {
 			ventana.terminarPartida(determinarGanadores(puntajesFinales));
 		}
 		System.out.println(jugadorLocal+" sali de la partida");
-		Partida.turnosIniciales=null;
+		turnosIniciales=null;
 		ventana.dispose();
 		return true;
 	}
@@ -279,14 +281,14 @@ public class Partida {
 				esTurnoJugadorLocal = false;
 				try {
 					System.out.println(jugadorLocal + ":esperando paquete");
-					mtxEsperarPaquete.await();
+					getMtxEsperarPaquete().await();
 					System.out.println(jugadorLocal + ":recibi paquete");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				mtxEsperarPaquete = new CountDownLatch(1);
-				String[] paqueteActual = Partida.paquete.split(",");
-				Partida.paquete = null;
+				setMtxEsperarPaquete(new CountDownLatch(1));
+				String[] paqueteActual = paquete.split(",");
+				paquete=null;
 				numeroElegido = Integer.valueOf(paqueteActual[0]);
 				coordenadaX = Integer.valueOf(paqueteActual[1]);
 				coordenadaY = Integer.valueOf(paqueteActual[2]);
@@ -311,33 +313,33 @@ public class Partida {
 			} else {
 				// Si es el turno del jugador local, tiene que elegir su carta y posicion
 				esTurnoJugadorLocal = true;
-				numeroElegido = jugadorTurnoActual.eligeCarta(cartasAElegir, entrada);
-				if (!rendido) {// El jugador se puede rendir mientras elije cartas
+				numeroElegido = jugadorTurnoActual.eligeCarta(cartasAElegir, entrada,this);
+				if (!isRendido()) {// El jugador se puede rendir mientras elije cartas
 					cartaElegida = cartasAElegir.get(numeroElegido);
 				}
-				if (!rendido) {// El jugador se puede rendir antes de colocar la carta elegida
+				if (!isRendido()) {// El jugador se puede rendir antes de colocar la carta elegida
 					pudoInsertar = jugadorTurnoActual.insertaEnTablero(cartaElegida, entrada);
 					insercion = pudoInsertar ? "S" : "N";
 					coordenadaX = cartaElegida.getFichas()[0].getColumna();
 					coordenadaY = cartaElegida.getFichas()[0].getFila();
 				}
-				if (!rendido) {
+				if (!isRendido()) {
 					// Si no es un bot, envia un paquete
 					if (jugadorLocal.equals(jugadorTurnoActual.getNombre())) {
 						int rotacion = cartaElegida.getRotacion();
-						jugadorTurnoActual.crearPaquete(numeroElegido, coordenadaX, coordenadaY, pudoInsertar,
+						jugadorTurnoActual.crearPaquete(this,hiloCliente,numeroElegido, coordenadaX, coordenadaY, pudoInsertar,
 								rotacion);
 					}
 				}
 
 			}
-			if (rendido) {
+			if (isRendido()) {
 				partidaEnJuego = false;
 //				Partida.paquete = numeroElegido + "," + coordenadaX + "," + coordenadaY + "," + jugadorLocal
 //						+ ",Rendir," + 0;
 //				HiloCliente.mtxPaquetePartida.countDown(); // aviso a mi hilo que tiene preparado un paquete
 			}
-			if (!rendido) {
+			if (!isRendido()) {
 				if (!insercion.contains("Rendir")) {
 					if (insercion.equals("S")) {
 						ventana.actualizarTablero(turno, coordenadaY, coordenadaX);
@@ -360,8 +362,8 @@ public class Partida {
 	}
 
 	private List<Integer> determinarTurnosIniciales() {
-		if (Partida.turnosIniciales != null)
-			return Partida.turnosIniciales;
+		if (turnosIniciales != null)
+			return turnosIniciales;
 		List<Integer> idJugadores = new ArrayList<Integer>();
 
 		for (int i = 0; i < cantidadJugadores; i++) {
@@ -372,7 +374,7 @@ public class Partida {
 		return idJugadores;
 	}
 
-	public static List<Integer> getTurnosIniciales() {
+	public List<Integer> getTurnosIniciales() {
 		return turnosIniciales;
 	}
 
@@ -384,37 +386,37 @@ public class Partida {
 		reinoMedio = b;
 	}
 
-	public static Mazo getMazo() {
+	public Mazo getMazo() {
 		return mazoInicial;
 	}
 
 	public void setMazo(Mazo mazoMezcladoDePartida) {
-		Partida.mazoInicial = mazoMezcladoDePartida;
+		mazoInicial = mazoMezcladoDePartida;
 		this.mazo = mazoMezcladoDePartida;
 		isMazoMezclado = true;
 	}
 
 	public void setTurnosIniciales(List<Integer> turnosIniciales) {
-		Partida.turnosIniciales = turnosIniciales;
+		this.turnosIniciales = turnosIniciales;
 	}
 
-	public static void addBotLocal(String nombre) {
+	public void addBotLocal(String nombre) {
 		botsLocales.add(nombre);
 	}
 
-	public static boolean esTurnoJugadorLocal() {
+	public boolean esTurnoJugadorLocal() {
 		return esTurnoJugadorLocal;
 	}
 
-	public static void setJugadorLocal(String nombre) {
+	public void setJugadorLocal(String nombre) {
 		jugadorLocal = nombre;
 	}
 
-	public static String getJugadorLocal() {
+	public String getJugadorLocal() {
 		return jugadorLocal;
 	}
 
-	public static void rendirse() {
+	public void rendirse() {
 		rendido = true;
 		VentanaJueguito.getStartLatch().countDown();
 		VentanaJueguito.getLatchCartaElegida().countDown();
@@ -463,5 +465,29 @@ public class Partida {
 			ventana.mostrarVentanaMensaje("Solo quedas vos, ganaste la partida(⌐■_■)");
 		}
 
+	}
+
+	public void rendirseDesdeVentana() {
+		hiloCliente.rendirse(jugadorLocal);
+	}
+
+	public CountDownLatch getMtxEsperarPaquete() {
+		return mtxEsperarPaquete;
+	}
+
+	public void setMtxEsperarPaquete(CountDownLatch mtxEsperarPaquete) {
+		this.mtxEsperarPaquete = mtxEsperarPaquete;
+	}
+
+	public String getPaquete() {
+		return paquete;
+	}
+
+	public void setPaquete(String paquete) {
+		this.paquete = paquete;
+	}
+
+	public boolean isRendido() {
+		return rendido;
 	}
 }

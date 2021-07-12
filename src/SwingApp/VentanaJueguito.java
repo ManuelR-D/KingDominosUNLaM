@@ -34,7 +34,7 @@ public class VentanaJueguito extends JFrame {
 	private static String texturaCastilloRojo = "./assets/castilloRojo.png";
 	private static String texturaCastilloVerde = "./assets/castilloVerde.png";
 	private static String texturaCorona = "./assets/corona.png";
-	static String texturaVacia = "./assets/vacio.png";
+	private static String texturaVacia = "./assets/vacio.png";
 
 	private Sonido sonido;
 	static BufferedImage bufferCastilloAmarillo;
@@ -44,13 +44,13 @@ public class VentanaJueguito extends JFrame {
 	static BufferedImage bufferCarta;
 	static BufferedImage bufferVacio;
 	static BufferedImage bufferCorona;
-	static final int TAM_FICHA = 80;
-	static double LARGO_VENTANA;
-	static double ALTO_VENTANA;
+	private final static int TAM_FICHA = 80;
+	private static double LARGO_VENTANA;
+	private static double ALTO_VENTANA;
 	static int TAM_TABLEROS;
 	static PanelTableroSeleccion pSeleccion;
-	TablerosJugadores tableros;
-	PanelInformacion informacion;
+	private TablerosJugadores tableros;
+	private PanelInformacion informacion;
 	private Partida partida;
 	private static int turnoJugador;
 
@@ -59,8 +59,8 @@ public class VentanaJueguito extends JFrame {
 	public static VentanaJueguito mainFrame;
 	public static PanelFicha fichaElegida;
 
-	private static int xVentana;
-	private static int yVentana;
+	private int xVentana;
+	private int yVentana;
 
 	/**
 	 * Launch the application.
@@ -156,8 +156,8 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	protected void actualizarCoordenadas() {
-		VentanaJueguito.xVentana = getX();
-		VentanaJueguito.yVentana = getY();
+		this.xVentana = getX();
+		this.yVentana = getY();
 	}
 
 	public synchronized int[] obtenerInputCoordenadas(Carta carta) {
@@ -173,7 +173,7 @@ public class VentanaJueguito extends JFrame {
 		// onCartaElegida se encarga ya de redibujar la carta en su rotaciÃ³n.
 
 		pSeleccion.onCartaElegida(carta);
-		return tableros.obtenerInputCoordenadas();
+		return tableros.obtenerInputCoordenadas(this);
 	}
 
 	public static CountDownLatch getLatchCartaElegida() {
@@ -225,7 +225,7 @@ public class VentanaJueguito extends JFrame {
 		int altoPanel = (int) (ALTO_VENTANA / 2);
 		int largoPanel = (int) (LARGO_VENTANA - TAM_TABLEROS);
 
-		pSeleccion = new PanelTableroSeleccion(cartasAElegir, largoPanel, altoPanel);
+		pSeleccion = new PanelTableroSeleccion(cartasAElegir, largoPanel, altoPanel,partida);
 		pSeleccion.setBounds(TAM_TABLEROS, altoPanel, largoPanel, altoPanel);
 		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
 		this.getContentPane().add(pSeleccion);
@@ -277,7 +277,6 @@ public class VentanaJueguito extends JFrame {
 	@Override
 	public void dispose() {
 		super.dispose();
-		HiloCliente.rendirse(Partida.getJugadorLocal());
 		if (sonido != null)
 			sonido.stop();
 	}
@@ -321,11 +320,11 @@ public class VentanaJueguito extends JFrame {
 		}
 	}
 
-	public static int getXVentana() {
+	public int getXVentana() {
 		return xVentana;
 	}
 
-	public static int getYVentana() {
+	public int getYVentana() {
 		return yVentana;
 	}
 
@@ -334,7 +333,11 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void rendirse() {
-		HiloCliente.rendirse(Partida.getJugadorLocal());
+		partida.rendirseDesdeVentana();
+	}
+
+	public static int getTAM_FICHA() {
+		return TAM_FICHA;
 	}
 
 

@@ -10,17 +10,15 @@ import java.util.List;
 import java.util.Map;
 
 public class Servidor {
-	int puerto;
-	ServerSocket server;
-	List<Socket> sockets;
-	List<Sala> salas;
+	private ServerSocket server;
+	private List<Socket> sockets;
+	private List<Sala> salas;
 
-	Map<String, Sala> mapaSalas;
-	Map<Socket, ObjectOutputStream> mapaSocketsObjectOuput;
-	Map<String, Socket> mapaNombreSocket;
+	private Map<String, Sala> mapaSalas;
+	private Map<Socket, ObjectOutputStream> mapaSocketsObjectOuput;
+	private Map<String, Socket> mapaNombreSocket;
 
 	public Servidor(int puerto) {
-		this.puerto = puerto;
 		this.sockets = new ArrayList<Socket>();
 		this.salas = new ArrayList<Sala>();
 		this.mapaSalas = new HashMap<String, Sala>();

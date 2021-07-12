@@ -9,10 +9,10 @@ public class MensajeACliente implements Serializable{
 
 
 	private static final long serialVersionUID = -3270450619107272291L;
-	String texto;
-	List<Sala> listaSalas;
-	Sala sala;
-	int tipo;
+	private String texto;
+	private List<Sala> listaSalas;
+	private Sala sala;
+	private int tipo;
 	MensajeEstadoPartida estado = null;
 	public MensajeACliente(String texto, List<Sala> salas, int tipo) {
 		this.texto = texto;

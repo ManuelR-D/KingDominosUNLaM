@@ -15,10 +15,10 @@ import reyes.Jugador;
 public class TablerosJugadores extends JPanel {
 
 	private static final long serialVersionUID = -5711758328587102246L;
-	int tamTablero;
-	int tamTableros = VentanaJueguito.TAM_TABLEROS;
-	List<PanelJugador> tableros;
-	int[][] matrizCoordenadas;// Tiene 2 coordenadas, x del tablero e y del tablero;
+	private int tamTablero;
+	private int tamTableros = VentanaJueguito.TAM_TABLEROS;
+	private List<PanelJugador> tableros;
+	private int[][] matrizCoordenadas;// Tiene 2 coordenadas, x del tablero e y del tablero;
 
 	public TablerosJugadores(List<Jugador> jugadores) {
 		setLayout(null);
@@ -66,7 +66,7 @@ public class TablerosJugadores extends JPanel {
 		}
 	}
 
-	public synchronized int[] obtenerInputCoordenadas() {
+	public synchronized int[] obtenerInputCoordenadas(VentanaJueguito ventana) {
 		int turno=VentanaJueguito.getTurnoJugador();
 		int[] coordenadasElegidas = new int[2];
 		while (VentanaJueguito.coordenadasElegidas[0] == 0 && VentanaJueguito.coordenadasElegidas[1] == 0) {
@@ -75,8 +75,8 @@ public class TablerosJugadores extends JPanel {
 				//Al implementar cliente/servidor, esto es innecesario
 				int xMouse = VentanaJueguito.coordenadasElegidas[2];
 				int yMouse = VentanaJueguito.coordenadasElegidas[3];
-				int xVentana=VentanaJueguito.getXVentana();
-				int yVentana=VentanaJueguito.getYVentana();
+				int xVentana=ventana.getXVentana();
+				int yVentana=ventana.getYVentana();
 				int xTablero = matrizCoordenadas[turno][0]+xVentana;
 				int yTablero = matrizCoordenadas[turno][1]+yVentana;
 				if (!((xMouse >= xTablero && xMouse <= xTablero + tamTablero)

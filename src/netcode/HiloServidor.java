@@ -198,7 +198,7 @@ public class HiloServidor extends Thread {
 		for (int i = 1; i < jugadoresEnSala.size(); i++) {
 			// 12: Le decimos a los usuarios que inicien su UI, y le pasamos el estado de la
 			// partida
-			MensajeACliente msj = new MensajeACliente(getName(), 12, salaActual, mensajeAServidor.estado);
+			MensajeACliente msj = new MensajeACliente(getName(), 12, salaActual, mensajeAServidor.getEstado());
 			System.out.println("Servdor: Usuario " + jugadoresEnSala.get(i) + " inicia!");
 			enviarMensajeAUsuario(msj, jugadoresEnSala.get(i));
 			try {

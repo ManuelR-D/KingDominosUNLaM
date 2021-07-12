@@ -3,14 +3,14 @@ package reyes;
 import java.util.List;
 
 import SwingApp.VentanaJueguito;
+import netcode.HiloCliente;
 
 public class Bot extends Jugador {
 
 	private static final long serialVersionUID = -7706573554002056333L;
-	int puntajeMax = 0;
-	int xPuntajeMax;
-	int yPuntajeMax;
-	int rotacionPuntajeMax;
+	private int xPuntajeMax;
+	private int yPuntajeMax;
+	private int rotacionPuntajeMax;
 
 	public Bot(String nombre, int tamTablero) {
 		super(nombre, tamTablero);
@@ -26,11 +26,11 @@ public class Bot extends Jugador {
 		this.tablero = new TableroBot(tamanioTablero);
 	}
 	@Override
-	public void crearPaquete(int numeroElegido, int coordenadaX, int coordenadaY, boolean pudoInsertar, int rotacion) {
+	public void crearPaquete(Partida partida,HiloCliente hiloCliente,int numeroElegido, int coordenadaX, int coordenadaY, boolean pudoInsertar, int rotacion) {
 		//Bots no crean paquetes.
 	}
 	@Override
-	public int eligeCarta(List<Carta> cartasAElegir, VentanaJueguito ventana) {
+	public int eligeCarta(List<Carta> cartasAElegir, VentanaJueguito ventana,Partida partida) {
 		int numeroElegido = -1;
 		int[] puntajeMaxYCoordenadas = new int[4];
 

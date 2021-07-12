@@ -16,13 +16,20 @@ public class PanelFicha extends JPanel {
 
 	private static final long serialVersionUID = 5537172421677141208L;
 	private Ficha ficha;
-	private static final int TAM_FICHA = VentanaJueguito.TAM_FICHA;
+	private static final int TAM_FICHA = VentanaJueguito.getTAM_FICHA();
 	private static final int LARGO_CORONA = 22;
 	private int x, y;
 	private BufferedImage bufferFicha;
-	double escalaLargo;
-	double escalaAlto;
+	private double escalaLargo;
+	private double escalaAlto;
 	private boolean seteada = false;
+	private static BufferedImage bufferCastilloAmarillo;
+	private static BufferedImage bufferCastilloAzul;
+	private static BufferedImage bufferCastilloRojo;
+	private static BufferedImage bufferCastilloVerde;
+	private static BufferedImage bufferCarta;
+	private static BufferedImage bufferVacio;
+	private static BufferedImage bufferCorona;
 
 	public PanelFicha(Ficha f, int y, int x) {
 		this.x = x;
@@ -69,7 +76,7 @@ public class PanelFicha extends JPanel {
 			}
 			return castillo;
 		} else {
-			int rotacion = f.getRotacion()-1;
+//			int rotacion = f.getRotacion()-1;
 			int idFicha = f.getId() - 2;
 			/*
 			 * Nos traemos una copia de bufferCarta, puesto que vamos a dibujar las coronas.
@@ -172,7 +179,7 @@ public class PanelFicha extends JPanel {
 			return;
 		
 		bufferFicha = getTexturaFicha(c.getFichas()[0]);
-		int turno = VentanaJueguito.getTurnoJugador();
+//		int turno = VentanaJueguito.getTurnoJugador();
 		//VentanaJueguito.mainFrame.tableros.tableros.get(turno)c.
 		//repaint();
 	}

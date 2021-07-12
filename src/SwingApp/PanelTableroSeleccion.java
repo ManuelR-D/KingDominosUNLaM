@@ -19,16 +19,19 @@ public class PanelTableroSeleccion extends JPanel {
 
 	private static final long serialVersionUID = 6840011839081352510L;
 	private CountDownLatch startLatch = new CountDownLatch(1);
-	Carta cartaElegida;
+	private Carta cartaElegida;
 	public static volatile int idCartaElegida;
-	double escala;
+	private double escala;
 	private int largoPanel;
 	private int altoPanel;
-	public PanelTableroSeleccion(List<Carta> cartasAElegir, int largoPanel, int altoPanel) {
+	private Partida partida;
+	
+	public PanelTableroSeleccion(List<Carta> cartasAElegir, int largoPanel, int altoPanel,Partida partida) {
+		this.partida=partida;
 		this.largoPanel=largoPanel;
 		this.altoPanel=altoPanel;
 		this.setBackground(new Color(0x614828));
-		int tamFicha = VentanaJueguito.TAM_FICHA;
+		int tamFicha = VentanaJueguito.getTAM_FICHA();
 		double altoFicha=altoPanel/4;
 		escala=altoFicha/tamFicha;
 		int tamFichaEscalado=(int) (tamFicha*escala);
@@ -77,14 +80,14 @@ public class PanelTableroSeleccion extends JPanel {
 	}
 
 	public synchronized void onCartaElegida(Carta carta) {
-		if(!Partida.esTurnoJugadorLocal())
+		if(!partida.esTurnoJugadorLocal())
 			return;
 		this.cartaElegida = carta;
 		idCartaElegida = carta.getId();
 		this.removeAll();
 		
 
-		int tamFicha= VentanaJueguito.TAM_FICHA;
+		int tamFicha= VentanaJueguito.getTAM_FICHA();
 		int tamFichaEscalado=(int) (tamFicha*escala);
 		int centradoLargo=(largoPanel/2)-tamFichaEscalado;
 		int centradoAlto=(altoPanel/2)-tamFichaEscalado;

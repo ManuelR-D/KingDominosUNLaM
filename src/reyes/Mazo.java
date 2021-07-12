@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Mazo implements Serializable {
+
+	private static final long serialVersionUID = 4226348200557418394L;
 	private List<Carta> cartas;
 
 	public Mazo(int cantidadCartas, String nombreMazo) {

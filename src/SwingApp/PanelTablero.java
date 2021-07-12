@@ -165,7 +165,7 @@ public class PanelTablero extends JPanel {
 		 */
 		int fichasMaximas = tablero.getTamanio() + 2;
 		double tamFicha = tamTableroVisual / fichasMaximas;
-		escala = tamFicha / VentanaJueguito.TAM_FICHA;
+		escala = tamFicha / VentanaJueguito.getTAM_FICHA();
 
 		int desplVertical = Math.min(tablero.getTamanio() - (fMax - fMin + 1), 2);
 		int desplHorizontal = Math.min(tablero.getTamanio() - (cMax - cMin + 1), 2);
