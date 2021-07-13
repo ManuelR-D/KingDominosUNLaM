@@ -29,7 +29,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import SwingApp.VentanaJueguito;
 import netcode.Cliente;
 import netcode.MensajeACliente;
 import netcode.MensajeAServidor;

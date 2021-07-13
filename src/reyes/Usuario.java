@@ -1,9 +1,12 @@
 package reyes;
 
 import java.io.Serializable;
-import java.util.Scanner;
 
 public class Usuario implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2007699419196672147L;
 	private String nombreUsuario;
 	private String contraseña;
 	private int idUsuario;
@@ -24,17 +27,6 @@ public class Usuario implements Serializable {
 		this.nombreUsuario = user.nombreUsuario;
 		this.contraseña = user.contraseña;
 		this.idUsuario = user.idUsuario;
-	}
-
-	public Sala crearSala() {
-		System.out.println("Ingrese nombre de sala a crear");
-		Scanner in = new Scanner(System.in);
-		String nombreDeSala = in.nextLine();
-		Sala nuevaSala = new Sala(nombreDeSala);
-		this.salaActual = nuevaSala;
-		nuevaSala.añadirJugadorASala(new Jugador(this));
-		return nuevaSala;
-
 	}
 
 	@Override

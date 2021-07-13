@@ -36,7 +36,7 @@ public class Partida {
 	private boolean esTurnoJugadorLocal = false;
 	private String jugadorLocal;
 	private List<String> botsLocales = new ArrayList<String>();
-
+	private Map<Integer, Integer> nuevoOrdenDeTurnos;
 	private CountDownLatch mtxEsperarPaquete = new CountDownLatch(1);
 	private String paquete;
 	private boolean rendido = false;
@@ -421,7 +421,66 @@ public class Partida {
 		VentanaJueguito.getStartLatch().countDown();
 		VentanaJueguito.getLatchCartaElegida().countDown();
 	}
+	private void eliminarJugadorRendido(String nombreJugador) {
+		int i = 0;
+		// busco el indice "del jugador a remover
+//		System.out.println("i:" + i + " nombre:" + jugadores.get(i).getNombre());
+		while (!jugadores.get(i).getNombre().equals(nombreJugador)) {
+			i++;
+//			System.out.println("i:" + i + " nombre:" + jugadores.get(i).getNombre());
+		}
+		ventana.mostrarVentanaMensaje(jugadores.get(i).getNombre() + " ha abandonado la partida :c");
+		jugadores.remove(i);
 
+		// busco el indice del turno que tenga el indice del jugador removido
+		int j = 0;
+		while (j < turnos.size() && turnos.get(j) != i) {
+			j++;
+		}
+		if (j < turnos.size()) {
+			turnos.remove(j);
+			// decremento los turnos cuyo valor es mayor al jugador removido
+			// ya que si el turno siguiente apuntaba al jugador 4 y removi el
+			// 4, ahora el 4 seria el 3
+//			System.out.println("Turnos");
+//			for (Integer n : turnos) {
+//				System.out.println(n);
+//			}
+			j = 0;
+			while (j < turnos.size()) {
+//				System.out.println("Turno:" + turnos.get(j));
+				if (turnos.get(j) >= i) {
+//					System.out.println("Cambio por:" + (turnos.get(j) - 1));
+					turnos.set(j, turnos.get(j) - 1);
+				}
+				j++;
+			}
+		} else {// Si no esta en turnos, es porque ya eligio, ahora esta en nuevos turnos
+			System.out.println("Encontre el turno a remover en nuevoOrdenDeturnos");
+			for (Map.Entry<Integer, Integer> entry : nuevoOrdenDeTurnos.entrySet()) {
+				int clave = entry.getKey();
+				int valor = entry.getValue();
+				if (valor == i) {
+					nuevoOrdenDeTurnos.remove(clave);
+					break;
+				}
+				if (valor >= i) {
+					nuevoOrdenDeTurnos.put(clave, valor - 1);
+				}
+			}
+		}
+//		System.out.println("Turnos");
+//		for (Integer n : turnos) {
+//			System.out.println(n);
+//		}
+		ventana.inicializarTableros(jugadores);
+		ventana.actualizarTableros();
+		if (jugadores.size() == 1) {
+			ventana.mostrarVentanaMensaje("Solo quedas vos, ganaste la partida(⌐■_■)");
+		}
+
+	}
+	/*
 	private void eliminarJugadorRendido(String nombreJugador) {
 		int i = 0;
 		// busco el indice "del jugador a remover
@@ -465,7 +524,7 @@ public class Partida {
 			ventana.mostrarVentanaMensaje("Solo quedas vos, ganaste la partida(⌐■_■)");
 		}
 
-	}
+	}*/
 
 	public void rendirseDesdeVentana() {
 		hiloCliente.rendirse(jugadorLocal);

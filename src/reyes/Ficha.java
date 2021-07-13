@@ -3,6 +3,10 @@ package reyes;
 import java.io.Serializable;
 
 public class Ficha implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4690540669498297364L;
 	private String Tipo;
 	private int fila, columna, cantCoronas;
 	private Carta carta;

@@ -1,8 +1,6 @@
 package SwingApp;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.Graphics2D;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,21 +10,17 @@ import reyes.Carta;
 import reyes.Ficha;
 import reyes.Mazo;
 
-import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
-import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,6 +33,10 @@ import javax.swing.JTextField;
 
 public class CreadorDeMazo extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7977743420992458562L;
 	private JPanel contentPane;
 
 	/**
@@ -267,9 +265,6 @@ public class CreadorDeMazo extends JFrame {
 		System.out.println(mazo.getCartas().size());
 	}
 	protected void visualizarMazo() {
-		
-		
-		Ficha f = null;
 		PanelFicha pF = null;
 		VentanaJueguito.cargarTexturas();
 		List<Carta> cartas = mazo.getCartas();

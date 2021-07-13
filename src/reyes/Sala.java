@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Sala implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1273807392156990177L;
 	private int idSala;
 	private String nombreSala;
 	private List<Jugador> jugadoresEnSala = new ArrayList<Jugador>();

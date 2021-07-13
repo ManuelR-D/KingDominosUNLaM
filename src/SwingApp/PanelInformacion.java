@@ -18,7 +18,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import reyes.Jugador;import reyes.Partida;
+import reyes.Jugador;
 import reyes.Tablero;
 
 public class PanelInformacion extends JPanel {

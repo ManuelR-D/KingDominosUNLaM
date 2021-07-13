@@ -15,6 +15,10 @@ import reyes.Ficha;
 
 public class TestFrame extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8474398618218191038L;
 	private JPanel contentPane;
 
 	/**
@@ -41,7 +45,7 @@ public class TestFrame extends JFrame {
 	private File texturaCastilloAzul = new File("./assets/castilloAzul.png");
 	private File texturaCastilloRojo = new File("./assets/castilloRojo.png");
 	private File texturaCastilloVerde = new File("./assets/castilloVerde.png");
-	private Sonido sonido;
+	//private Sonido sonido;
 	static File texturaVacia = new File("./assets/vacio.png");
 	static BufferedImage bufferCastilloAmarillo;
 	static BufferedImage bufferCastilloAzul;

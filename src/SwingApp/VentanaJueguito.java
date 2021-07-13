@@ -17,7 +17,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import netcode.HiloCliente;
 import reyes.Carta;
 import reyes.Jugador;
 import reyes.Partida;

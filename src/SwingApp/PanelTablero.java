@@ -231,7 +231,7 @@ public class PanelTablero extends JPanel {
 	}
 
 	protected void borrarPreview(PanelFicha pFSeleccionado) {
-		Carta c = VentanaJueguito.mainFrame.pSeleccion.getCartaElegida();
+		Carta c = VentanaJueguito.pSeleccion.getCartaElegida();
 		if (c == null )
 			return;
 		int i = pFSeleccionado.getFila() + c.getFichas()[1].getFila();
@@ -245,7 +245,7 @@ public class PanelTablero extends JPanel {
 	}
 
 	protected void pintarPreview(PanelFicha pFSeleccionado) {
-		Carta c = VentanaJueguito.mainFrame.pSeleccion.getCartaElegida();
+		Carta c = VentanaJueguito.pSeleccion.getCartaElegida();
 		if (c == null )
 			return;
 		int i = pFSeleccionado.getFila() + c.getFichas()[1].getFila();

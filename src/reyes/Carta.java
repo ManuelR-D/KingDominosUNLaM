@@ -3,6 +3,10 @@ package reyes;
 import java.io.Serializable;
 
 public class Carta implements Comparable<Carta>, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6805522631985847792L;
 	private int id;
 	private Ficha[] fichas = new Ficha[2];
 	private int rotacion = 1;

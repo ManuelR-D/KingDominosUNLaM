@@ -1,5 +1,6 @@
 package SwingApp;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -7,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import reyes.Carta;
@@ -23,20 +25,13 @@ public class PanelFicha extends JPanel {
 	private double escalaLargo;
 	private double escalaAlto;
 	private boolean seteada = false;
-	private static BufferedImage bufferCastilloAmarillo;
-	private static BufferedImage bufferCastilloAzul;
-	private static BufferedImage bufferCastilloRojo;
-	private static BufferedImage bufferCastilloVerde;
-	private static BufferedImage bufferCarta;
-	private static BufferedImage bufferVacio;
-	private static BufferedImage bufferCorona;
 
 	public PanelFicha(Ficha f, int y, int x) {
 		this.x = x;
 		this.y = y;
 		this.ficha = f;
 		this.escalaLargo = 1;
-		this.escalaAlto= 1;
+		this.escalaAlto = 1;
 
 		bufferFicha = getTexturaFicha(f);
 	}
@@ -46,14 +41,14 @@ public class PanelFicha extends JPanel {
 		this.y = y;
 		this.ficha = f;
 		this.escalaLargo = escalaLargo;
-		this.escalaAlto= escalaAlto;
+		this.escalaAlto = escalaAlto;
 		bufferFicha = getTexturaFicha(f);
 
 	}
 
 	private BufferedImage getTexturaFicha(Ficha f) {
 		BufferedImage imagen = null;
-		
+
 		if (f == null)
 			return VentanaJueguito.bufferVacio;
 		else if (f.getId() < 0) {
@@ -123,7 +118,7 @@ public class PanelFicha extends JPanel {
 				g2d.drawImage(VentanaJueguito.bufferCorona, null, null);
 				g2d.translate(LARGO_CORONA * escalaLargo, 0);
 			}
-			
+
 		}
 		seteada = true;
 		return imagen;
@@ -151,7 +146,7 @@ public class PanelFicha extends JPanel {
 		affineTransform.scale(escalaLargo, escalaAlto);
 		int rotacion = 0;
 		if (ficha != null) {
-			rotacion = ficha.getRotacion() - 1;	
+			rotacion = ficha.getRotacion() - 1;
 		}
 		if (rotacion != 0) {
 			affineTransform.rotate((rotacion) * Math.PI / 2);
@@ -174,32 +169,34 @@ public class PanelFicha extends JPanel {
 	}
 
 	public void mouseEncima(double escala) {
-		Carta c = VentanaJueguito.mainFrame.pSeleccion.getCartaElegida();
-		if (c == null || ficha != null )
+		Carta c = VentanaJueguito.pSeleccion.getCartaElegida();
+		if (c == null || ficha != null)
 			return;
-		
+
 		bufferFicha = getTexturaFicha(c.getFichas()[0]);
 //		int turno = VentanaJueguito.getTurnoJugador();
-		//VentanaJueguito.mainFrame.tableros.tableros.get(turno)c.
-		//repaint();
+		// VentanaJueguito.mainFrame.tableros.tableros.get(turno)c.
+		// repaint();
 	}
 
 	public void mouseAfuera() {
-		if(seteada == false) {
+		if (seteada == false) {
 			this.ficha = null;
 			bufferFicha = getTexturaFicha(null);
 			repaint();
 		}
 	}
+
 	public int getFila() {
 		return y;
 	}
+
 	public int getColumna() {
 		return x;
 	}
 
 	public void pintarPreview(Ficha ficha) {
-		if(seteada == true )
+		if (seteada == true)
 			return;
 		this.ficha = ficha;
 		bufferFicha = getTexturaFicha(ficha);
@@ -209,5 +206,53 @@ public class PanelFicha extends JPanel {
 
 	public static int getTamFicha() {
 		return TAM_FICHA;
+	}
+
+	public void pintarBorde(Ficha ficha, int grosor, Color color) {
+		if (ficha == null) {
+			this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, grosor, grosor, color));
+			return;
+		}
+		if (ficha.getId() < 0) {
+			this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, grosor, grosor, color));
+			return;
+		}
+		boolean izquierda = (ficha.getId() % 2 == 0);
+		int rotacion = ficha.getRotacion();
+
+		switch (rotacion) {
+		case 1:
+			if (izquierda) {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, grosor, 0, color));
+			} else {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, 0, grosor, grosor, color));
+			}
+			break;
+		case 2:
+			if (izquierda) {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, 0, grosor, color));
+			} else {
+				this.setBorder(BorderFactory.createMatteBorder(0, grosor, grosor, grosor, color));
+			}
+			break;
+		case 3:
+			if (izquierda) {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, 0, grosor, grosor, color));
+			} else {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, grosor, 0, color));
+			}
+			break;
+		case 4:
+			if (izquierda) {
+				this.setBorder(BorderFactory.createMatteBorder(0, grosor, grosor, grosor, color));
+			} else {
+				this.setBorder(BorderFactory.createMatteBorder(grosor, grosor, 0, grosor, color));
+			}
+			break;
+
+		default:
+			break;
+		}
+		this.repaint();
 	}
 }
