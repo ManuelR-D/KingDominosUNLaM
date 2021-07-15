@@ -45,6 +45,9 @@ public class MensajeACliente implements Serializable{
 	public int getTipo() {
 		return tipo;
 	}
+	public void setTipo(int tipo) {
+		this.tipo = tipo;
+	}
 	public void setTexto(String texto) {
 		this.texto = texto;
 	}

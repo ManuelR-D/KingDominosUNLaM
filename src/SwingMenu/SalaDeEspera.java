@@ -45,7 +45,7 @@ public class SalaDeEspera extends JFrame {
 	private Sala sala;
 	private boolean salaPrivada;
 	JButton btnIniciarPartida;
-	Menu menu;
+	Menu menu = null;
 
 	public SalaDeEspera(Sala sala, Cliente cliente) {
 		this.sala = sala;
@@ -164,8 +164,8 @@ public class SalaDeEspera extends JFrame {
 	}
 
 	protected void iniciarPartida() {
-		//Pide la lista de usuarios al servidor para pasarselo a menu
-		MensajeAServidor mensaje=new MensajeAServidor(cliente.getNombre(), sala, 14);
+		// Pide la lista de usuarios al servidor para pasarselo a menu
+		MensajeAServidor mensaje = new MensajeAServidor(cliente.getNombre(), sala, 14);
 		cliente.enviarMensaje(mensaje);
 
 	}
@@ -279,7 +279,7 @@ public class SalaDeEspera extends JFrame {
 
 	public void mostrarListaUsuarios(String mensaje) {
 		Lobby lobby = cliente.getLobby();
-		boolean puedeCrear = lobby.verificarCantidadSalas();
+		boolean puedeCrear = lobby.verificarCantidadSalas(2);
 
 		if (!puedeCrear) {
 			return;
@@ -319,7 +319,19 @@ public class SalaDeEspera extends JFrame {
 
 	public void abrirMenuCreacionPartida(String nombresUsuarios) {
 		btnIniciarPartida.setEnabled(false);
-		menu=new Menu(cliente,sala,this,nombresUsuarios);
+		menu = new Menu(cliente, sala, this, nombresUsuarios);
+	}
+
+	public void menuCerrado() {
+		setEnabledBtnIniciarPartida(true);
+		menu = null;
+	}
+
+	public void actualizarMenu() {
+		if (menu != null) {
+			menu.dispose();
+			iniciarPartida();
+		}
 	}
 
 }

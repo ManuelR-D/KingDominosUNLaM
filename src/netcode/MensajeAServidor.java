@@ -35,6 +35,9 @@ public class MensajeAServidor implements Serializable{
 	public int getTipo() {
 		return tipo;
 	}
+	public void setTipo(int tipo) {
+		this.tipo = tipo;
+	}
 	@Override
 	public String toString() {
 		return "MensajeAServidor [mensaje=" + texto + ", sala=" + sala + ", tipo=" + tipo + "]";

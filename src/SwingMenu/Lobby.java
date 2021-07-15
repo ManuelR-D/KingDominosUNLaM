@@ -256,8 +256,8 @@ public class Lobby extends JFrame {
 	protected void unirseASala() {
 		String salaElegida = listaSalas.getSelectedValue();
 
-		if (salaElegida != null) {
-			boolean puedeAbrir = verificarCantidadSalas();
+		if (salaElegida != null) {//En esta implementacion solo se puede estar en una sala(partida) a la vez
+			boolean puedeAbrir = verificarCantidadSalas(1);
 			if (puedeAbrir) {
 				boolean abierta = isSalaAbierta(salaElegida);
 				if (abierta == false) {
@@ -337,13 +337,13 @@ public class Lobby extends JFrame {
 		JOptionPane.showMessageDialog(this, descripcion, titulo, JOptionPane.WARNING_MESSAGE);
 	}
 
-	public boolean verificarCantidadSalas() {
+	public boolean verificarCantidadSalas(int salasMaximas) {
 
 		int cantSalasAbiertas = salasAbiertas.size();
-		if (cantSalasAbiertas < 3) {
+		if (cantSalasAbiertas < salasMaximas) {
 			return true;
 		} else {
-			JOptionPane.showMessageDialog(this, "Se pueden abrir 3 salas como maximo",
+			JOptionPane.showMessageDialog(this, "Se pueden abrir "+salasMaximas+" salas como maximo",
 					"Cantidad de salas abiertas maximas", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
@@ -368,6 +368,11 @@ public class Lobby extends JFrame {
 	
 	public Sala getSalaActual() {
 		return salaActual;
+	}
+
+	public void actualizarMenu(MensajeACliente mensaje) {
+		SalaDeEspera sala=mapaSalasAbiertas.get(mensaje.getSala().getNombreSala());
+		sala.actualizarMenu();
 	}
 
 }

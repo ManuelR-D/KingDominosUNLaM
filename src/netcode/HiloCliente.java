@@ -91,6 +91,10 @@ public class HiloCliente extends Thread {
 					// 16: recepcion lista usuarios para menu de creacion de partida
 					recibirListaUsuarios(mensaje);
 					break;
+				case 17:
+					// 17: El servidor le avisa al creador que ingreso o salio un usuario, debe actualizar el menu
+					actualizarMenu(mensaje);
+					break;
 
 				}
 				if (tipoMensaje == -2) {
@@ -103,6 +107,10 @@ public class HiloCliente extends Thread {
 			System.out.println("Error en lectura de mensaje en hiloCliente");
 			e.printStackTrace();
 		}
+	}
+
+	private void actualizarMenu(MensajeACliente mensaje) {
+		ventana.actualizarMenu(mensaje);
 	}
 
 	private void procesarTurnoJugador(MensajeACliente mensaje) {

@@ -61,7 +61,7 @@ public class Menu extends JDialog {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				salaDeEspera.setEnabledBtnIniciarPartida(true);
+				salaDeEspera.menuCerrado();
 			}
 		});
 		this.cliente = cliente;
