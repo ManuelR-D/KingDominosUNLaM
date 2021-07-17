@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -111,7 +112,7 @@ public class VentanaJueguito extends JFrame {
 		try {
 			Sonido s = new Sonido("./assets/Sound/main.wav");
 			s.setVolume(0.01f);
-			// s.play(Clip.LOOP_CONTINUOUSLY);
+			s.play(Clip.LOOP_CONTINUOUSLY);
 			sonido = s;
 		} catch (Exception e) {
 			e.printStackTrace();
