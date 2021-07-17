@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,11 +30,14 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import SwingApp.CreadorDeMazo;
 import netcode.Cliente;
 import netcode.MensajeACliente;
 import netcode.MensajeAServidor;
 import netcode.MensajeEstadoPartida;
 import netcode.Sala;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Lobby extends JFrame {
 
@@ -55,7 +59,9 @@ public class Lobby extends JFrame {
 
 	private JTextPane textAreaInfoSala;
 	private List<SalaDeEspera> salasAbiertas;
-
+	public static void main(String[] args) {
+		new Lobby();
+	}
 	/**
 	 * Create the frame.
 	 */
@@ -93,6 +99,26 @@ public class Lobby extends JFrame {
 		});
 		mnNewMenu.add(btnDesconexion);
 		btnDesconexion.setEnabled(false);
+		
+		mnOpciones = new JMenu("Opciones");
+		menuBar.add(mnOpciones);
+		
+		mntmCreadorDeMazo = new JMenuItem("Creador de mazo");
+		mntmCreadorDeMazo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new Thread(()->{
+					try {
+						new CreadorDeMazo();
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}).start();
+			}
+		});
+		
+		mnOpciones.add(mntmCreadorDeMazo);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -188,7 +214,7 @@ public class Lobby extends JFrame {
 	}
 
 	public void crearUsuario(String nombreCliente) {
-		cliente = new Cliente(nombreCliente, "localhost", 50000, this);
+		cliente = new Cliente(nombreCliente, "localhost", 40000, this);
 		cliente.inicializarHiloCliente(this);
 	}
 
@@ -220,10 +246,10 @@ public class Lobby extends JFrame {
 			salasAbiertas.remove(salaARemover);
 			mapaSalasAbiertas.remove(sala.getNombreSala());
 			if (sala.isPrivada()) {
-				mapaSalas.remove(salaARemover.getNombreSala());
-				if (salaARemover != null) {
-					salaARemover.dispose();
-				}
+				mapaSalas.remove(salaARemover.getNombreSala());	
+			}
+			if (salaARemover != null) {
+				salaARemover.dispose();
 			}
 		}
 
@@ -253,6 +279,8 @@ public class Lobby extends JFrame {
 		textAreaInfoSala.setText("Informacion de la sala:\n Conectados:" + cantUsuarios);
 	}
 	private Sala salaActual;
+	private JMenu mnOpciones;
+	private JMenuItem mntmCreadorDeMazo;
 	protected void unirseASala() {
 		String salaElegida = listaSalas.getSelectedValue();
 

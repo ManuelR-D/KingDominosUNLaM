@@ -82,7 +82,7 @@ public class VentanaJueguito extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaJueguito(Partida p) {
-		this.partida=p;
+		this.partida = p;
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentMoved(ComponentEvent e) {
@@ -93,7 +93,7 @@ public class VentanaJueguito extends JFrame {
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 //		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setBounds(0, 0, 400, 300);
+		setBounds(0, 0, 800, 600);
 		setResizable(true);
 		getContentPane().setBackground(new Color(0x5E411B));
 
@@ -148,7 +148,7 @@ public class VentanaJueguito extends JFrame {
 		tableros.setBounds(0, 0, TAM_TABLEROS, TAM_TABLEROS);
 		getContentPane().add(tableros);
 	}
-	
+
 	public void actualizarInterfaz() {
 		inicializarTableros(partida.getJugadores());
 		inicializarPanelInformacion(partida);
@@ -224,7 +224,7 @@ public class VentanaJueguito extends JFrame {
 		int altoPanel = (int) (ALTO_VENTANA / 2);
 		int largoPanel = (int) (LARGO_VENTANA - TAM_TABLEROS);
 
-		pSeleccion = new PanelTableroSeleccion(cartasAElegir, largoPanel, altoPanel,partida);
+		pSeleccion = new PanelTableroSeleccion(cartasAElegir, largoPanel, altoPanel, partida);
 		pSeleccion.setBounds(TAM_TABLEROS, altoPanel, largoPanel, altoPanel);
 		PanelTableroSeleccion.idCartaElegida = Integer.MIN_VALUE;
 		this.getContentPane().add(pSeleccion);
@@ -254,6 +254,7 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void actualizarTablero(int indice, int fila, int columna) {
+		pSeleccion.setCartaElegida(null);
 		tableros.actualizarTablero(indice, fila, columna);
 	}
 
@@ -333,12 +334,26 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void rendirse() {
-		partida.rendirseDesdeVentana();
+
+		this.setVisible(false);
+		new Thread(() -> {
+			while (partida.getTurnoJugadorLocalHumano() == false) {
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			partida.rendirseDesdeVentana();
+
+			this.dispose();
+		}).start();
+
 	}
 
 	public static int getTAM_FICHA() {
 		return TAM_FICHA;
 	}
-
 
 }

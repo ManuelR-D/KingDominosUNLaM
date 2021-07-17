@@ -41,7 +41,7 @@ public class CreadorDeMazo extends JFrame {
 
 	/**
 	 * Launch the application.
-	 */
+	 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -181,6 +181,7 @@ public class CreadorDeMazo extends JFrame {
 		gbc_panelPreviewMazo.gridx = 0;
 		gbc_panelPreviewMazo.gridy = 5;
 		panelControl.add(panelPreviewMazo, gbc_panelPreviewMazo);
+		this.setVisible(true);
 	}
 
 	protected void onCoronasSeleccionadas() {

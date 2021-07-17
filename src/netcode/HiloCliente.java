@@ -293,6 +293,7 @@ public class HiloCliente extends Thread {
 
 	private void salirDeSala(MensajeACliente mensaje) {
 		ventana.cerrarSala(mensaje.getSala());
+		
 	}
 
 	private void unirseASala(MensajeACliente mensaje) {

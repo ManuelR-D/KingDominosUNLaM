@@ -330,12 +330,12 @@ public class HiloServidor extends Thread {
 		String notificacion = mensajeServidor.getTexto() + " se ha desconectado de la sala";
 		MensajeAServidor msjServidor = new MensajeAServidor(notificacion, salaActual, 0);
 		recibirMensaje(msjServidor);
-
+		/*
 		if (salaActual.getCantUsuarios() > 0) {
 			String creador = salaActual.getCreador();
 			msj.setTipo(17);
 			enviarMensajeAUsuario(msj, creador);
-		}
+		}*/
 	}
 
 	private void unirseASala(MensajeAServidor mensajeServidor) {

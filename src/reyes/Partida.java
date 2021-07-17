@@ -41,6 +41,7 @@ public class Partida {
 	private String paquete;
 	private boolean rendido = false;
 	private List<Integer> turnosIniciales;
+	private boolean esTurnoJugadorLocalHumano = false;
 
 	public Partida() {
 		this.tamanioTablero = DEFAULT_TAM_TABLERO;
@@ -260,7 +261,7 @@ public class Partida {
 		int numeroElegido = 0;
 		Map<Integer, Integer> nuevoOrdenDeTurnos = new TreeMap<Integer, Integer>();
 
-		for (int i = 0; partidaEnJuego && i < jugadores.size(); i++) {
+		for (int i = 0; partidaEnJuego && i < jugadores.size() && i<turnos.size() && turnos.get(i) < jugadores.size(); i++) {
 
 			entrada.mostrarCartasAElegir(cartasAElegir);
 			int turno = turnos.get(i);
@@ -279,6 +280,7 @@ public class Partida {
 				// Si no es ni el jugador local ni un bot, tiene que esperar a que el servidor
 				// informe lo que hizo el otro jugador
 				esTurnoJugadorLocal = false;
+				esTurnoJugadorLocalHumano = false;
 				try {
 					System.out.println(jugadorLocal + ":esperando paquete");
 					getMtxEsperarPaquete().await();
@@ -286,6 +288,8 @@ public class Partida {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				if(isRendido())
+					break;
 				setMtxEsperarPaquete(new CountDownLatch(1));
 				String[] paqueteActual = paquete.split(",");
 				paquete=null;
@@ -313,6 +317,11 @@ public class Partida {
 			} else {
 				// Si es el turno del jugador local, tiene que elegir su carta y posicion
 				esTurnoJugadorLocal = true;
+				esTurnoJugadorLocalHumano = !botsLocales.contains(jugadorTurnoActual.getNombre());
+				if(esTurnoJugadorLocalHumano)
+					System.out.println("es turno de jugador local humano");
+				else
+					System.out.println("no es turno de jugador local humano");
 				numeroElegido = jugadorTurnoActual.eligeCarta(cartasAElegir, entrada,this);
 				if (!isRendido()) {// El jugador se puede rendir mientras elije cartas
 					cartaElegida = cartasAElegir.get(numeroElegido);
@@ -415,11 +424,14 @@ public class Partida {
 	public String getJugadorLocal() {
 		return jugadorLocal;
 	}
-
+	public boolean getTurnoJugadorLocalHumano() {
+		return esTurnoJugadorLocalHumano;
+	}
 	public void rendirse() {
 		rendido = true;
 		VentanaJueguito.getStartLatch().countDown();
 		VentanaJueguito.getLatchCartaElegida().countDown();
+		getMtxEsperarPaquete().countDown();
 	}
 	private void eliminarJugadorRendido(String nombreJugador) {
 		int i = 0;
@@ -469,10 +481,10 @@ public class Partida {
 				}
 			}
 		}
-//		System.out.println("Turnos");
-//		for (Integer n : turnos) {
-//			System.out.println(n);
-//		}
+		System.out.println("Turnos");
+		for (Integer n : turnos) {
+			System.out.println(n);
+		}
 		ventana.inicializarTableros(jugadores);
 		ventana.actualizarTableros();
 		if (jugadores.size() == 1) {

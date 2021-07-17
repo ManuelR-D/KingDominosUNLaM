@@ -51,7 +51,7 @@ public class Servidor {
 
 	public static void main(String[] args) {
 		System.out.println("Servidor ejecutandose");
-		new Servidor(50000).run();
+		new Servidor(40000).run();
 	}
 
 }

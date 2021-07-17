@@ -18,6 +18,7 @@ import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -43,13 +44,13 @@ public class Menu extends JDialog {
 	private JPanel contentPane;
 	private List<JTextField> txtJugadores = new ArrayList<JTextField>(4);
 	private JComboBox<Integer> cantJugadores;
-	private JRadioButton rdbtnElGranDuelo;
+	private JCheckBox rdbtnElGranDuelo;
 	private List<JRadioButton> rdbtns;
 	private JLabel lblNewLabel;
 	private JComboBox<String> texturas;
-	private JRadioButton rdbtnDinastia;
-	private JRadioButton rdbtnElReinoMedio;
-	private JRadioButton rdbtnArmonia;
+	private JCheckBox rdbtnDinastia;
+	private JCheckBox rdbtnElReinoMedio;
+	private JCheckBox rdbtnArmonia;
 	private JComboBox<String> mazos;
 	private JLabel lblNewLabel_1;
 	private JButton btnNewButton;
@@ -221,7 +222,7 @@ public class Menu extends JDialog {
 		panel.add(cantJugadores, gbc_cantJugadores);
 
 		ButtonGroup radioButtons = new ButtonGroup();
-		rdbtnElGranDuelo = new JRadioButton("El gran duelo");
+		rdbtnElGranDuelo = new JCheckBox("El gran duelo");
 		radioButtons.add(rdbtnElGranDuelo);
 		GridBagConstraints gbc_rdbtnElGranDuelo = new GridBagConstraints();
 		gbc_rdbtnElGranDuelo.insets = new Insets(0, 0, 5, 5);
@@ -251,7 +252,7 @@ public class Menu extends JDialog {
 		gbc_rdbtnBot1.gridy = 4;
 		panel.add(rdbtnBot1, gbc_rdbtnBot1);
 
-		rdbtnDinastia = new JRadioButton("Dinastia");
+		rdbtnDinastia = new JCheckBox("Dinastia");
 		radioButtons.add(rdbtnDinastia);
 		GridBagConstraints gbc_rdbtnNewRadioButton = new GridBagConstraints();
 		gbc_rdbtnNewRadioButton.insets = new Insets(0, 0, 5, 5);
@@ -279,7 +280,7 @@ public class Menu extends JDialog {
 		gbc_rdbtnBot2.gridy = 5;
 		panel.add(rdbtnBot2, gbc_rdbtnBot2);
 
-		rdbtnElReinoMedio = new JRadioButton("El reino medio");
+		rdbtnElReinoMedio = new JCheckBox("El reino medio");
 		radioButtons.add(rdbtnElReinoMedio);
 		GridBagConstraints gbc_rdbtnNewRadioButton_1 = new GridBagConstraints();
 		gbc_rdbtnNewRadioButton_1.insets = new Insets(0, 0, 5, 5);
@@ -310,7 +311,7 @@ public class Menu extends JDialog {
 		gbc_rdbtnBot3.gridy = 6;
 		panel.add(rdbtnBot3, gbc_rdbtnBot3);
 
-		rdbtnArmonia = new JRadioButton("Armonia");
+		rdbtnArmonia = new JCheckBox("Armonia");
 		radioButtons.add(rdbtnArmonia);
 		GridBagConstraints gbc_rdbtnNewRadioButton_2 = new GridBagConstraints();
 		gbc_rdbtnNewRadioButton_2.insets = new Insets(0, 0, 5, 5);
