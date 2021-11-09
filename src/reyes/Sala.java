@@ -29,7 +29,7 @@ public class Sala implements Serializable {
 		}
 	}
 
-	public void añadirJugadorASala(Usuario user) {
+	public void aniadirJugadorASala(Usuario user) {
 		jugadoresEnSala.add(new Jugador(user));
 		System.out.println(jugadoresEnSala.size());
 		if(jugadoresEnSala.size() == 4) {

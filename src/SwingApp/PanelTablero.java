@@ -71,7 +71,7 @@ public class PanelTablero extends JPanel {
 		 * Por alguna razon llegan panelFicha nulo, y lo mas raro es que a veces llegan
 		 * panelFicha no nulo pero con pFicha.getFicha igual a null
 		 * 
-		 * EDIT: Sucede cuando hay un hilo que todavía esta renderizando PanelFicha. Se arrelgo
+		 * EDIT: Sucede cuando hay un hilo que todavï¿½a esta renderizando PanelFicha. Se arrelgo
 		 * en commit c16ff1f
 		 */
 		if (pFicha != null && pFicha.getFicha() != null) {
@@ -236,6 +236,7 @@ public class PanelTablero extends JPanel {
 			return;
 		int i = pFSeleccionado.getFila() + c.getFichas()[1].getFila();
 		int j = pFSeleccionado.getColumna() + c.getFichas()[1].getColumna();
+
 		if(i>0 && i<matrizPaneles.length && j > 0 && j < matrizPaneles[i].length) {
 			PanelFicha pFVecino = matrizPaneles[i][j];
 			if(pFVecino != null)

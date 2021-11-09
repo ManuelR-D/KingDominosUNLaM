@@ -18,21 +18,15 @@ public class Cliente{
 	private Lobby lobby;
 	
 
-	public Cliente(String nombre,String ip, int puerto,Lobby lobby) {
+	public Cliente(String nombre,String ip, int puerto,Lobby lobby) throws UnknownHostException, IOException{
 		this.nombre=nombre;
 		this.lobby=lobby;
-		try {
-			socket = new Socket(ip, puerto);
-			salida=new ObjectOutputStream(socket.getOutputStream());
-			MensajeAServidor msj= new MensajeAServidor(nombre,null,1);
-			enviarMensaje(msj);
-		} catch (UnknownHostException e) {
-			System.out.println("Error host desconocido");
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("Error en conexion con el servidor");
-			e.printStackTrace();
-		}
+		
+		socket = new Socket(ip, puerto);
+		salida=new ObjectOutputStream(socket.getOutputStream());
+		MensajeAServidor msj= new MensajeAServidor(nombre,null,1);
+		enviarMensaje(msj);
+		
 	}
 	public <T> void enviarMensaje(T msj) {
 		if(!socket.isClosed()) {

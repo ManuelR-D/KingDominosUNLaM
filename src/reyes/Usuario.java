@@ -8,7 +8,7 @@ public class Usuario implements Serializable {
 	 */
 	private static final long serialVersionUID = 2007699419196672147L;
 	private String nombreUsuario;
-	private String contraseña;
+	private String contrasenia;
 	private int idUsuario;
 	private Sala salaActual;
 //	private int cantVictorias;
@@ -17,15 +17,15 @@ public class Usuario implements Serializable {
 //	private int cantDominosJugados; 
 //	private int puntajeMaximo; 
 
-	public Usuario(String nombreUsuario, String contraseña) {
+	public Usuario(String nombreUsuario, String contrasenia) {
 		this.nombreUsuario = nombreUsuario;
-		this.contraseña = contraseña;
+		this.contrasenia = contrasenia;
 		this.idUsuario = 1;
 	}
 
 	public Usuario(Usuario user) {
 		this.nombreUsuario = user.nombreUsuario;
-		this.contraseña = user.contraseña;
+		this.contrasenia = user.contrasenia;
 		this.idUsuario = user.idUsuario;
 	}
 
@@ -64,7 +64,7 @@ public class Usuario implements Serializable {
 
 	public void unirseSala(Sala salaActual) {
 		this.salaActual = salaActual;
-		salaActual.añadirJugadorASala(this);
+		salaActual.aniadirJugadorASala(this);
 	}
 
 	public void verEstadistica(Usuario other) {
@@ -73,7 +73,7 @@ public class Usuario implements Serializable {
 
 	@Override
 	public String toString() {
-		return nombreUsuario + "," + contraseña;
+		return nombreUsuario + "," + contrasenia;
 	}
 
 	public String getNombreUsuario() {

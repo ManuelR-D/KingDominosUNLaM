@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -36,8 +37,7 @@ import netcode.MensajeACliente;
 import netcode.MensajeAServidor;
 import netcode.MensajeEstadoPartida;
 import netcode.Sala;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import netcode.Servidor;
 
 public class Lobby extends JFrame {
 
@@ -50,6 +50,7 @@ public class Lobby extends JFrame {
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
 	private Cliente cliente;
 	private JMenuItem menuItemConectarse;
+	private JMenuItem jugarLocal;
 	private JPanel panelBordeDerecho;
 	private JButton btnBorrarSala;
 	private JButton btnUnirseASala;
@@ -89,6 +90,14 @@ public class Lobby extends JFrame {
 			}
 		});
 		mnNewMenu.add(menuItemConectarse);
+
+		jugarLocal = new JMenuItem("Jugar local");
+		jugarLocal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jugarLocal();
+			}
+		});
+		mnNewMenu.add(jugarLocal);
 
 		btnDesconexion = new JMenuItem("Salir");
 		btnDesconexion.addActionListener(new ActionListener() {
@@ -208,14 +217,35 @@ public class Lobby extends JFrame {
 
 	private void conectarse() {
 		String respuesta = JOptionPane.showInputDialog(this, "Ingrese nombre de usuario:", "");
-		if (respuesta != null && !respuesta.equals("")) {
-			crearUsuario(respuesta);
+		String ip = JOptionPane.showInputDialog(this, "Ingrese ip del servidor:", "");
+		int puerto = Integer.parseInt(JOptionPane.showInputDialog(this, "Ingrese puerto del servidor:", ""));
+		if (respuesta != null && !respuesta.equals("") && ip != null && !ip.equals("") && puerto > 0) {
+			crearUsuario(respuesta, ip, puerto, false);
+		}else{
+			JOptionPane.showMessageDialog(this, "No se pudo conectar", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	public void jugarLocal() {
+		String respuesta = JOptionPane.showInputDialog(this, "Ingrese nombre de usuario:", "");
 
-	public void crearUsuario(String nombreCliente) {
-		cliente = new Cliente(nombreCliente, "localhost", 40000, this);
-		cliente.inicializarHiloCliente(this);
+		if (respuesta != null && !respuesta.equals("")) {
+			crearUsuario(respuesta, null, 0, true);
+		}
+	}
+	public void crearUsuario(String nombreCliente, String ip, int puerto, boolean local) {
+		if(local){
+			new Thread(() -> {
+				new Servidor(40000).run();
+			}).start();
+			ip = "localhost";
+			puerto = 40000;
+		}
+		try {
+			cliente = new Cliente(nombreCliente, ip, puerto, this);
+			cliente.inicializarHiloCliente(this);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, "No se pudo conectar ", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	public void activarBotones() {

@@ -14,8 +14,8 @@ public class Juego {
 		//test.iniciarSalaYMostrar();
 	}
 
-	public Usuario crearUsuario(String nombreDeUsuario, String contraseña) {
-		Usuario user = new Usuario(nombreDeUsuario, contraseña);
+	public Usuario crearUsuario(String nombreDeUsuario, String contrasenia) {
+		Usuario user = new Usuario(nombreDeUsuario, contrasenia);
 		return user;
 	}
 
@@ -31,7 +31,7 @@ public class Juego {
 			System.out.println(sala);
 		}
 	}
-	public Sala generarIdYAñadirSala(Sala sala) {
+	public Sala generarIdYAniadirSala(Sala sala) {
 		sala.setIdSala(salas.size());
 		salas.add(sala);
 		return sala; // id de la sala recien creada

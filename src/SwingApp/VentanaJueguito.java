@@ -335,14 +335,13 @@ public class VentanaJueguito extends JFrame {
 	}
 
 	public void rendirse() {
-
+		// Ocultamos la ventana y enviamos el mensaje de rendirse
 		this.setVisible(false);
 		new Thread(() -> {
 			while (partida.getTurnoJugadorLocalHumano() == false) {
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
